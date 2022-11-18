@@ -16,19 +16,16 @@ Template repository for CRM packages. Necessary steps after using template:
 7. Create an test metadata file in `force-app` folder to initiate init package creation (can be just a CustomLabel file)
 8. Push changes made to `force-app` and `sfdx-project.json` (remember to fetch Package ID if #crm-platform-team creates the package)
 
-# Navn på prosjekt
+# NAV Innholdsbibliotek
 
-[![Build](https://github.com/navikt/XXXXXXXXXXXXX/workflows/%5BPUSH%5D%20Create%20Package/badge.svg)](https://github.com/navikt/XXXXXXXXXXXXX/actions?query=workflow%3Acreate)
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/navikt/XXXXXXXXXXXXX/blob/master/LICENSE)
+[![Build](https://github.com/navikt/crm-nks-innholdsbibliotek/workflows/%5BPUSH%5D%20Create%20Package/badge.svg)](https://github.com/navikt/crm-nks-innholdsbibliotek/actions?query=workflow%3Acreate)
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/navikt/crm-nks-innholdsbibliotek/blob/master/LICENSE)
 
-Kort beskrivelse av hva prosjektet dreier seg om.
+Løsning i Salesforce for å lagre og vedlikeholde grafiske ressurser (bilder, video etc) som skal deles i ulike kanaler.
 
 ### Avhengigheter
 
-Dette repoet er avhengig av følgende pakker:
-
--   [XXXXXXXXXXXXX](https://github.com/navikt/XXXXXXXXXXXXX)
--   [XXXXXXXXXXXXX](https://github.com/navikt/XXXXXXXXXXXXX)
+Dette repoet har ingen avhengigheter
 
 # Komme i gang
 
@@ -73,9 +70,6 @@ sfdx force:org:open
 Enten:
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub
 
-Eller:
-Spørsmål knyttet til koden eller prosjektet kan stilles til teamalias@nav.no
-
 ## For NAV-ansatte
 
-Interne henvendelser kan sendes via Slack i kanalen `#teamkanal`.
+Interne henvendelser kan sendes via Slack i kanalen #crm-nks.
