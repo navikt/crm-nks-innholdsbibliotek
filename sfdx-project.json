@@ -2,11 +2,16 @@
     "packageDirectories": [
         {
             "path": "force-app",
-            "default": true
+            "default": true,
+            "package": "crm-nks-innholdsbibliotek",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT"
         }
     ],
     "namespace": "",
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "55.0",
-    "packageAliases": {}
+    "packageAliases": {
+        "crm-nks-innholdsbibliotek": "0Ho7U000000blJJSAY"
+    }
 }

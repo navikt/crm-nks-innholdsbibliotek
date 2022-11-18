@@ -6,6 +6,7 @@
 # lwc config
 **/jsconfig.json
 
+/.sf
 
 # NOTE!! USE **/ before
 !**/unpackagable/profiles/* 
