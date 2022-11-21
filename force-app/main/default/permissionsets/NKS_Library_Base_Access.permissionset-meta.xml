@@ -3,4 +3,16 @@
     <description>Basic access to handle and share salesforce files</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Library Base Access</label>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ChatterFileLink</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>DistributeFromPersWksp</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ManageContentPermissions</name>
+    </userPermissions>
 </PermissionSet>
