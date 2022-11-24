@@ -3,16 +3,25 @@
     <description>Basic access to handle and share salesforce files</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Library Base Access</label>
+    <license>Salesforce</license>
+    <tabSettings>
+        <tab>standard-File</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>standard-Workspace</tab>
+        <visibility>Available</visibility>
+    </tabSettings>
     <userPermissions>
         <enabled>true</enabled>
         <name>ChatterFileLink</name>
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
-        <name>DistributeFromPersWksp</name>
+        <name>ContentWorkspaces</name>
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
-        <name>ManageContentPermissions</name>
+        <name>DistributeFromPersWksp</name>
     </userPermissions>
 </PermissionSet>
