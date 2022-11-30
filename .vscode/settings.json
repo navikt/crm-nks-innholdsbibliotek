@@ -27,5 +27,8 @@
         "**/.sfdx": true,
         "**/.vscode": true,
         "**/.idea": true
-    }
+    },
+    "scratch.default.permissionsets": [
+        "NKS_Library_Base_Access"
+    ]
 }
