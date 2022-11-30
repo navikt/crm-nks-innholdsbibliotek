@@ -3,21 +3,33 @@
     "edition": "Enterprise",
     "release": "Current",
     "adminEmail": "fakeemail@nav.no.scratchorg",
-    "features": ["ProcessBuilder", "API", "LiveAgent", "PersonAccounts", "ContactsToMultipleAccounts"],
+    "features": [
+        "ProcessBuilder",
+        "API",
+        "Sites",
+        "ForceComPlatform",
+        "Communities",
+        "PersonAccounts",
+        "ContactsToMultipleAccounts"
+    ],
     "country": "NO",
     "language": "en_US",
     "settings": {
+        "experienceBundleSettings": {
+            "enableExperienceBundleMetadata": true
+        },
         "lightningExperienceSettings": {
             "enableS1DesktopEnabled": true
+        },
+        "communitiesSettings": {
+            "enableNetworksEnabled": true,
+            "enableOotbProfExtUserOpsEnable": true
         },
         "languageSettings": {
             "enableTranslationWorkbench": true
         },
         "accountSettings": {
             "enableAccountTeams": true
-        },
-        "liveAgentSettings": {
-            "enableLiveAgent": true
         },
         "emailAdministrationSettings": {
             "enableEnhancedEmailEnabled": true
