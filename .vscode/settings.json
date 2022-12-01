@@ -30,5 +30,6 @@
     },
     "scratch.default.permissionsets": [
         "NKS_Library_Base_Access"
-    ]
+    ],
+    "dummy.data.location": "/dummy-data"
 }
