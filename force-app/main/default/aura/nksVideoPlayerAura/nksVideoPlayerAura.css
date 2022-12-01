@@ -1,0 +1,8 @@
+.THIS.video-container {
+    width: 100%;
+}
+
+.THIS.video_container video {
+    width: 100% !important;
+    height: auto !important;
+}

@@ -3,7 +3,9 @@
     <aura:attribute name="videoUrl" type="String" />
     <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
 
-    <video controls="true" controlsList="nodownload">
-        <source src="{!v.videoUrl}" type="video/mp4" />
-    </video>
+    <div class="video-container">
+        <video style="width: 100%" controls="true">
+            <source src="{!v.videoUrl}" type="video/mp4" />
+        </video>
+    </div>
 </aura:component>
