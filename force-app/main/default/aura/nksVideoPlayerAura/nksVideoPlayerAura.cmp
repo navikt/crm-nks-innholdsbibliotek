@@ -1,11 +1,8 @@
 <aura:component implements="forceCommunity:availableForAllPageTypes">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="videoUrl" type="String" />
+    <aura:attribute name="videoPlayer" type="String" />
     <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
 
-    <div class="video-container">
-        <video style="width: 100%" controls="true">
-            <source src="{!v.videoUrl}" type="video/mp4" />
-        </video>
-    </div>
+    <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
 </aura:component>
