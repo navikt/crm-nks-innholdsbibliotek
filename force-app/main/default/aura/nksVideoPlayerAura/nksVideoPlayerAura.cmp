@@ -1,14 +1,9 @@
-<aura:component controller="NKS_VideoPlayerCtrl" implements="forceCommunity:availableForAllPageTypes">
+<aura:component implements="forceCommunity:availableForAllPageTypes">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:attribute
-        name="videoUrl"
-        type="String"
-        required="true"
-        default="https://velocity-nosoftware-3904.scratch.my.site.com/sfsites/c/sfc/servlet.shepherd/document/download/0693O000002KmB0QAK"
-    />
+    <aura:attribute name="videoUrl" type="String" />
     <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
 
-    <video controls="true">
+    <video controls="true" controlsList="nodownload">
         <source src="{!v.videoUrl}" type="video/mp4" />
     </video>
 </aura:component>
