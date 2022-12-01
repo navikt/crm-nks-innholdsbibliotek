@@ -5,6 +5,20 @@
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="videoPlayer" type="String" />
     <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="contentDocument" type="Object" />
+    <aura:attribute name="recordError" type="String" />
 
-    <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
+    <aura:if isTrue="{!not(empty(v.recordId))}">
+        <force:recordData
+            aura:id="recordLoader"
+            fields="FileExtension"
+            recordId="{!v.recordId}"
+            targetFields="{!v.contentDocument}"
+            targetError="{!v.recordError}"
+        />
+    </aura:if>
+
+    <aura:if isTrue="{!empty(v.recordId) || v.contentDocument.FileExtension == 'mp4'}">
+        <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
+    </aura:if>
 </aura:component>
