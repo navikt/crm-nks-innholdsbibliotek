@@ -1,3 +1,18 @@
 <template>
-    <a>{libraryUrl}</a>
+    <lightning-layout multiple-rows>
+        <lightning-layout-item size="12">
+            <h1 class="slds-text-heading_small slds-text-title_bold">Bibliotekslenke:</h1>
+        </lightning-layout-item>
+        <lightning-layout-item size="12">
+            <a>{libraryUrl}</a>
+            <lightning-button-icon
+                value={libraryUrl}
+                class="slds-var-p-left_xx-small"
+                alternative-text="Kopier"
+                icon-name="utility:copy"
+                variant="bare"
+                onclick={handleCopy}
+            ></lightning-button-icon>
+        </lightning-layout-item>
+    </lightning-layout>
 </template>
