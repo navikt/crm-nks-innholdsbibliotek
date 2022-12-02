@@ -19,6 +19,8 @@
     </aura:if>
 
     <aura:if isTrue="{!empty(v.recordId) || v.contentDocument.FileExtension == 'mp4'}">
-        <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
+        <center>
+            <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
+        </center>
     </aura:if>
 </aura:component>
