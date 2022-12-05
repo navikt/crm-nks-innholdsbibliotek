@@ -35,3 +35,25 @@ jobs:
       org: ${{ inputs.org }}
       unpackagable: ./force-app/unpackagable-with-auto-deploy
     secrets: inherit
+  
+  publish-community:
+    name: publish-community
+    needs: [deploy-package]
+    runs-on: ubuntu-latest
+    steps:
+      # Install SFDX
+      - name: Install SFDX
+        uses: navikt/crm-workflows-base/.github/actions/installSFDX@master
+
+         # Authorize SFDX
+      - name: Authorize SFDX
+        uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
+        with:
+          auth-url: ${{ env.target }} #Set in the deploy package step
+          alias: targetOrg
+          setDefaultUsername: true
+          setDefaultDevhubUsername: false
+      
+      - name: Publish
+        run: |
+          sfdx force:community:publish --name 'innholdsbibliotek'
