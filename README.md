@@ -47,6 +47,12 @@ sfdx force:source:push
 sfdx force:org:open
 ```
 
+Finally the packaged community can be published by running:
+
+```bash
+npm run publishCommunity
+```
+
 # Henvendelser
 
 Enten:
