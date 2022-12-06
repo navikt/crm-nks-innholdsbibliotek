@@ -31,10 +31,10 @@
           "filename": "force-app/unpackagable-with-auto-deploy/experiences/innholdsbibliotek1/views/home.json",
           "stringToReplace": "\"Prod\"",
           "replaceWithEnv": "HEADER_ENV_REPLACER",  
-          "replaceWhenEnv": {
+          "replaceWhenEnv": [{
             "env": "DEPLOY_DESTINATION",
             "value": "DEV"
-          }
+          }]
         }
     ],
     "namespace": "",
