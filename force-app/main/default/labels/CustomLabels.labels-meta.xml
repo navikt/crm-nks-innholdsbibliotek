@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>NKS_Video_Stats_Title</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Video Stats Title</shortDescription>
+        <value>Video Stats</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Video_Total_Views</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Video Total Views</shortDescription>
+        <value>Views</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Video_Views_Today</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Video Views Today</shortDescription>
+        <value>Views today</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Video_Library_Link</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Video Library Link Label</shortDescription>
+        <value>Asset library link</value>
+    </labels>
+</CustomLabels>
