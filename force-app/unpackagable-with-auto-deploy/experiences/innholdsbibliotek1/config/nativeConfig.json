@@ -10,7 +10,7 @@
       "barTintColor" : "#FFFFFF"
     },
     "menuItems" : [ {
-      "name" : "Home",
+      "name" : "Innholdsbibliotek",
       "targetUrl" : "/",
       "iconAsset" : "slds-icon:home"
     } ]
