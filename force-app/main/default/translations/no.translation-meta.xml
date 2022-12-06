@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Bibliotekslenke</label>
+        <name>NKS_Video_Library_Link</name>
+    </customLabels>
+    <customLabels>
+        <label>Statistikk</label>
+        <name>NKS_Video_Stats_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>Antall visninger</label>
+        <name>NKS_Video_Total_Views</name>
+    </customLabels>
+    <customLabels>
+        <label>Visninger i dag</label>
+        <name>NKS_Video_Views_Today</name>
+    </customLabels>
+</Translations>
