@@ -9,4 +9,14 @@ public class NKS_VideoPlayerCtrl_Test {
 
         System.assert(String.isBlank(url));
     }
+
+    @isTest
+    static void testGetVideoStats() {
+        Test.startTest();
+        NKS_VideoPlayerCtrl.addViewCount('12345TEST');
+        Test.stopTest();
+        NKS_VideoPlayerCtrl.VideoStats stats = NKS_VideoPlayerCtrl.getVideoStats('12345TEST');
+
+        System.assertEquals(1, stats.numViewsTotal);
+    }
 }
