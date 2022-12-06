@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-expressions */
 ({
-    getVideoId: function(component) {
+    getVideoId: function (component) {
         const recordId = component.get('v.recordId');
         let videoSrc;
         let videoSize = '80%';
@@ -24,14 +25,14 @@
         component.set('v.videoPlayer', videoPlayer);
     },
 
-    addVideoView: function(component) {
+    addVideoView: function (component) {
         let viewCountAction = component.get('c.addViewCount');
 
         viewCountAction.setParams({
             videoId: component.get('v.videoId')
         });
 
-        viewCountAction.setCallback(this, function(response) {
+        viewCountAction.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
                 //View count was updated
