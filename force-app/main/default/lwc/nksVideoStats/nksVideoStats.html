@@ -1,16 +1,16 @@
 <template>
-    <lightning-card class="slds-is-relative" style="min-height: 5em" title="Video Stats">
+    <lightning-card class="slds-is-relative" style="min-height: 5em" title={labels.VIDEO_STATS_LABEL}>
         <lightning-spinner if:true={isLoading}> </lightning-spinner>
         <lightning-layout if:true={videoStats}>
             <lightning-layout-item padding="horizontal-small" size="6">
                 <div class="slds-box">
-                    <h1>Views Total</h1>
+                    <h1>{labels.VIDEO_VIEWS_LABEL}</h1>
                     <p class="slds-text-heading_large">{videoStats.numViewsTotal}</p>
                 </div>
             </lightning-layout-item>
             <lightning-layout-item padding="horizontal-small" size="6">
                 <div class="slds-box">
-                    <h1>Views today</h1>
+                    <h1>{labels.VIDEO_VIEWS_TODAY_LABEL}</h1>
                     <lightning-layout vertical-align="center">
                         <p class="slds-text-heading_large">
                             {videoStats.numViewsToday}

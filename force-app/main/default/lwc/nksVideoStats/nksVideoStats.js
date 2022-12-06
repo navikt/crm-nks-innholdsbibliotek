@@ -1,11 +1,19 @@
 import { LightningElement, api, track } from 'lwc';
 import getStats from '@salesforce/apex/NKS_VideoPlayerCtrl.getVideoStats';
+import VIDEO_STATS_LABEL from '@salesforce/label/c.NKS_Video_Stats_Title';
+import VIDEO_VIEWS_LABEL from '@salesforce/label/c.NKS_Video_Total_Views';
+import VIDEO_VIEWS_TODAY_LABEL from '@salesforce/label/c.NKS_Video_Views_Today';
 
 export default class NksVideoStats extends LightningElement {
     @api recordId;
     @track videoStats;
     isLoading = false;
     error = false;
+    labels = {
+        VIDEO_STATS_LABEL,
+        VIDEO_VIEWS_LABEL,
+        VIDEO_VIEWS_TODAY_LABEL
+    };
 
     connectedCallback() {
         this.isLoading = true;
