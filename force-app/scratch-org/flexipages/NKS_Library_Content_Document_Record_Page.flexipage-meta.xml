@@ -48,28 +48,6 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>forceContent:previewPanel</componentName>
-                <identifier>forceContent_previewPanel</identifier>
-            </componentInstance>
-        </itemInstances>
-        <mode>Replace</mode>
-        <name>previewTabContent</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentName>forceContent:latestVersionDetailPanel</componentName>
-                <identifier>forceContent_latestVersionDetailPanel</identifier>
-            </componentInstance>
-        </itemInstances>
-        <mode>Replace</mode>
-        <name>detailTabContent</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
                 <componentName>nksVideoLibLinker</componentName>
                 <identifier>c_nksVideoLibLinker</identifier>
             </componentInstance>
@@ -86,16 +64,38 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>forceContent:latestVersionDetailPanel</componentName>
+                <identifier>forceContent_latestVersionDetailPanel</identifier>
+            </componentInstance>
+        </itemInstances>
+        <mode>Replace</mode>
+        <name>detailTabContent</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>forceContent:previewPanel</componentName>
+                <identifier>forceContent_previewPanel</identifier>
+            </componentInstance>
+        </itemInstances>
+        <mode>Replace</mode>
+        <name>previewTabContent</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>body</name>
-                    <value>previewTabContent</value>
+                    <value>Facet-b71cde68-37df-4250-b62d-4fdf330fb8b6</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>title</name>
-                    <value>Standard.Tab.preview</value>
+                    <value>Video</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
-                <identifier>previewTab</identifier>
+                <identifier>flexipage_tab</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -116,14 +116,14 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>body</name>
-                    <value>Facet-b71cde68-37df-4250-b62d-4fdf330fb8b6</value>
+                    <value>previewTabContent</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>title</name>
-                    <value>Video</value>
+                    <value>Standard.Tab.preview</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
-                <identifier>flexipage_tab</identifier>
+                <identifier>previewTab</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -148,8 +148,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>forceContent:statsPanel</componentName>
-                <identifier>forceContent_statsPanel</identifier>
+                <componentName>nksVideoStats</componentName>
+                <identifier>c_nksVideoStats</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
