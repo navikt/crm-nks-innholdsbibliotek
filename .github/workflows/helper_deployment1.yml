@@ -16,6 +16,10 @@ on:
         - crm-uat
         - uat
         - dev
+env:
+  DEPLOY_DESTINADION: DEV
+  HEADER_ENV_REPLACER: Dev
+
 jobs:
   debug:
     name: Debug Information
