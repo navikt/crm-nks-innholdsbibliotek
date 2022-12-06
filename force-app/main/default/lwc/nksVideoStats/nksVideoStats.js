@@ -41,8 +41,6 @@ export default class NksVideoStats extends LightningElement {
         if (this.videoStats) {
             const numViewsToday = this.videoStats.numViewsToday;
             const numViewsYesterday = this.videoStats.numViewsYesterday;
-            console.log('VIEWS TODAY: ' + numViewsToday);
-            console.log('VIEWS YESTERDAY: ' + numViewsYesterday);
             if (numViewsToday > numViewsYesterday) {
                 trend = 'up';
             } else if (numViewsToday < numViewsYesterday) {
