@@ -1,0 +1,14 @@
+.data-trend {
+    --sds-c-icon-color-foreground-default: gray;
+    vertical-align: text-top;
+}
+
+.data-trend[data-trend='up'] {
+    --sds-c-icon-color-foreground-default: green;
+    vertical-align: text-top;
+}
+
+.data-trend[data-trend='down'] {
+    --sds-c-icon-color-foreground-default: red;
+    vertical-align: text-top;
+}

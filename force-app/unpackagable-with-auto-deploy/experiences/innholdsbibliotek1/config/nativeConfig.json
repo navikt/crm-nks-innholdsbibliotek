@@ -1,0 +1,20 @@
+{
+  "id" : "97808aec-fec6-4f75-84a9-9eee25558986",
+  "nativeMobileNavConfig" : {
+    "showBackButton" : true,
+    "showHamburgerMenuWithBackButton" : false
+  },
+  "nativeTabMenu" : {
+    "branding" : {
+      "iconTintColorUnselected" : "#C9C5C5",
+      "barTintColor" : "#FFFFFF"
+    },
+    "menuItems" : [ {
+      "name" : "Innholdsbibliotek",
+      "targetUrl" : "/",
+      "iconAsset" : "slds-icon:home"
+    } ]
+  },
+  "showHamburgerMenu" : true,
+  "type" : "nativeConfig"
+}

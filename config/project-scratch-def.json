@@ -1,23 +1,58 @@
 {
-    "orgName": "crm-shared-template",
+    "orgName": "crm-nks-innholdsbibliotek",
     "edition": "Enterprise",
-    "release": "Current",
     "adminEmail": "fakeemail@nav.no.scratchorg",
-    "features": ["ProcessBuilder", "API", "LiveAgent", "PersonAccounts", "ContactsToMultipleAccounts"],
+    "features": [
+        "ProcessBuilder",
+        "API",
+        "Sites",
+        "ForceComPlatform",
+        "Communities",
+        "PersonAccounts",
+        "ContactsToMultipleAccounts",
+        "ServiceCloud",
+        "LiveAgent",
+        "LightningServiceConsole",
+        "PublishAuraExpBuilderBasedSna",
+        "FIELDSERVICE:1"
+    ],
     "country": "NO",
     "language": "en_US",
     "settings": {
+        "experienceBundleSettings": {
+            "enableExperienceBundleMetadata": true
+        },
         "lightningExperienceSettings": {
             "enableS1DesktopEnabled": true
+        },
+        "communitiesSettings": {
+            "enableNetworksEnabled": true,
+            "enableOotbProfExtUserOpsEnable": true
+        },
+        "knowledgeSettings": {
+            "enableKnowledge": true,
+            "enableLightningKnowledge": true
+        },
+        "liveAgentSettings": {
+            "enableLiveAgent": true
+        },
+        "omniChannelSettings": {
+            "enableOmniChannel": true
+        },
+        "fieldServiceSettings": {
+            "fieldServiceOrgPref": true,
+            "doesShareSaParentWoWithAr": false,
+            "doesShareSaWithAr": false,
+            "enableWorkOrders": true,
+            "isGeoCodeSyncEnabled": false,
+            "isLocationHistoryEnabled": false,
+            "fieldServiceNotificationsOrgPref": true
         },
         "languageSettings": {
             "enableTranslationWorkbench": true
         },
         "accountSettings": {
             "enableAccountTeams": true
-        },
-        "liveAgentSettings": {
-            "enableLiveAgent": true
         },
         "emailAdministrationSettings": {
             "enableEnhancedEmailEnabled": true
