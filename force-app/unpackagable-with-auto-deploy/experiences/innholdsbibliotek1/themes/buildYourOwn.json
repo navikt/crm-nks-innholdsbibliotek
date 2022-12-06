@@ -1,6 +1,6 @@
 {
     "activeBrandingSetId": "6727a8da-e604-4f82-9a57-c0017be30d2c",
-    "customCSS": ".comm-content-header{\n    padding-left: 0;\n    padding-right: 0;\n}\n\n.comm-content-footer{\n    padding-left: 0;\n    padding-right: 0;\n}\n\n.cCenterPanel{\n    margin-top: 0;\n}",
+    "customCSS": ".comm-content-header{\n    padding-left: 0;\n    padding-right: 0;\n    padding-top: 0 !important;\n}\n\n.comm-content-footer{\n    padding-left: 0;\n    padding-right: 0;\n}\n\n.cCenterPanel{\n    margin-top: 0;\n}",
     "developerName": "starter",
     "id": "9ee49e43-b560-42aa-8f45-663fe45b532c",
     "label": "Build Your Own",
