@@ -17,8 +17,7 @@ on:
         - uat
         - dev
 env:
-  DEPLOY_DESTINADION: DEV
-  HEADER_ENV_REPLACER: Dev
+  SFDX_ENV: HEADER_ENV_REPLACER='"Dev"' DEPLOY_DESTINATION=DEV
 
 jobs:
   debug:
@@ -38,6 +37,7 @@ jobs:
       packageId: ${{ inputs.packageId }}
       org: ${{ inputs.org }}
       unpackagable: ./force-app/unpackagable-with-auto-deploy
+      SFDX_ENV: ${{ env.SFDX_ENV }}
     secrets: inherit
   
   publish-community:
@@ -53,7 +53,7 @@ jobs:
       - name: Authorize SFDX
         uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
         with:
-          auth-url: ${{ env.target }} #Set in the deploy package step
+          auth-url: ${{ jobs.deploy-package.env.target }} #Set in the deploy package step
           alias: targetOrg
           setDefaultUsername: true
           setDefaultDevhubUsername: false
