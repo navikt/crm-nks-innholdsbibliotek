@@ -32,7 +32,7 @@ jobs:
 
   deploy-package:
     name: Deploy Package
-    uses: navikt/crm-workflows-base/.github/workflows/deployPackage.yml@master
+    uses: navikt/crm-workflows-base/.github/workflows/deployPackage.yml@sfdx-env-support
     with:
       packageId: ${{ inputs.packageId }}
       org: ${{ inputs.org }}
