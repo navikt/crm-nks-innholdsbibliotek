@@ -53,7 +53,7 @@ jobs:
       - name: Authorize SFDX
         uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
         with:
-          auth-url: ${{ jobs.deploy-package.env.target }} #Set in the deploy package step
+          auth-url: ${{ needs.deploy-package.env.target }} #Set in the deploy package step
           alias: targetOrg
           setDefaultUsername: true
           setDefaultDevhubUsername: false
