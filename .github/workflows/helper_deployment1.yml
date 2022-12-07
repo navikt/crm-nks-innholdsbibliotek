@@ -37,7 +37,7 @@ jobs:
       packageId: ${{ inputs.packageId }}
       org: ${{ inputs.org }}
       unpackagable: ./force-app/unpackagable-with-auto-deploy
-      SFDX_ENV: $SFDX_ENV
+      SFDX_ENV: ${{env.SFDX_ENV}}
     secrets: inherit
   
   publish-community:
