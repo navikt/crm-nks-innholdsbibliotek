@@ -30,7 +30,7 @@ jobs:
 
   deploy-package:
     name: Deploy Package
-    uses: navikt/crm-workflows-base/.github/workflows/deployPackage.yml@sfdx-env-support
+    uses: navikt/crm-workflows-base/.github/workflows/deployPackage.yml@master
     with:
       packageId: ${{ inputs.packageId }}
       org: ${{ inputs.org }}
@@ -40,22 +40,6 @@ jobs:
   
   publish-community:
     name: publish-community
-    needs: [deploy-package]
-    runs-on: ubuntu-latest
-    steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: navikt/crm-workflows-base/.github/actions/installSFDX@master
-
-         # Authorize SFDX
-      - name: Authorize SFDX
-        uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
-        with:
-          auth-url: ${{ needs.deploy-package.env.target }} #Set in the deploy package step
-          alias: targetOrg
-          setDefaultUsername: true
-          setDefaultDevhubUsername: false
-      
-      - name: Publish
-        run: |
-          sfdx force:community:publish --name 'innholdsbibliotek'
+    uses: .github/workflows/publishCommunity.yml
+    with:
+      org: ${{ inputs.org }}
