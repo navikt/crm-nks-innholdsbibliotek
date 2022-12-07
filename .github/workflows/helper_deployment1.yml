@@ -16,8 +16,6 @@ on:
         - crm-uat
         - uat
         - dev
-env:
-  SFDX_ENV: HEADER_ENV_REPLACER='"Dev"' DEPLOY_DESTINATION=DEV
 
 jobs:
   debug:
