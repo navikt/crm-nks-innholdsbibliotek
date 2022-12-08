@@ -9,7 +9,7 @@
                 {
                     "componentAttributes": {
                         "context": "Privatperson",
-                        "env": "Prod"
+                        "env": "Dev"
                     },
                     "componentName": "c:salesforceHeader",
                     "id": "663c6f65-1123-41cf-903c-5b4bbaa0751e",
