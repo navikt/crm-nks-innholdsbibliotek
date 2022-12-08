@@ -29,11 +29,11 @@
     "replacements": [
         {
           "filename": "force-app/unpackagable-with-auto-deploy/experiences/innholdsbibliotek1/views/home.json",
-          "stringToReplace": "\"Prod\"",
+          "stringToReplace": "\"Dev\"",
           "replaceWithEnv": "HEADER_ENV_REPLACER",
           "replaceWhenEnv": [{
             "env": "DEPLOY_DESTINATION",
-            "value": "DEV"
+            "value": "Prod"
           }]  
         }
     ],
