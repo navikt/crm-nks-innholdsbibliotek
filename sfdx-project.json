@@ -28,15 +28,13 @@
     ],
     "replacements": [
         {
-            "filename": "force-app/unpackagable-with-auto-deploy/experiences/innholdsbibliotek1/views/home.json",
-            "stringToReplace": "\"Dev\"",
-            "replaceWithEnv": "HEADER_ENV_REPLACER",
-            "replaceWhenEnv": [
-                {
-                    "env": "DEPLOY_DESTINATION",
-                    "value": "Prod"
-                }
-            ]
+          "filename": "force-app/unpackagable-with-auto-deploy/experiences/innholdsbibliotek1/views/innholdsbibliotek.json",
+          "stringToReplace": "\"Dev\"",
+          "replaceWithEnv": "HEADER_ENV_REPLACER",
+          "replaceWhenEnv": [{
+            "env": "DEPLOY_DESTINATION",
+            "value": "Prod"
+          }]  
         }
     ],
     "namespace": "",
