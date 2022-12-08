@@ -43,3 +43,4 @@ jobs:
     uses: .github/workflows/publishCommunity.yml
     with:
       org: ${{ inputs.org }}
+    secrets: inherit
