@@ -33,7 +33,7 @@
           "replaceWithEnv": "HEADER_ENV_REPLACER",
           "replaceWhenEnv": [{
             "env": "DEPLOY_DESTINATION",
-            "value": "Prod"
+            "value": "PROD"
           }]  
         }
     ],
