@@ -8,12 +8,14 @@
             //Displaying inside Salesforce
             videoSrc = window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId;
             component.set('v.videoId', recordId);
+            component.set('v.context', 'Standard');
             videoSize = '100%';
         } else {
             //In community
             const url = window.location.href;
             const videoId = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
             component.set('v.videoId', videoId);
+            component.set('v.recordId', videoId);
             videoSrc = window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
         }
         const videoPlayer =
