@@ -13,6 +13,9 @@
                             <value>NewVersion</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>EditFileDetails</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>DeleteFile</value>
                         </valueListItems>
                     </valueList>
