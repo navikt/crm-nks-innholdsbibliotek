@@ -35,10 +35,19 @@ public with sharing class NKS_VideoPlayerCtrl {
     }
 
     @AuraEnabled(cacheable=true)
-    public static string getLibraryUrl(){
+    public static String getLibraryUrl(String recordId){
             String communityId = [SELECT Id FROM Network WHERE Name = 'Innholdsbibliotek' LIMIT 1]?.Id;
             String communityUrl = String.isBlank(communityId) ? '' : Network.getLoginUrl(communityId);
-            return communityUrl.removeEnd(communityUrl.substringAfterLast('/'));
+            return communityUrl.removeEnd(communityUrl.substringAfterLast('/')) + getParentFolderName(recordId).toLowerCase() + '/' + recordId;
+    }
+
+    /**
+     * @description Query the name of the parent folder for making complete library url
+     * @param recordId 
+     * @return  `String`
+     */
+    private static String getParentFolderName(String recordId) {
+        return [SELECT Id, ParentContentFolder.Name FROM ContentFolderItem WHERE Id =: recordId LIMIT 1]?.ParentContentFolder?.Name; 
     }
 
     public class VideoStats {
