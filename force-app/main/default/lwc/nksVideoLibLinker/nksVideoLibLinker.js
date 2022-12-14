@@ -9,12 +9,13 @@ export default class NksVideoLibLinker extends LightningElement {
         VIDEO_LIBRARY_LINK
     };
 
-    experienceUrl;
+    libraryUrl;
 
     connectedCallback() {
-        getExperienceUrl({})
+        getExperienceUrl({ recordId: this.recordId })
             .then((url) => {
-                this.experienceUrl = url;
+                this.libraryUrl = url;
+                console.log(this.libraryUrl);
             })
             .catch((error) => {});
     }
@@ -42,9 +43,5 @@ export default class NksVideoLibLinker extends LightningElement {
             mode: 'pester'
         });
         this.dispatchEvent(evt);
-    }
-
-    get libraryUrl() {
-        return this.experienceUrl ? this.experienceUrl + '?videoId=' + this.recordId : null;
     }
 }
