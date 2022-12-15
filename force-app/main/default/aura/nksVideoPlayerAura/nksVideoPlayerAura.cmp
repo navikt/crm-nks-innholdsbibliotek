@@ -6,6 +6,8 @@
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="context" type="String" default="Experience" />
     <aura:attribute name="videoId" type="String" />
+    <aura:attribute name="videoSize" type="String" />
+    <aura:attribute name="videoSrc" type="String" />
     <aura:attribute name="videoPlayer" type="String" />
     <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
     <aura:attribute name="contentDocument" type="Object" />

@@ -18,13 +18,60 @@
             component.set('v.recordId', videoId);
             videoSrc = window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
         }
-        const videoPlayer =
-            '<video width=' +
-            videoSize +
-            ' controls controlsList="nodownload">><source src="' +
-            videoSrc +
-            '" type="video/mp4" /></video>';
-        component.set('v.videoPlayer', videoPlayer);
+
+        component.set('v.videoSize', videoSize);
+        component.set('v.videoSrc', videoSrc);
+        this.generateVideoPlayer(component);
+    },
+
+    getVideoTracks: function (component) {
+        let getTracksAction = component.get('c.getVideoTracks');
+
+        getTracksAction.setParams({
+            videoId: component.get('v.videoId')
+        });
+
+        const trackPromise = new Promise((resolve, reject) => {
+            getTracksAction.setCallback(this, function (response) {
+                const state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else if (state === 'ERROR') {
+                    let errors = response.getError();
+                    console.error(JSON.stringify(errors));
+                    reject(JSON.stringify(errors));
+                }
+            });
+        });
+
+        $A.enqueueAction(getTracksAction);
+        return trackPromise;
+    },
+
+    generateVideoPlayer: function (component) {
+        this.getVideoTracks(component).then((subTracks) => {
+            let videoPlayer =
+                '<video width=' +
+                component.get('v.videoSize') +
+                ' controls controlsList="nodownload"><source src="' +
+                component.get('v.videoSrc') +
+                '" type="video/mp4" >';
+
+            if (subTracks && subTracks.length > 0) {
+                subTracks.forEach((track) => {
+                    videoPlayer +=
+                        '<track kind="subtitles" srclang=' +
+                        track.srclang +
+                        ' label=' +
+                        track.languageLabel +
+                        ' src="' +
+                        track.src +
+                        '">';
+                });
+            }
+            videoPlayer += '</video>'; //Video end
+            component.set('v.videoPlayer', videoPlayer);
+        });
     },
 
     addVideoView: function (component) {
