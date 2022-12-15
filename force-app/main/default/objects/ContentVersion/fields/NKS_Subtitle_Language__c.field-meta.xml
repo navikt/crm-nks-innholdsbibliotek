@@ -12,19 +12,19 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Norsk</fullName>
+                <fullName>no</fullName>
                 <default>false</default>
-                <label>Norsk</label>
+                <label>Norwegian</label>
             </value>
             <value>
-                <fullName>Nynorsk</fullName>
+                <fullName>pl</fullName>
                 <default>false</default>
-                <label>Nynorsk</label>
+                <label>Polish</label>
             </value>
             <value>
-                <fullName>Engelsk</fullName>
+                <fullName>en</fullName>
                 <default>false</default>
-                <label>Engelsk</label>
+                <label>English</label>
             </value>
         </valueSetDefinition>
     </valueSet>
