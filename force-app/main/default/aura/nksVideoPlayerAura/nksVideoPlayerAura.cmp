@@ -25,7 +25,7 @@
 
     <aura:if isTrue="{!empty(v.recordId) || v.contentDocument.FileExtension == 'mp4'}">
         <lightning:layout horizontalAlign="center" multipleRows="true">
-            <lightning:layoutItem size="12" smallDeviceSize="10">
+            <lightning:layoutItem size="12" mediumDeviceSize="10">
                 <aura:if isTrue="{!v.context == 'Experience'}">
                     <div class="decorator-wrapper slds-p-bottom_small">
                         <h1 class="navds-heading navds-heading--xlarge">{!v.contentDocument.Title}</h1>
