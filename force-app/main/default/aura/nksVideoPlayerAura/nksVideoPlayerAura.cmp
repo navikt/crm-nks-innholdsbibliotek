@@ -9,7 +9,7 @@
     <aura:attribute name="videoSize" type="String" />
     <aura:attribute name="videoSrc" type="String" />
     <aura:attribute name="videoPlayer" type="String" />
-    <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="error" type="Boolean" default="false" />
     <aura:attribute name="contentDocument" type="Object" />
     <aura:attribute name="recordError" type="String" />
 
@@ -29,8 +29,20 @@
                 <h1 class="navds-heading navds-heading--xlarge">{!v.contentDocument.Title}</h1>
             </div>
         </aura:if>
-        <center>
-            <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
-        </center>
+        <div style="position: relative">
+            <div class="decorator-wrapper alert-positioning">
+                <div class="navds-alert navds-alert--error navds-alert--medium">
+                    <div class="navds-alert__wrapper navds-body-long">
+                        <h3 class="navds-heading navds-heading--small navds-typo--spacing">
+                            {!$Label.c.NKS_Video_Player_Error_Header}
+                        </h3>
+                        {!$Label.c.NKS_Video_Player_Error_Message}
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center">
+                <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
+            </div>
+        </div>
     </aura:if>
 </aura:component>

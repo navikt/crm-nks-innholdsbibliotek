@@ -7,6 +7,10 @@
             video.addEventListener('play', (event) => {
                 helper.addVideoView(component);
             });
+
+            video.addEventListener('error', (event) => {
+                component.set('v.error', true);
+            });
         }
     }
 });
