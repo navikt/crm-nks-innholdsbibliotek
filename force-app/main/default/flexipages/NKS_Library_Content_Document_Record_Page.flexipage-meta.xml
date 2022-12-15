@@ -88,7 +88,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>flowName</name>
-                    <value>File_Add_Subtitle_Screenflow</value>
+                    <value>NKS_File_Add_Subtitle_Screenflow</value>
                 </componentInstanceProperties>
                 <componentName>flowruntime:interview</componentName>
                 <identifier>flowruntime_interview</identifier>
