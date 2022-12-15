@@ -42,12 +42,47 @@ public with sharing class NKS_VideoPlayerCtrl {
     }
 
     /**
+     * @description Returns a list of video tracks related to a content document video file
+     * @param recordId 
+     * @return  `List<VideoTrack>`
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<VideoTrack> getVideoTracks(String videoId) {
+        String src;
+        List<VideoTrack> subTracks = new List<VideoTrack>();
+        Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();
+        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
+            src = isGuest ? 
+                '/sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
+                '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
+            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), src));
+        }
+
+        return subTracks;
+    }
+
+    /**
      * @description Query the name of the parent folder for making complete library url
      * @param recordId 
      * @return  `String`
      */
     private static String getParentFolderName(String recordId) {
         return [SELECT Id, ParentContentFolder.Name FROM ContentFolderItem WHERE Id =: recordId LIMIT 1]?.ParentContentFolder?.Name; 
+    }
+
+    public class VideoTrack {
+        @AuraEnabled
+        public String srclang;
+        @AuraEnabled
+        public String languageLabel;
+        @AuraEnabled
+        public String src;
+
+        public VideoTrack(String srclang, String languageLabel, String src) {
+            this.src = src;
+            this.srclang = srclang;
+            this.languageLabel = languageLabel;
+        }
     }
 
     public class VideoStats {
