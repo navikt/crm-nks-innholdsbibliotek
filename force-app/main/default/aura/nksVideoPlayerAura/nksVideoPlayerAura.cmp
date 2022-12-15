@@ -23,7 +23,7 @@
         />
     </aura:if>
 
-    <aura:if isTrue="{!empty(v.recordId) || v.contentDocument.FileExtension == 'mp4'}">
+    <aura:if isTrue="{!v.contentDocument.FileExtension == 'mp4'}">
         <lightning:layout horizontalAlign="center" multipleRows="true">
             <lightning:layoutItem size="12" mediumDeviceSize="10">
                 <aura:if isTrue="{!v.context == 'Experience'}">
