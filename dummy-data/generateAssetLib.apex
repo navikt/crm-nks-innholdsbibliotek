@@ -8,3 +8,7 @@ folders.add(new ContentFolder(Name = 'Familie', ParentContentFolderId = workspac
 folders.add(new ContentFolder(Name = 'Helse', ParentContentFolderId = workspaceFolder));
 
 insert folders;
+
+PermissionSet extLibPermSet = [SELECT Id FROM PermissionSet WHERE Name = 'NKS_Asset_Library_Experience'];
+User libraryUser = [SELECT Id FROM User WHERE Name LIKE 'Innhold%' LIMIT 1];
+insert new PermissionSetAssignment(PermissionSetId = extLibPermSet.Id, AssigneeId = libraryUser.Id);

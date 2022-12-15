@@ -13,7 +13,6 @@
             const url = window.location.href;
             const videoId = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
             component.set('v.videoId', videoId);
-            component.set('v.recordId', videoId);
             videoSrc = window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
         }
 
