@@ -53,6 +53,14 @@ Finally the packaged community can be published by running:
 npm run publishCommunity
 ```
 
+To complete the dummy folder setup for the asset library, run:
+
+```bash
+npm run scratch:postCreate
+```
+
+This will generate a folder structur where you i.e. can upload from the dummy-assets folder for testing
+
 # Henvendelser
 
 Enten:
