@@ -30,17 +30,19 @@
             </div>
         </aura:if>
         <div style="position: relative">
-            <div class="decorator-wrapper alert-positioning">
-                <div style="align-items: inherit" class="navds-alert navds-alert--error navds-alert--medium">
-                    <c:icon icon="ErrorFilled" fill="Red"></c:icon>
-                    <div class="navds-alert__wrapper navds-body-long">
-                        <h3 class="navds-heading navds-heading--small navds-typo--spacing">
-                            {!$Label.c.NKS_Video_Player_Error_Header}
-                        </h3>
-                        {!$Label.c.NKS_Video_Player_Error_Message}
+            <aura:if isTrue="{!v.error}">
+                <div class="decorator-wrapper alert-positioning">
+                    <div style="align-items: inherit" class="navds-alert navds-alert--error navds-alert--medium">
+                        <c:icon icon="ErrorFilled" fill="Red"></c:icon>
+                        <div class="navds-alert__wrapper navds-body-long">
+                            <h3 class="navds-heading navds-heading--small navds-typo--spacing">
+                                {!$Label.c.NKS_Video_Player_Error_Header}
+                            </h3>
+                            {!$Label.c.NKS_Video_Player_Error_Message}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </aura:if>
             <div style="text-align: center">
                 <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
             </div>
