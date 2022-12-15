@@ -3,13 +3,11 @@
     getVideoId: function (component) {
         const recordId = component.get('v.recordId');
         let videoSrc;
-        let videoSize = '80%';
         if (recordId) {
             //Displaying inside Salesforce
             videoSrc = window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId;
             component.set('v.videoId', recordId);
             component.set('v.context', 'Standard');
-            videoSize = '100%';
         } else {
             //In community
             const url = window.location.href;
@@ -19,7 +17,6 @@
             videoSrc = window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
         }
 
-        component.set('v.videoSize', videoSize);
         component.set('v.videoSrc', videoSrc);
         this.generateVideoPlayer(component);
     },
@@ -51,8 +48,7 @@
     generateVideoPlayer: function (component) {
         this.getVideoTracks(component).then((subTracks) => {
             let videoPlayer =
-                '<video width=' +
-                component.get('v.videoSize') +
+                '<video width=100%' +
                 ' controls controlsList="nodownload"><source src="' +
                 component.get('v.videoSrc') +
                 '" type="video/mp4" >';
