@@ -4,16 +4,32 @@
   "id" : "dbe84be2-4877-4d8c-8f8b-50898077b8bb",
   "label" : "Error",
   "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "context" : "Privatperson",
+        "env" : "Dev"
+      },
+      "componentName" : "c:decoratorHeader",
+      "id" : "83970b8f-ba6d-45ea-83ac-4bfca7e1f74c",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
     "id" : "1fc54d8e-bc44-49ed-ac32-6ca0041b6076",
     "regionName" : "header",
     "type" : "region"
   }, {
     "components" : [ {
-      "componentAttributes" : {
-        "richTextValue" : "<div style='text-align: center;'>Invalid Page</div>"
-      },
-      "componentName" : "forceCommunity:richTextInline",
-      "id" : "6bf8a09a-a177-4f5e-a128-bbcc8a5873a8",
+      "componentAttributes" : { },
+      "componentName" : "c:mainContent",
+      "id" : "d741efe6-0ae4-4c70-b8a4-8207836bb55e",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : { },
+      "componentName" : "c:nksVideoPlayerAura",
+      "id" : "c550bbea-c282-43fa-b42d-2ab7cd629c90",
       "renderPriority" : "NEUTRAL",
       "renditionMap" : { },
       "type" : "component"
@@ -22,6 +38,14 @@
     "regionName" : "content",
     "type" : "region"
   }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:decoratorFooter",
+      "id" : "811c54cb-5cd1-4a49-a0a2-298d8b97f7ef",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
     "id" : "7d530512-f1cc-4e8c-8294-0981ab889131",
     "regionName" : "footer",
     "type" : "region"
@@ -30,7 +54,7 @@
       "componentAttributes" : {
         "customHeadTags" : "",
         "description" : "",
-        "title" : "Error"
+        "title" : "Innholdsbibliotek"
       },
       "componentName" : "forceCommunity:seoAssistant",
       "id" : "abfba083-e34b-46e9-a2ab-a1049735a89c",

@@ -4,25 +4,55 @@
 >
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="context" type="String" default="Experience" />
     <aura:attribute name="videoId" type="String" />
+    <aura:attribute name="videoSize" type="String" />
+    <aura:attribute name="videoSrc" type="String" />
     <aura:attribute name="videoPlayer" type="String" />
-    <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="error" type="Boolean" default="false" />
     <aura:attribute name="contentDocument" type="Object" />
     <aura:attribute name="recordError" type="String" />
 
     <aura:if isTrue="{!not(empty(v.recordId))}">
         <force:recordData
             aura:id="recordLoader"
-            fields="FileExtension"
+            fields="Title,FileExtension"
             recordId="{!v.recordId}"
             targetFields="{!v.contentDocument}"
             targetError="{!v.recordError}"
         />
     </aura:if>
 
-    <aura:if isTrue="{!empty(v.recordId) || v.contentDocument.FileExtension == 'mp4'}">
-        <center>
-            <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
-        </center>
+    <aura:if isTrue="{!v.contentDocument.FileExtension == 'mp4'}">
+        <lightning:layout horizontalAlign="center" multipleRows="true">
+            <lightning:layoutItem size="12" mediumDeviceSize="10">
+                <aura:if isTrue="{!v.context == 'Experience'}">
+                    <div class="decorator-wrapper slds-p-bottom_small">
+                        <h1 class="navds-heading navds-heading--xlarge">{!v.contentDocument.Title}</h1>
+                    </div>
+                </aura:if>
+                <div style="position: relative">
+                    <aura:if isTrue="{!v.error}">
+                        <div class="decorator-wrapper alert-positioning">
+                            <div
+                                style="align-items: inherit"
+                                class="navds-alert navds-alert--error navds-alert--medium"
+                            >
+                                <c:icon icon="ErrorFilled" fill="Red"></c:icon>
+                                <div class="navds-alert__wrapper navds-body-long">
+                                    <h3 class="navds-heading navds-heading--small navds-typo--spacing">
+                                        {!$Label.c.NKS_Video_Player_Error_Header}
+                                    </h3>
+                                    {!$Label.c.NKS_Video_Player_Error_Message}
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <div style="text-align: center">
+                        <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
     </aura:if>
 </aura:component>

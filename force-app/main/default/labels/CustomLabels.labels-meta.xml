@@ -32,4 +32,20 @@
         <shortDescription>Video Library Link Label</shortDescription>
         <value>Asset library link</value>
     </labels>
+    <labels>
+        <fullName>NKS_Video_Player_Error_Message</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NKS_Video_Player_Error_Message</shortDescription>
+        <value>Oops! Her har det skjedd en feil og vi kunne ikke spille av videoen du leter etter.</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Video_Player_Error_Header</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Video Player Error Header</shortDescription>
+        <value>Videospiller feilet</value>
+    </labels>
 </CustomLabels>
