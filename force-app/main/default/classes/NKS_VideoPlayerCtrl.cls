@@ -38,7 +38,8 @@ public with sharing class NKS_VideoPlayerCtrl {
     public static String getLibraryUrl(String recordId){
             String communityId = [SELECT Id FROM Network WHERE Name = 'Innholdsbibliotek' LIMIT 1]?.Id;
             String communityUrl = String.isBlank(communityId) ? '' : Network.getLoginUrl(communityId);
-            return communityUrl.removeEnd(communityUrl.substringAfterLast('/')) + getParentFolderName(recordId).toLowerCase() + '/' + recordId;
+            return String.isNotBlank(communityUrl) ? communityUrl.removeEnd(communityUrl.substringAfterLast('/')) + getParentFolderName(recordId).toLowerCase() + '/' + recordId
+            : '';
     }
 
     /**
