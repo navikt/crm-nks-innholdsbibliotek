@@ -22,7 +22,8 @@
     <redirectToCustomDomain>false</redirectToCustomDomain>
     <referrerPolicyOriginWhenCrossOrigin>true</referrerPolicyOriginWhenCrossOrigin>
     <selfRegPage>CommunitiesSelfReg</selfRegPage>
-    <siteAdmin>stian.schikora@nav.no.sit2</siteAdmin>
-    <siteGuestRecordDefaultOwner>stian.schikora@nav.no.sit2</siteGuestRecordDefaultOwner>
+    <siteAdmin>test-jtjikyygeuc0@example.com</siteAdmin>
+    <siteGuestRecordDefaultOwner>test-jtjikyygeuc0@example.com</siteGuestRecordDefaultOwner>
     <siteType>ChatterNetwork</siteType>
+    <urlPathPrefix>innholdsbibliotek</urlPathPrefix>
 </CustomSite>
