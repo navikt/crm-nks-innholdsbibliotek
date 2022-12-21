@@ -25,11 +25,14 @@
     },
 
     generateVideoPlayer: function (component) {
+        const videoSrc =
+            'https://app-ability-27772.scratch.my.site.com/innholdsbibliotek/sfsites/c/sfc/servlet.shepherd/document/download/' +
+            component.get('v.videoId');
         this.getVideoTracks(component).then((subTracks) => {
             let videoPlayer =
                 '<video width=100%' +
                 ' controls controlsList="nodownload"><source src="' +
-                component.get('v.videoSrc') +
+                videoSrc +
                 '" type="video/mp4" >';
 
             if (subTracks && subTracks.length > 0) {

@@ -1,12 +1,25 @@
 <aura:component controller="NKS_VideoPlayerCtrl">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute access="GLOBAL" name="videoId" type="String" />
+    <aura:attribute name="videoPlayer" type="String" />
     <aura:attribute name="error" type="Boolean" default="false" />
 
     <div style="position: relative">
+        <aura:if isTrue="{!v.error}">
+            <div class="decorator-wrapper alert-positioning">
+                <div style="align-items: inherit" class="navds-alert navds-alert--error navds-alert--medium">
+                    <c:icon icon="ErrorFilled" fill="Red"></c:icon>
+                    <div class="navds-alert__wrapper navds-body-long">
+                        <h3 class="navds-heading navds-heading--small navds-typo--spacing">
+                            {!$Label.c.NKS_Video_Player_Error_Header}
+                        </h3>
+                        {!$Label.c.NKS_Video_Player_Error_Message}
+                    </div>
+                </div>
+            </div>
+        </aura:if>
         <div style="text-align: center">
-            Embedded component
-            <!-- <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>-->
+            <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>
         </div>
     </div>
 </aura:component>
