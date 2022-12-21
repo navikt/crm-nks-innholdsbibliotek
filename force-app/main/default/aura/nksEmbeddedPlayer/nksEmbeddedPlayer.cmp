@@ -1,0 +1,12 @@
+<aura:component controller="NKS_VideoPlayerCtrl">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute access="GLOBAL" name="videoId" type="String" />
+    <aura:attribute name="error" type="Boolean" default="false" />
+
+    <div style="position: relative">
+        <div style="text-align: center">
+            Embedded component
+            <!-- <aura:unescapedHtml value="{!v.videoPlayer}"> </aura:unescapedHtml>-->
+        </div>
+    </div>
+</aura:component>
