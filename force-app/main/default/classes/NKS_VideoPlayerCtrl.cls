@@ -42,8 +42,11 @@ public with sharing class NKS_VideoPlayerCtrl {
     @AuraEnabled(cacheable=true)
     public static String getLibraryUrl(String recordId){
             String communityUrl = getLibraryBaseUrl();
-            return String.isNotBlank(communityUrl) ? communityUrl + getParentFolderName(recordId).toLowerCase() + '/' + recordId
-            : '';
+            return String.isNotBlank(communityUrl) ?
+                getParentFolderName(recordId) != null ?
+                    communityUrl + getParentFolderName(recordId).toLowerCase() + '/' + recordId
+                    : '' 
+                : '';
     }
 
     /**
