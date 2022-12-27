@@ -50,7 +50,8 @@ public with sharing class NKS_VideoPlayerCtrl {
      * @description Get the community url for the asset library
      * @return  `String`
      */
-    private static String getLibraryBaseUrl() {
+    @AuraEnabled(cacheable=true)
+    public static String getLibraryBaseUrl() {
         String communityId = [SELECT Id FROM Network WHERE Name = 'Innholdsbibliotek' LIMIT 1]?.Id;
         String communityUrl = String.isBlank(communityId) ? '' : Network.getLoginUrl(communityId);
         return String.isNotBlank(communityUrl) ? communityUrl.removeEnd(communityUrl.substringAfterLast('/')) : '';
