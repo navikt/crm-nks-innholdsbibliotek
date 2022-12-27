@@ -2,26 +2,21 @@ public with sharing class NKS_VideoPlayerCtrl {
 
     @AuraEnabled
     public static VideoStats getVideoStats(String videoId){
-        try {
-            Integer numViewsTotal = 0, numViewsToday = 0, numViewsYesterday = 0;
-            Date today = Date.today();
-            Date yesterday = today.addDays(-1);
+        Integer numViewsTotal = 0, numViewsToday = 0, numViewsYesterday = 0;
+        Date today = Date.today();
+        Date yesterday = today.addDays(-1);
 
-            numViewsTotal = [SELECT count() FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId];
-            List<AggregateResult> aggRes = [SELECT COUNT_DISTINCT(Id) numViews, DAY_ONLY(CreatedDate) viewDate FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId AND CreatedDate = LAST_N_DAYS:2 GROUP BY DAY_ONLY(CreatedDate)];
-            System.debug(aggRes);
-            for (AggregateResult agg : aggRes) {
-                if(agg.get('viewDate') == today) {
-                    numViewsToday = Integer.valueOf(agg.get('numViews'));
-                }
-                else if(agg.get('viewDate') == yesterday) {
-                    numViewsYesterday = Integer.valueOf(agg.get('numViews'));
-                }
+        numViewsTotal = [SELECT count() FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId];
+        List<AggregateResult> aggRes = [SELECT COUNT_DISTINCT(Id) numViews, DAY_ONLY(CreatedDate) viewDate FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId AND CreatedDate = LAST_N_DAYS:2 GROUP BY DAY_ONLY(CreatedDate)];
+        for (AggregateResult agg : aggRes) {
+            if(agg.get('viewDate') == today) {
+                numViewsToday = Integer.valueOf(agg.get('numViews'));
             }
-            return new VideoStats(numViewsTotal, numViewsToday, numViewsYesterday);
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            else if(agg.get('viewDate') == yesterday) {
+                numViewsYesterday = Integer.valueOf(agg.get('numViews'));
+            }
         }
+        return new VideoStats(numViewsTotal, numViewsToday, numViewsYesterday);
     }
 
     @AuraEnabled(cacheable=true)
