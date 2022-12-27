@@ -30,10 +30,13 @@ public class NKS_VideoPlayerCtrl_Test {
     static void testGetVideoStats() {
         Test.startTest();
         NKS_VideoPlayerCtrl.addViewCount('12345TEST');
+        NKS_VideoPlayerCtrl.addViewCount('12345TEST');
         Test.stopTest();
+        ReportingData__c vidView = [SELECT id FROM ReportingData__c WHERE NKS_Video_Id__c != NULL LIMIT 1];
+        Test.setCreatedDate(vidView.Id, Date.today().addDays(-1));
         NKS_VideoPlayerCtrl.VideoStats stats = NKS_VideoPlayerCtrl.getVideoStats('12345TEST');
 
-        System.assertEquals(1, stats.numViewsTotal);
+        System.assertEquals(2, stats.numViewsTotal);
     }
 
     @isTest

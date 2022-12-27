@@ -14,7 +14,7 @@
         "prettier:verify": "prettier --list-different \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
         "postinstall": "node bin/check-version.js",
         "publishCommunity": "sfdx force:community:publish --name 'innholdsbibliotek' ",
-        "scratch:postCreate": "sfdx force:apex:execute -f ./dummy-data/generateAssetLib.apex"
+        "scratch:postCreate": "sfdx force:apex:execute -f ./dummy-data/generateAssetLib.apex && sfdx force:apex:execute -f ./dummy-data/addLibraryPermission.apex"
     },
     "engines": {
         "node": ">= 16.0.0",

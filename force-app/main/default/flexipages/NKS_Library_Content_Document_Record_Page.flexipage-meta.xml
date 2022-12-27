@@ -51,8 +51,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>nksVideoLibLinker</componentName>
-                <identifier>c_nksVideoLibLinker</identifier>
+                <componentName>nksVideoDetails</componentName>
+                <identifier>c_nksVideoDetails</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
