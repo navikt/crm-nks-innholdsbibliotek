@@ -31,5 +31,4 @@
     <navType>Standard</navType>
     <tabs>standard-File</tabs>
     <uiType>Lightning</uiType>
-    <utilityBar>Test_UtilityBar</utilityBar>
 </CustomApplication>
