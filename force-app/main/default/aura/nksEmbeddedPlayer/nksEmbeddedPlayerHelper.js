@@ -24,17 +24,39 @@
         return trackPromise;
     },
 
-    generateVideoPlayer: function (component) {
-        const videoSrc =
-            'https://app-ability-27772.scratch.my.site.com/innholdsbibliotek/sfsites/c/sfc/servlet.shepherd/document/download/' +
-            component.get('v.videoId');
-        this.getVideoTracks(component).then((subTracks) => {
-            let videoPlayer =
-                '<video width=100%' +
-                ' controls controlsList="nodownload"><source src="' +
-                videoSrc +
-                '" type="video/mp4" >';
+    getVideoTitle: function (component) {
+        let getVideoTitle = component.get('c.getVideoTitle');
+        getVideoTitle.setParams({videoId: component.get('v.videoId')});
 
+        const videoTitlePromise = new Promise((resolve, reject) => {
+            getVideoTitle.setCallback(this, function (response) {
+                const state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else if (state === 'ERROR') {
+                    let errors = response.getError();
+                    console.error(JSON.stringify(errors));
+                    reject(JSON.stringify(errors));
+                }
+            });
+        });
+        $A.enqueueAction(getVideoTitle);
+        return videoTitlePromise;
+    },
+
+    // Called on init of component
+    generateVideoPlayer: function (component) {
+        const videoSrc = 'https://ihb.nav.no/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
+        let videoPlayer = '';
+        this.getVideoTitle(component).then((videoTitle) => {
+            videoPlayer =
+            '<video height=720px; width=1280px;' + 
+            ' aria-label="' + videoTitle + '"' +  
+            ' controls controlsList="nodownload"><source src="' +
+            videoSrc + '" type="video/mp4" >';
+        });
+        
+        this.getVideoTracks(component).then((subTracks) => {
             if (subTracks && subTracks.length > 0) {
                 subTracks.forEach((track) => {
                     videoPlayer +=

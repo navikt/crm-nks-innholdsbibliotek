@@ -27,7 +27,7 @@ export default class NksEmbedGenerator extends LightningElement {
 
     showCopyToast() {
         const evt = new ShowToastEvent({
-            message: 'kopiert til utklippstavlen.',
+            message: 'Kopiert til utklippstavlen.',
             variant: 'success',
             mode: 'pester'
         });
@@ -55,7 +55,7 @@ export default class NksEmbedGenerator extends LightningElement {
             "' }," +
             "'video-player'," +
             'function (cmp) {' +
-            "console.log('LWC component was created');" +
+            "console.log('Aura component was created');" +
             '}' +
             ');' +
             '},' +

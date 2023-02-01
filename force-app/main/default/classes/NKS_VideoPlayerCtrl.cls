@@ -77,6 +77,17 @@ public with sharing class NKS_VideoPlayerCtrl {
     }
 
     /**
+     * @description Returns the title of the video file
+     * @param recordId 
+     * @return  `String`
+     */
+    @AuraEnabled(cacheable=true)
+    public static String getVideoTitle(String videoId) {
+        ContentVersion cv = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId LIMIT 1];
+        return cv.Title;
+    }
+
+    /**
      * @description Query the name of the parent folder for making complete library url
      * @param recordId 
      * @return  `String`
