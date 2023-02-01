@@ -50,4 +50,17 @@ public class NKS_VideoPlayerCtrl_Test {
 
         System.assertEquals(1, tracks.size());
     }
+    
+    @isTest
+    static void testGetVideoTitle() {
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        ?.ContentDocumentId;
+
+        Test.startTest();
+        String videoTitle = NKS_VideoPlayerCtrl.getVideoTitle(videoId);
+        Test.stopTest();
+
+        System.assertEquals('TEST VIDEO', videoTitle);
+    }
+
 }
