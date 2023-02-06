@@ -400,7 +400,7 @@
                     <inputParameters>
                         <name>accept</name>
                         <value>
-                            <stringValue>.vtt</stringValue>
+                            <stringValue>.vtt, .srt</stringValue>
                         </value>
                     </inputParameters>
                     <inputParameters>

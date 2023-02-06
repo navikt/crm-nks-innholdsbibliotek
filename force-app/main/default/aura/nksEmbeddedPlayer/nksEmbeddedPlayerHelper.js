@@ -1,29 +1,8 @@
 /* eslint-disable no-unused-expressions */
 ({
-    // Called on init of component
-    getVideoId: function (component) {
-        const recordId = component.get('v.recordId');
-        let videoSrc;
-        if (recordId) {
-            //Displaying inside Salesforce
-            videoSrc = window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId;
-            component.set('v.videoId', recordId);
-            component.set('v.context', 'Standard');
-        } else {
-            //In community
-            const url = window.location.href;
-            const videoId = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
-            component.set('v.videoId', videoId);
-            component.set('v.recordId', videoId);
-            videoSrc = window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
-        }
-        component.set('v.videoSrc', videoSrc);
-        this.generateVideoPlayer(component);
-    },
-
-    // Subtitles
     getVideoTracks: function (component) {
         let getTracksAction = component.get('c.getVideoTracks');
+
         getTracksAction.setParams({
             videoId: component.get('v.videoId')
         });
@@ -40,6 +19,7 @@
                 }
             });
         });
+
         $A.enqueueAction(getTracksAction);
         return trackPromise;
     },
@@ -64,16 +44,18 @@
         return videoTitlePromise;
     },
 
+    // Called on init of component
     generateVideoPlayer: function (component) {
+        const videoSrc = 'https://ihb.nav.no/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
         let videoPlayer = '';
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
             '<video height=720px; width=1280px;' + 
             ' aria-label="' + videoTitle + '"' +  
             ' controls controlsList="nodownload"><source src="' +
-            component.get('v.videoSrc') + '" type="video/mp4" >';
+            videoSrc + '" type="video/mp4" >';
         });
-
+        
         this.getVideoTracks(component).then((subTracks) => {
             if (subTracks && subTracks.length > 0) {
                 subTracks.forEach((track) => {
@@ -94,6 +76,7 @@
 
     addVideoView: function (component) {
         let viewCountAction = component.get('c.addViewCount');
+
         viewCountAction.setParams({
             videoId: component.get('v.videoId')
         });

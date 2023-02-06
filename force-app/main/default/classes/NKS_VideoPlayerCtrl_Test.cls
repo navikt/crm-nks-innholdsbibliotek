@@ -30,10 +30,13 @@ public class NKS_VideoPlayerCtrl_Test {
     static void testGetVideoStats() {
         Test.startTest();
         NKS_VideoPlayerCtrl.addViewCount('12345TEST');
+        NKS_VideoPlayerCtrl.addViewCount('12345TEST');
         Test.stopTest();
+        ReportingData__c vidView = [SELECT id FROM ReportingData__c WHERE NKS_Video_Id__c != NULL LIMIT 1];
+        Test.setCreatedDate(vidView.Id, Date.today().addDays(-1));
         NKS_VideoPlayerCtrl.VideoStats stats = NKS_VideoPlayerCtrl.getVideoStats('12345TEST');
 
-        System.assertEquals(1, stats.numViewsTotal);
+        System.assertEquals(2, stats.numViewsTotal);
     }
 
     @isTest
@@ -47,4 +50,17 @@ public class NKS_VideoPlayerCtrl_Test {
 
         System.assertEquals(1, tracks.size());
     }
+    
+    @isTest
+    static void testGetVideoTitle() {
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        ?.ContentDocumentId;
+
+        Test.startTest();
+        String videoTitle = NKS_VideoPlayerCtrl.getVideoTitle(videoId);
+        Test.stopTest();
+
+        System.assertEquals('TEST VIDEO', videoTitle);
+    }
+
 }

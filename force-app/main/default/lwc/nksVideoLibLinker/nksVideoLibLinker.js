@@ -15,7 +15,6 @@ export default class NksVideoLibLinker extends LightningElement {
         getExperienceUrl({ recordId: this.recordId })
             .then((url) => {
                 this.libraryUrl = url;
-                console.log(this.libraryUrl);
             })
             .catch((error) => {});
     }
@@ -38,7 +37,7 @@ export default class NksVideoLibLinker extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? 'kopiert til utklippstavlen.' : 'Kunne ikke kopiere',
+            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere',
             variant: status,
             mode: 'pester'
         });

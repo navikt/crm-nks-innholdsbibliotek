@@ -2,26 +2,21 @@ public with sharing class NKS_VideoPlayerCtrl {
 
     @AuraEnabled
     public static VideoStats getVideoStats(String videoId){
-        try {
-            Integer numViewsTotal = 0, numViewsToday = 0, numViewsYesterday = 0;
-            Date today = Date.today();
-            Date yesterday = today.addDays(-1);
+        Integer numViewsTotal = 0, numViewsToday = 0, numViewsYesterday = 0;
+        Date today = Date.today();
+        Date yesterday = today.addDays(-1);
 
-            numViewsTotal = [SELECT count() FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId];
-            List<AggregateResult> aggRes = [SELECT COUNT_DISTINCT(Id) numViews, DAY_ONLY(CreatedDate) viewDate FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId AND CreatedDate = LAST_N_DAYS:2 GROUP BY DAY_ONLY(CreatedDate)];
-            System.debug(aggRes);
-            for (AggregateResult agg : aggRes) {
-                if(agg.get('viewDate') == today) {
-                    numViewsToday = Integer.valueOf(agg.get('numViews'));
-                }
-                else if(agg.get('viewDate') == yesterday) {
-                    numViewsYesterday = Integer.valueOf(agg.get('numViews'));
-                }
+        numViewsTotal = [SELECT count() FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId];
+        List<AggregateResult> aggRes = [SELECT COUNT_DISTINCT(Id) numViews, DAY_ONLY(CreatedDate) viewDate FROM ReportingData__c WHERE NKS_Video_Id__c =: videoId AND CreatedDate = LAST_N_DAYS:2 GROUP BY DAY_ONLY(CreatedDate)];
+        for (AggregateResult agg : aggRes) {
+            if(agg.get('viewDate') == today) {
+                numViewsToday = Integer.valueOf(agg.get('numViews'));
             }
-            return new VideoStats(numViewsTotal, numViewsToday, numViewsYesterday);
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            else if(agg.get('viewDate') == yesterday) {
+                numViewsYesterday = Integer.valueOf(agg.get('numViews'));
+            }
         }
+        return new VideoStats(numViewsTotal, numViewsToday, numViewsYesterday);
     }
 
     @AuraEnabled(cacheable=true)
@@ -34,12 +29,30 @@ public with sharing class NKS_VideoPlayerCtrl {
         insert as system new ReportingData__c(CRM_Category__c = 'Video View', NKS_Video_Id__c = videoId);
     }
 
+    /**
+    * @description Generate library url for a unique video
+    * @param recordId 
+    * @return  `String`
+    */
     @AuraEnabled(cacheable=true)
     public static String getLibraryUrl(String recordId){
-            String communityId = [SELECT Id FROM Network WHERE Name = 'Innholdsbibliotek' LIMIT 1]?.Id;
-            String communityUrl = String.isBlank(communityId) ? '' : Network.getLoginUrl(communityId);
-            return String.isNotBlank(communityUrl) ? communityUrl.removeEnd(communityUrl.substringAfterLast('/')) + getParentFolderName(recordId).toLowerCase() + '/' + recordId
-            : '';
+            String communityUrl = getLibraryBaseUrl();
+            return String.isNotBlank(communityUrl) ?
+                getParentFolderName(recordId) != null ?
+                    communityUrl + getParentFolderName(recordId).toLowerCase() + '/' + recordId
+                    : '' 
+                : '';
+    }
+
+    /**
+     * @description Get the community url for the asset library
+     * @return  `String`
+     */
+    @AuraEnabled(cacheable=true)
+    public static String getLibraryBaseUrl() {
+        String communityId = [SELECT Id FROM Network WHERE Name = 'Innholdsbibliotek' LIMIT 1]?.Id;
+        String communityUrl = String.isBlank(communityId) ? '' : Network.getLoginUrl(communityId);
+        return String.isNotBlank(communityUrl) ? communityUrl.removeEnd(communityUrl.substringAfterLast('/')) : '';
     }
 
     /**
@@ -49,17 +62,29 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
-        String src;
+        String src, baseUrl;
         List<VideoTrack> subTracks = new List<VideoTrack>();
         Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();
+        baseUrl = isGuest ? getLibraryBaseUrl() : Url.getSalesforceBaseUrl().toExternalForm();
         for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
             src = isGuest ? 
-                '/sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
-                '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
+                baseUrl + 'sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
+                baseUrl + '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
             subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), src));
         }
 
         return subTracks;
+    }
+
+    /**
+     * @description Returns the title of the video file
+     * @param recordId 
+     * @return  `String`
+     */
+    @AuraEnabled(cacheable=true)
+    public static String getVideoTitle(String videoId) {
+        ContentVersion cv = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId LIMIT 1];
+        return cv.Title;
     }
 
     /**
