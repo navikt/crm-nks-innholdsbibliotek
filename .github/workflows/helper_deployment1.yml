@@ -37,10 +37,3 @@ jobs:
       unpackagable: ./force-app/unpackagable-with-auto-deploy
       SFDX_ENV: HEADER_ENV_REPLACER='"Dev"' DEPLOY_DESTINATION=DEV
     secrets: inherit
-  
-  publish-community:
-    name: publish-community
-    uses: .github/workflows/publishCommunity.yml
-    with:
-      org: ${{ inputs.org }}
-    secrets: inherit
