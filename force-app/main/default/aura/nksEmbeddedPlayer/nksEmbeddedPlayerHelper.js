@@ -46,14 +46,16 @@
 
     // Called on init of component
     generateVideoPlayer: function (component) {
-        const videoSrc = 'https://ihb.nav.no/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
+        // TODO: Set this videoSourceURL to prod
+        // const videoSrc = 'https://ihb.nav.no/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
+        const videoSrc = 'https://power-business-4181.scratch.my.site.com/innholdsbibliotek/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
         let videoPlayer = '';
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
             '<video height=720px; width=1280px;' + 
             ' aria-label="' + videoTitle + '"' +  
-            ' controls controlsList="nodownload"><source src="' +
-            videoSrc + '" type="video/mp4" >';
+            ' controls controlsList="nodownload"' +
+            '><source src="' + videoSrc + '" type="video/mp4" >';
         });
         
         this.getVideoTracks(component).then((subTracks) => {
