@@ -5,5 +5,5 @@
         <enabled>true</enabled>
     </classAccesses>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>Asset Library Experience</label>
+    <label>NKS - Asset Library Experience</label>
 </PermissionSet>
