@@ -83,8 +83,8 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static String getVideoTitle(String videoId) {
-        ContentVersion cv = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId LIMIT 1];
-        return cv.Title;
+        String cvTitle = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId LIMIT 1]?.Title;
+        return cvTitle != null ? cvTitle : 'Video mangler tittel';
     }
 
     /**
