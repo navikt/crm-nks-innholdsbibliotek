@@ -46,7 +46,7 @@
 
     // Called on init of component
     generateVideoPlayer: function (component) {
-        const videoSrc = 'https://ihb.nav.no/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
+        const videoSrc = 'https://customer-data-8070.scratch.my.site.com/innholdsbibliotek/s/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
         let videoPlayer = '';
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
