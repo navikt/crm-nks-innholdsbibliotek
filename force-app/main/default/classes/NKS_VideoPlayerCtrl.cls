@@ -118,11 +118,8 @@ public with sharing class NKS_VideoPlayerCtrl {
             inputVariable.subtitleFile.NKS_Subtitle_Language__c = inputVariable.language;
             subtitles.add(inputVariable.subtitleFile);
         }
-       
-        System.debug(subtitleFoldersToInsert);
-        System.debug(subtitles);
         insert subtitleFoldersToInsert;
-        update subtitles;
+        update subtitles; 
 
         // Get library
         ContentWorkspace ihb = [SELECT Id FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek' LIMIT 1];
@@ -153,12 +150,10 @@ public with sharing class NKS_VideoPlayerCtrl {
         List<OutputVariables> resultList = new List<OutputVariables>();
         try {
             update cfmToUpdate;
-            System.debug('Success!');
             result.resultMessage = new List<String>{('Success')};
             resultList.add(result);
             return resultList;
         } catch (Exception e) {
-            System.debug(e.getMessage());
             result.resultMessage = new List<String>{(e.getMessage())};
             resultList.add(result);
             return resultList;
