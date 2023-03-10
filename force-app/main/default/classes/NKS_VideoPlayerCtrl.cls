@@ -137,7 +137,7 @@ public with sharing class NKS_VideoPlayerCtrl {
         insert cdlsToInsert;
 
         // Add to subtitle folder
-        List<ContentFolderMember> cfmList = [SELECT ParentContentFolderId,  ChildRecordId FROM ContentFolderMember WHERE ChildRecordId IN :subtitleFolderbySubtitleId.keySet()];
+        List<ContentFolderMember> cfmList = [SELECT ParentContentFolderId, ChildRecordId FROM ContentFolderMember WHERE ChildRecordId IN :subtitleFolderbySubtitleId.keySet()];
         List<ContentFolderMember> cfmToUpdate = new List<ContentFolderMember>();
         for (ContentFolderMember cfm : cfmList) {
             if (subtitleFolderbySubtitleId.keySet().contains(cfm.ChildRecordId)) {
