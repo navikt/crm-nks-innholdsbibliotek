@@ -96,6 +96,93 @@ public with sharing class NKS_VideoPlayerCtrl {
         return [SELECT Id, ParentContentFolder.Name FROM ContentFolderItem WHERE Id =: recordId LIMIT 1]?.ParentContentFolder?.Name; 
     }
 
+    @InvocableMethod(label='Insert Subtitle Files' description='Creates folder if not found and adds subtitle files to the folder.')
+    public static List<OutputVariables> insertSubtitleFiles(List<InputVariables> inputVariables) {
+
+        // Get subtitle folder -> create if not exists
+        List<ContentFolder> subtitleFoldersToInsert = new List<ContentFolder>();
+        List<ContentVersion> subtitles = new List<ContentVersion>();
+        Map<Id, ContentFolder> subtitleFolderbySubtitleId = new Map<Id, ContentFolder>();
+
+        for (InputVariables inputVariable : inputVariables) {
+            if (inputVariable.subtitleFolder == null) {
+                ContentFolder subtitleFolder = new ContentFolder(Name='Subtitles', ParentContentFolderId=inputVariable.parentFolder.ParentContentFolderId);
+                subtitleFoldersToInsert.add(subtitleFolder);
+                subtitleFolderbySubtitleId.put(inputVariable.subtitleFile.Id, subtitleFolder);
+            } else {
+                subtitleFolderbySubtitleId.put(inputVariable.subtitleFile.Id, inputVariable.subtitleFolder);
+            }
+            // Set content document URL and video relation on new subtitle file and update it
+            inputVariable.subtitleFile.NKS_Content_Document_Link__c = '/' + inputVariable.subtitleFile.ContentDocumentId;
+            inputVariable.subtitleFile.NKS_Related_Video__c = inputVariable.recordId;
+            inputVariable.subtitleFile.NKS_Subtitle_Language__c = inputVariable.language;
+            subtitles.add(inputVariable.subtitleFile);
+        }
+       
+        System.debug(subtitleFoldersToInsert);
+        System.debug(subtitles);
+        insert subtitleFoldersToInsert;
+        update subtitles;
+
+        // Get library
+        ContentWorkspace ihb = [SELECT Id FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek' LIMIT 1];
+        
+        // Create content document link based on subtitle content version
+        List<ContentDocumentLink> cdlsToInsert = new List<ContentDocumentLink>();
+        for (ContentVersion subtitle : subtitles) {
+            ContentDocumentLink cdl = new ContentDocumentLink();
+            cdl.ContentDocumentId = subtitle.ContentDocumentId;
+            cdl.LinkedEntityId = ihb.Id;
+            cdl.ShareType = 'I';
+            cdl.Visibility = 'AllUsers';
+            cdlsToInsert.add(cdl);
+        }
+        insert cdlsToInsert;
+
+        // Add to subtitle folder
+        List<ContentFolderMember> cfmList = [SELECT ParentContentFolderId,  ChildRecordId FROM ContentFolderMember WHERE ChildRecordId IN :subtitleFolderbySubtitleId.keySet()];
+        List<ContentFolderMember> cfmToUpdate = new List<ContentFolderMember>();
+        for (ContentFolderMember cfm : cfmList) {
+            if (subtitleFolderbySubtitleId.keySet().contains(cfm.ChildRecordId)) {
+                cfm.ParentContentFolderId = subtitleFolderbySubtitleId.get(cfm.ChildRecordId).Id;
+                cfmToUpdate.add(cfm);
+            }
+        }
+
+        OutputVariables result = new OutputVariables();
+        List<OutputVariables> resultList = new List<OutputVariables>();
+        try {
+            update cfmToUpdate;
+            System.debug('Success!');
+            result.resultMessage = new List<String>{('Success')};
+            resultList.add(result);
+            return resultList;
+        } catch (Exception e) {
+            System.debug(e.getMessage());
+            result.resultMessage = new List<String>{(e.getMessage())};
+            resultList.add(result);
+            return resultList;
+        }
+    }
+
+    public class InputVariables {
+        @InvocableVariable
+        public Id recordId;
+        @InvocableVariable
+        public String language;
+        @InvocableVariable
+        public ContentVersion subtitleFile;
+        @InvocableVariable
+        public ContentFolder subtitleFolder;
+        @InvocableVariable
+        public ContentFolderItem parentFolder;
+    }
+
+    public class OutputVariables {
+        @InvocableVariable
+        public List<String> resultMessage;
+    }
+
     public class VideoTrack {
         @AuraEnabled
         public String srclang;
