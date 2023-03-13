@@ -2,8 +2,8 @@
 public class NKS_VideoPlayerCtrl_Test {
     @TestSetup
     static void makeData() {
-        ContentWorkspace ihb = [SELECT Id, Name, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek' LIMIT 1];
-        if (ihb == null) {
+        ContentWorkspace[] ihb = [SELECT Id, Name, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
+        if (ihb.size() == 0) {
             ihb = new ContentWorkspace (); 
             ihb.DeveloperName = 'Innholdsbibliotek'; 
             ihb.name = 'Innholdsbibliotek'; 
