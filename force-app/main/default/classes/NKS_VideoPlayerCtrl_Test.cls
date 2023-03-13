@@ -2,13 +2,33 @@
 public class NKS_VideoPlayerCtrl_Test {
     @TestSetup
     static void makeData() {
-        insert new ContentVersion(
+        ContentWorkspace ihb = [SELECT Id, Name, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek' LIMIT 1];
+
+        // Create contentfolder "Subtitles"
+        ContentFolder cf = new ContentFolder();
+        cf.Name = 'Subtitles';
+        cf.ParentContentFolderId = ihb.RootContentFolderId;
+        insert cf;
+
+        // Insert video file
+        ContentVersion cv = new ContentVersion(
             Title = 'TEST VIDEO',
             PathOnClient = 'testVid.mp4',
             VersionData = Blob.valueOf('123TEST')
         );
-        ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
+        insert cv;
 
+        // Insert Content Document Link
+        ContentVersion contentVersion = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id];
+        ContentDocumentLink contentlink = new ContentDocumentLink();
+        contentlink.LinkedEntityId = ihb.id;
+        contentlink.ShareType = 'I';
+        contentlink.Visibility = 'AllUsers';
+        contentlink.ContentDocumentId = contentVersion.ContentDocumentId;
+        insert contentlink;
+
+        // Insert subtitle file
+        ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
         insert new ContentVersion(
             Title = 'TEST SUBTITLE',
             PathOnClient = 'testSub.vtt',
@@ -61,6 +81,38 @@ public class NKS_VideoPlayerCtrl_Test {
         Test.stopTest();
 
         System.assertEquals('TEST VIDEO', videoTitle);
+    }
+
+    @isTest
+    static void testInsertSubtitleFilesWithExistingSubtitleFolder(){
+        NKS_VideoPlayerCtrl.InputVariables inputVariable = new NKS_VideoPlayerCtrl.InputVariables();
+        inputVariable.recordId = [SELECT Id FROM ContentVersion WHERE Title = 'TEST VIDEO' LIMIT 1].Id; // VideoId
+        System.debug('inputVariable.recordId: ' + inputVariable.recordId);
+        inputVariable.language = 'no';
+        inputVariable.subtitleFile = [SELECT Id, NKS_Content_Document_Link__c, NKS_Related_Video__c, NKS_Subtitle_Language__c, ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1];
+        // TODO: Get contentfolderitem. Is it not created?
+        // TODO: Use seealldata=true instead?
+        inputVariable.parentFolder = [SELECT Id, ParentContentFolderId FROM ContentFolderItem WHERE Id = :inputVariable.recordId LIMIT 1];
+        
+        
+        inputVariable.subtitleFolder = [SELECT Id FROM ContentFolder WHERE Name = 'Subtitles' LIMIT 1];
+
+        Test.startTest();
+        NKS_VideoPlayerCtrl.insertSubtitleFiles(new List<NKS_VideoPlayerCtrl.InputVariables>{(inputVariable)});
+        Test.stopTest();
+    }
+
+    @isTest
+    static void testInsertSubtitleFilesWithoutExistingSubtitleFolder(){
+        NKS_VideoPlayerCtrl.InputVariables inputVariable = new NKS_VideoPlayerCtrl.InputVariables();
+        inputVariable.recordId = [SELECT Id FROM ContentVersion WHERE Title = 'TEST VIDEO' LIMIT 1].Id; // VideoId
+        inputVariable.language = 'no';
+        inputVariable.subtitleFile = [SELECT Id, NKS_Content_Document_Link__c, NKS_Related_Video__c, NKS_Subtitle_Language__c, ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1];
+        inputVariable.parentFolder = [SELECT Id, ParentContentFolderId FROM ContentFolderItem WHERE Id = :inputVariable.recordId LIMIT 1];
+
+        Test.startTest();
+        NKS_VideoPlayerCtrl.insertSubtitleFiles(new List<NKS_VideoPlayerCtrl.InputVariables>{(inputVariable)});
+        Test.stopTest();
     }
 
 }

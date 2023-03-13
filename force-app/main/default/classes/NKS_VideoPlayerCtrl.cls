@@ -98,19 +98,18 @@ public with sharing class NKS_VideoPlayerCtrl {
 
     @InvocableMethod(label='Insert Subtitle Files' description='Creates folder if not found and adds subtitle files to the folder.')
     public static List<OutputVariables> insertSubtitleFiles(List<InputVariables> inputVariables) {
-
         // Get subtitle folder -> create if not exists
         List<ContentFolder> subtitleFoldersToInsert = new List<ContentFolder>();
         List<ContentVersion> subtitles = new List<ContentVersion>();
-        Map<Id, ContentFolder> subtitleFolderbySubtitleId = new Map<Id, ContentFolder>();
+        Map<Id, ContentFolder> subtitleFolderbySubtitleContentDocumentId = new Map<Id, ContentFolder>();
 
         for (InputVariables inputVariable : inputVariables) {
             if (inputVariable.subtitleFolder == null) {
                 ContentFolder subtitleFolder = new ContentFolder(Name='Subtitles', ParentContentFolderId=inputVariable.parentFolder.ParentContentFolderId);
                 subtitleFoldersToInsert.add(subtitleFolder);
-                subtitleFolderbySubtitleId.put(inputVariable.subtitleFile.Id, subtitleFolder);
+                subtitleFolderbySubtitleContentDocumentId.put(inputVariable.subtitleFile.ContentDocumentId, subtitleFolder);
             } else {
-                subtitleFolderbySubtitleId.put(inputVariable.subtitleFile.Id, inputVariable.subtitleFolder);
+                subtitleFolderbySubtitleContentDocumentId.put(inputVariable.subtitleFile.ContentDocumentId, inputVariable.subtitleFolder);
             }
             // Set content document URL and video relation on new subtitle file and update it
             inputVariable.subtitleFile.NKS_Content_Document_Link__c = '/' + inputVariable.subtitleFile.ContentDocumentId;
@@ -137,11 +136,11 @@ public with sharing class NKS_VideoPlayerCtrl {
         insert cdlsToInsert;
 
         // Add to subtitle folder
-        List<ContentFolderMember> cfmList = [SELECT ParentContentFolderId, ChildRecordId FROM ContentFolderMember WHERE ChildRecordId IN :subtitleFolderbySubtitleId.keySet()];
+        List<ContentFolderMember> cfmList = [SELECT ParentContentFolderId, ChildRecordId FROM ContentFolderMember WHERE ChildRecordId IN :subtitleFolderbySubtitleContentDocumentId.keySet()];
         List<ContentFolderMember> cfmToUpdate = new List<ContentFolderMember>();
         for (ContentFolderMember cfm : cfmList) {
-            if (subtitleFolderbySubtitleId.keySet().contains(cfm.ChildRecordId)) {
-                cfm.ParentContentFolderId = subtitleFolderbySubtitleId.get(cfm.ChildRecordId).Id;
+            if (subtitleFolderbySubtitleContentDocumentId.keySet().contains(cfm.ChildRecordId)) {
+                cfm.ParentContentFolderId = subtitleFolderbySubtitleContentDocumentId.get(cfm.ChildRecordId).Id;
                 cfmToUpdate.add(cfm);
             }
         }
@@ -150,7 +149,7 @@ public with sharing class NKS_VideoPlayerCtrl {
         List<OutputVariables> resultList = new List<OutputVariables>();
         try {
             update cfmToUpdate;
-            result.resultMessage = new List<String>{('Success')};
+            result.resultMessage = new List<String>{'Success!'};
             resultList.add(result);
             return resultList;
         } catch (Exception e) {
