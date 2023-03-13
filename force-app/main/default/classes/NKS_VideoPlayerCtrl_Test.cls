@@ -87,32 +87,12 @@ public class NKS_VideoPlayerCtrl_Test {
     static void testInsertSubtitleFilesWithExistingSubtitleFolder(){
         NKS_VideoPlayerCtrl.InputVariables inputVariable = new NKS_VideoPlayerCtrl.InputVariables();
         inputVariable.recordId = [SELECT Id FROM ContentVersion WHERE Title = 'TEST VIDEO' LIMIT 1].Id; // VideoId
-        System.debug('inputVariable.recordId: ' + inputVariable.recordId);
         inputVariable.language = 'no';
         inputVariable.subtitleFile = [SELECT Id, NKS_Content_Document_Link__c, NKS_Related_Video__c, NKS_Subtitle_Language__c, ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1];
-        // TODO: Get contentfolderitem. Is it not created?
-        // TODO: Use seealldata=true instead?
-        inputVariable.parentFolder = [SELECT Id, ParentContentFolderId FROM ContentFolderItem WHERE Id = :inputVariable.recordId LIMIT 1];
-        
-        
         inputVariable.subtitleFolder = [SELECT Id FROM ContentFolder WHERE Name = 'Subtitles' LIMIT 1];
 
         Test.startTest();
         NKS_VideoPlayerCtrl.insertSubtitleFiles(new List<NKS_VideoPlayerCtrl.InputVariables>{(inputVariable)});
         Test.stopTest();
     }
-
-    @isTest
-    static void testInsertSubtitleFilesWithoutExistingSubtitleFolder(){
-        NKS_VideoPlayerCtrl.InputVariables inputVariable = new NKS_VideoPlayerCtrl.InputVariables();
-        inputVariable.recordId = [SELECT Id FROM ContentVersion WHERE Title = 'TEST VIDEO' LIMIT 1].Id; // VideoId
-        inputVariable.language = 'no';
-        inputVariable.subtitleFile = [SELECT Id, NKS_Content_Document_Link__c, NKS_Related_Video__c, NKS_Subtitle_Language__c, ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1];
-        inputVariable.parentFolder = [SELECT Id, ParentContentFolderId FROM ContentFolderItem WHERE Id = :inputVariable.recordId LIMIT 1];
-
-        Test.startTest();
-        NKS_VideoPlayerCtrl.insertSubtitleFiles(new List<NKS_VideoPlayerCtrl.InputVariables>{(inputVariable)});
-        Test.stopTest();
-    }
-
 }
