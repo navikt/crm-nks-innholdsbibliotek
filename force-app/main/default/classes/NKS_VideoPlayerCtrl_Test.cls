@@ -3,6 +3,12 @@ public class NKS_VideoPlayerCtrl_Test {
     @TestSetup
     static void makeData() {
         ContentWorkspace ihb = [SELECT Id, Name, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek' LIMIT 1];
+        if (ihb == null) {
+            ihb = new ContentWorkspace (); 
+            ihb.DeveloperName = 'Innholdsbibliotek'; 
+            ihb.name = 'Innholdsbibliotek'; 
+            insert ihb;
+        }
 
         // Create contentfolder "Subtitles"
         ContentFolder cf = new ContentFolder();
