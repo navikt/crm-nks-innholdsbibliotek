@@ -2,12 +2,15 @@
 public class NKS_VideoPlayerCtrl_Test {
     @TestSetup
     static void makeData() {
-        ContentWorkspace[] ihb = [SELECT Id, Name, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
-        if (ihb.size() == 0) {
-            ihb = new ContentWorkspace (); 
+        List<ContentWorkspace> ihbList = [SELECT Id, Name, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
+        ContentWorkSpace ihb;
+        if (ihbList.size() == 0) {
+            ihb = new ContentWorkspace(); 
             ihb.DeveloperName = 'Innholdsbibliotek'; 
-            ihb.name = 'Innholdsbibliotek'; 
+            ihb.Name = 'Innholdsbibliotek'; 
             insert ihb;
+        } else {
+            ihb = ihbList[0];
         }
 
         // Create contentfolder "Subtitles"
@@ -27,7 +30,7 @@ public class NKS_VideoPlayerCtrl_Test {
         // Insert Content Document Link
         ContentVersion contentVersion = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id];
         ContentDocumentLink contentlink = new ContentDocumentLink();
-        contentlink.LinkedEntityId = ihb.id;
+        contentlink.LinkedEntityId = ihb.Id;
         contentlink.ShareType = 'I';
         contentlink.Visibility = 'AllUsers';
         contentlink.ContentDocumentId = contentVersion.ContentDocumentId;
