@@ -2,6 +2,10 @@
 public class NKS_VideoPlayerCtrl_Test {
     @TestSetup
     static void makeData() {
+        // Create Workspace
+        ContentWorkspace ihb = new ContentWorkspace(Name='Innholdsbibliotek', DeveloperName='Innholdsbibliotek');
+        insert ihb;
+
         // Insert video file
         ContentVersion cv = new ContentVersion(
             Title = 'TEST VIDEO',
