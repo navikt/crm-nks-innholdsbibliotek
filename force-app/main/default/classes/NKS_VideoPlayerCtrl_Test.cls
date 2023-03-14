@@ -10,23 +10,6 @@ public class NKS_VideoPlayerCtrl_Test {
             ihb = new ContentWorkspace(Name='Innholdsbibliotek', DeveloperName='Innholdsbibliotek');
             insert ihb;
         }        
-
-        // Insert video file
-        ContentVersion cv = new ContentVersion(
-            Title = 'TEST VIDEO',
-            PathOnClient = 'testVid.mp4',
-            VersionData = Blob.valueOf('123TEST')
-        );
-        insert cv;
-
-        // Insert subtitle file
-        ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
-        insert new ContentVersion(
-            Title = 'TEST SUBTITLE',
-            PathOnClient = 'testSub.vtt',
-            NKS_Related_Video__c = conDoc.Id,
-            VersionData = Blob.valueOf('123TEST')
-        );
     }
 
     @isTest
@@ -53,6 +36,23 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetVideoTracks() {
+        // Insert video file
+        ContentVersion cv = new ContentVersion(
+            Title = 'TEST VIDEO',
+            PathOnClient = 'testVid.mp4',
+            VersionData = Blob.valueOf('123TEST')
+        );
+        insert cv;
+
+        // Insert subtitle file
+        ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
+        insert new ContentVersion(
+            Title = 'TEST SUBTITLE',
+            PathOnClient = 'testSub.vtt',
+            NKS_Related_Video__c = conDoc.Id,
+            VersionData = Blob.valueOf('123TEST')
+        );
+
         String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
         ?.ContentDocumentId;
 
@@ -65,6 +65,23 @@ public class NKS_VideoPlayerCtrl_Test {
     
     @isTest
     static void testGetVideoTitle() {
+        // Insert video file
+        ContentVersion cv = new ContentVersion(
+            Title = 'TEST VIDEO',
+            PathOnClient = 'testVid.mp4',
+            VersionData = Blob.valueOf('123TEST')
+        );
+        insert cv;
+
+        // Insert subtitle file
+        ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
+        insert new ContentVersion(
+            Title = 'TEST SUBTITLE',
+            PathOnClient = 'testSub.vtt',
+            NKS_Related_Video__c = conDoc.Id,
+            VersionData = Blob.valueOf('123TEST')
+        );
+
         String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
         ?.ContentDocumentId;
 
@@ -77,6 +94,23 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testInsertSubtitleFilesWithExistingSubtitleFolder(){
+        // Insert video file
+        ContentVersion cv = new ContentVersion(
+            Title = 'TEST VIDEO',
+            PathOnClient = 'testVid.mp4',
+            VersionData = Blob.valueOf('123TEST')
+        );
+        insert cv;
+
+        // Insert subtitle file
+        ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
+        insert new ContentVersion(
+            Title = 'TEST SUBTITLE',
+            PathOnClient = 'testSub.vtt',
+            NKS_Related_Video__c = conDoc.Id,
+            VersionData = Blob.valueOf('123TEST')
+        );
+        
         NKS_VideoPlayerCtrl.InputVariables inputVariable = new NKS_VideoPlayerCtrl.InputVariables();
         inputVariable.recordId = [SELECT Id FROM ContentVersion WHERE Title = 'TEST VIDEO' LIMIT 1].Id; // VideoId
         inputVariable.language = 'no';
