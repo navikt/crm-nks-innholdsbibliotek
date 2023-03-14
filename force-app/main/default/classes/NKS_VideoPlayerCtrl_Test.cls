@@ -2,23 +2,6 @@
 public class NKS_VideoPlayerCtrl_Test {
     @TestSetup
     static void makeData() {
-        List<ContentWorkspace> ihbList = [SELECT Id, Name, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
-        ContentWorkSpace ihb;
-        if (ihbList.size() == 0) {
-            ihb = new ContentWorkspace(); 
-            ihb.DeveloperName = 'Innholdsbibliotek'; 
-            ihb.Name = 'Innholdsbibliotek'; 
-            insert ihb;
-        } else {
-            ihb = ihbList[0];
-        }
-
-        // Create contentfolder "Subtitles"
-        ContentFolder cf = new ContentFolder();
-        cf.Name = 'Subtitles';
-        cf.ParentContentFolderId = ihb.RootContentFolderId;
-        insert cf;
-
         // Insert video file
         ContentVersion cv = new ContentVersion(
             Title = 'TEST VIDEO',
@@ -26,15 +9,6 @@ public class NKS_VideoPlayerCtrl_Test {
             VersionData = Blob.valueOf('123TEST')
         );
         insert cv;
-
-        // Insert Content Document Link
-        ContentVersion contentVersion = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id];
-        ContentDocumentLink contentlink = new ContentDocumentLink();
-        contentlink.LinkedEntityId = ihb.Id;
-        contentlink.ShareType = 'I';
-        contentlink.Visibility = 'AllUsers';
-        contentlink.ContentDocumentId = contentVersion.ContentDocumentId;
-        insert contentlink;
 
         // Insert subtitle file
         ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
@@ -98,6 +72,12 @@ public class NKS_VideoPlayerCtrl_Test {
         inputVariable.recordId = [SELECT Id FROM ContentVersion WHERE Title = 'TEST VIDEO' LIMIT 1].Id; // VideoId
         inputVariable.language = 'no';
         inputVariable.subtitleFile = [SELECT Id, NKS_Content_Document_Link__c, NKS_Related_Video__c, NKS_Subtitle_Language__c, ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1];
+        ContentWorkspace ihb = [SELECT RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
+        // Create contentfolder "Subtitles"
+        ContentFolder cf = new ContentFolder();
+        cf.Name = 'Subtitles';
+        cf.ParentContentFolderId = ihb.RootContentFolderId;
+        insert cf;
         inputVariable.subtitleFolder = [SELECT Id FROM ContentFolder WHERE Name = 'Subtitles' LIMIT 1];
 
         Test.startTest();
