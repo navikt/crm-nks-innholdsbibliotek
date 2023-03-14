@@ -3,8 +3,13 @@ public class NKS_VideoPlayerCtrl_Test {
     @TestSetup
     static void makeData() {
         // Create Workspace
-        ContentWorkspace ihb = new ContentWorkspace(Name='Innholdsbibliotek', DeveloperName='Innholdsbibliotek');
-        insert ihb;
+        ContentWorkspace ihb;
+        try {
+            ihb = [SELECT Id FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
+        } catch (Exception e) {
+            ihb = new ContentWorkspace(Name='Innholdsbibliotek', DeveloperName='Innholdsbibliotek');
+            insert ihb;
+        }        
 
         // Insert video file
         ContentVersion cv = new ContentVersion(
