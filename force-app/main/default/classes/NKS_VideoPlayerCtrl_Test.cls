@@ -72,7 +72,15 @@ public class NKS_VideoPlayerCtrl_Test {
         inputVariable.recordId = [SELECT Id FROM ContentVersion WHERE Title = 'TEST VIDEO' LIMIT 1].Id; // VideoId
         inputVariable.language = 'no';
         inputVariable.subtitleFile = [SELECT Id, NKS_Content_Document_Link__c, NKS_Related_Video__c, NKS_Subtitle_Language__c, ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1];
-        ContentWorkspace ihb = [SELECT RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
+        ContentWorkspace ihb;
+        try {
+            ihb = [SELECT RootContentFolderId FROM ContentWorkspace WHERE Name = 'Innholdsbibliotek'];
+        } catch (Exception e) {
+            ihb = new ContentWorkspace(); 
+            ihb.DeveloperName = 'Innholdsbibliotek'; 
+            ihb.Name = 'Innholdsbibliotek'; 
+            insert ihb;
+        }
         // Create contentfolder "Subtitles"
         ContentFolder cf = new ContentFolder();
         cf.Name = 'Subtitles';
