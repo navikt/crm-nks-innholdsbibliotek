@@ -68,8 +68,8 @@ public with sharing class NKS_VideoPlayerCtrl {
         baseUrl = isGuest ? getLibraryBaseUrl() : Url.getSalesforceBaseUrl().toExternalForm();
         for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
             src = isGuest ? 
-                baseUrl + 'sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
-                baseUrl + '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
+                baseUrl.replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
+                baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
             subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), src));
         }
 
