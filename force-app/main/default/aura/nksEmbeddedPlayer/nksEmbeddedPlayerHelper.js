@@ -44,10 +44,31 @@
         return videoTitlePromise;
     },
 
+    getExperienceSiteURL: function (component) {
+        let getSiteURL = component.get('c.getLibraryBaseUrl');
+        const siteURLPromise = new Promise((resolve, reject) => {
+            getSiteURL.setCallback(this, function (response) {
+                const state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else if (state === 'ERROR') {
+                    let errors = response.getError();
+                    console.error(JSON.stringify(errors));
+                    reject(JSON.stringify(errors));
+                }
+            });
+        });
+        $A.enqueueAction(getSiteURL);
+        return siteURLPromise;
+    },
+
     // Called on init of component
     generateVideoPlayer: function (component) {
-        const videoSrc = 'https://ihb.nav.no/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
+        let videoSrc;
         let videoPlayer = '';
+        this.getExperienceSiteURL(component).then((experienceSiteURL) => {
+            videoSrc = experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');
+        });
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
             '<video height=720px; width=1280px;' + 
