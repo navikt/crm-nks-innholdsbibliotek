@@ -3,7 +3,7 @@
     <allowInternalUserLogin>false</allowInternalUserLogin>
     <allowMembersToFlag>false</allowMembersToFlag>
     <changePasswordTemplate>unfiled$public/CommunityChangePasswordEmailTemplate</changePasswordTemplate>
-    <communityRoles/>
+    <communityRoles />
     <disableReputationRecordConversations>false</disableReputationRecordConversations>
     <emailSenderAddress>fakeemail@nav.no.scratchorg</emailSenderAddress>
     <emailSenderName>innholdsbibliotek</emailSenderName>
@@ -47,6 +47,6 @@
         <defaultTab>home</defaultTab>
         <standardTab>Chatter</standardTab>
     </tabs>
-    <urlPathPrefix>innholdsbibliotek</urlPathPrefix>
+    <urlPathPrefix>ihb</urlPathPrefix>
     <welcomeTemplate>unfiled$public/CommunityWelcomeEmailTemplate</welcomeTemplate>
 </Network>
