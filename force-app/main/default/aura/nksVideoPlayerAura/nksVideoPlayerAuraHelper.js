@@ -16,7 +16,7 @@
             component.set('v.videoId', videoId);
             component.set('v.recordId', videoId);
             this.getInstanceType(component).then((isSandbox) => {
-                videoSrc = isSandbox ? window.location.origin + '/ihb/s/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId
+                videoSrc = isSandbox ? window.location.origin + '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId
                 : window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;      
             }).finally(() => {
                 component.set('v.videoSrc', videoSrc);
