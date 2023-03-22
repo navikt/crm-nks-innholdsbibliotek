@@ -63,4 +63,16 @@ public class NKS_VideoPlayerCtrl_Test {
         System.assertEquals('TEST VIDEO', videoTitle);
     }
 
+    @isTest
+    static void testIsSandbox() {
+        List<Organization> res = [SELECT IsSandbox, TrialExpirationDate FROM Organization LIMIT 1];
+        Boolean isSandboxQuery = res[0].IsSandbox && res[0].TrialExpirationDate == null;
+
+        Test.startTest();
+        Boolean isSandbox = NKS_VideoPlayerCtrl.isSandbox();
+        Test.stopTest();
+    
+        System.assertEquals(isSandboxQuery, isSandbox);
+    }
+
 }
