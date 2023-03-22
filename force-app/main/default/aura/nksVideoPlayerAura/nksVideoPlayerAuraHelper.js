@@ -15,10 +15,32 @@
             const videoId = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
             component.set('v.videoId', videoId);
             component.set('v.recordId', videoId);
-            videoSrc = window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
+            this.getInstanceType(component).then((isSandbox) => {
+                videoSrc = isSandbox ? window.location.origin + '/ihb/s/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId
+                : window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;      
+            }).finally(() => {
+                component.set('v.videoSrc', videoSrc);
+                this.generateVideoPlayer(component);
+            });   
         }
-        component.set('v.videoSrc', videoSrc);
-        this.generateVideoPlayer(component);
+    },
+
+    getInstanceType: function (component) {
+        let getInstanceType = component.get('c.isSandbox');
+        const instancePromise = new Promise((resolve, reject) => {
+            getInstanceType.setCallback(this, function (response) {
+                const state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else if (state === 'ERROR') {
+                    let errors = response.getError();
+                    console.error(JSON.stringify(errors));
+                    reject(JSON.stringify(errors));
+                }
+            })
+        });
+        $A.enqueueAction(getInstanceType);
+        return instancePromise;
     },
 
     // Subtitles

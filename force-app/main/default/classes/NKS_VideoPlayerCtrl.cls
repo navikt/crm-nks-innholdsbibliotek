@@ -19,6 +19,12 @@ public with sharing class NKS_VideoPlayerCtrl {
         return new VideoStats(numViewsTotal, numViewsToday, numViewsYesterday);
     }
 
+    @AuraEnabled(cacheable=true) 
+    public static Boolean isSandbox() {
+        List<Organization> res = [SELECT IsSandbox, TrialExpirationDate FROM Organization LIMIT 1];
+        return res[0].IsSandbox && res[0].TrialExpirationDate == null;
+    }
+
     @AuraEnabled(cacheable=true)
     public static void addViewCount(String videoId){
         reportView(videoId);
