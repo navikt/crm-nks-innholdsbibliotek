@@ -9,6 +9,8 @@
             videoSrc = window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId;
             component.set('v.videoId', recordId);
             component.set('v.context', 'Standard');
+            component.set('v.videoSrc', videoSrc);
+            this.generateVideoPlayer(component);
         } else {
             //In community
             const url = window.location.href;
