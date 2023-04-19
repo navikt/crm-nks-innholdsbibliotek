@@ -71,7 +71,7 @@
         });
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
-            '<video height=720px; width=1280px;' + 
+            '<video height=100%; width=100%;' + 
             ' aria-label="' + videoTitle + '"' +  
             ' controls controlsList="nodownload"><source src="' +
             videoSrc + '" type="video/mp4" >';
