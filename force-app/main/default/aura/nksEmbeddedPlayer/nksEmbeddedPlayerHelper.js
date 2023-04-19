@@ -79,18 +79,26 @@
         
         this.getVideoTracks(component).then((subTracks) => {
             if (subTracks && subTracks.length > 0) {
+                let blob;
                 subTracks.forEach((track) => {
+                    try {
+                        blob = new Blob([track.src], { type: 'text/plain' });
+                    } catch (e) {
+                        console.error('Could not create blob from VersionData. Error: ', e);
+                    }
+                    const url = window.URL.createObjectURL(blob);                     
                     videoPlayer +=
-                        '<track kind="subtitles" srclang=' +
+                        '<track kind="captions" srclang=' +
                         track.srclang +
                         ' label=' +
                         track.languageLabel +
                         ' src="' +
-                        track.src +
+                        url +
                         '">';
                 });
             }
             videoPlayer += '</video>'; //Video end
+            console.log(videoPlayer);
             component.set('v.videoPlayer', videoPlayer);
         });
     },
