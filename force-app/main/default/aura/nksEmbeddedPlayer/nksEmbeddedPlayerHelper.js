@@ -71,7 +71,7 @@
         });
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
-            '<video height=720px; width=1280px;' + 
+            '<video height=100%; width=100%;' + 
             ' aria-label="' + videoTitle + '"' +  
             ' controls controlsList="nodownload"><source src="' +
             videoSrc + '" type="video/mp4" >';
@@ -79,14 +79,21 @@
         
         this.getVideoTracks(component).then((subTracks) => {
             if (subTracks && subTracks.length > 0) {
+                let blob;
                 subTracks.forEach((track) => {
+                    try {
+                        blob = new Blob([track.src], { type: 'text/plain' });
+                    } catch (e) {
+                        console.error('Could not create blob from VersionData. Error: ', e);
+                    }
+                    const url = window.URL.createObjectURL(blob);                     
                     videoPlayer +=
-                        '<track kind="subtitles" srclang=' +
+                        '<track kind="captions" srclang=' +
                         track.srclang +
                         ' label=' +
                         track.languageLabel +
                         ' src="' +
-                        track.src +
+                        url +
                         '">';
                 });
             }

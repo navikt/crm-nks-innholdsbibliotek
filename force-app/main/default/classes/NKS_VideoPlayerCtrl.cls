@@ -68,17 +68,12 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
-        String src, baseUrl;
         List<VideoTrack> subTracks = new List<VideoTrack>();
-        Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();
-        baseUrl = isGuest ? getLibraryBaseUrl() : Url.getSalesforceBaseUrl().toExternalForm();
-        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
-            src = isGuest ? 
-                baseUrl.replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
-                baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
-            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), src));
+        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, VersionData, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
+            Blob fileBody = subTrack.VersionData;
+            String versionDataAsString = fileBody.toString();
+            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), versionDataAsString));
         }
-
         return subTracks;
     }
 
