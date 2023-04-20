@@ -35,19 +35,24 @@ public with sharing class NKS_VideoPlayerCtrl {
         insert as system new ReportingData__c(CRM_Category__c = 'Video View', NKS_Video_Id__c = videoId);
     }
 
+    @AuraEnabled(cacheable=true)
+    public static String checkFileType(String recordId) {
+        return [SELECT FileExtension FROM ContentDocument WHERE Id = :recordId LIMIT 1]?.FileExtension;
+    }
+
     /**
     * @description Generate library url for a unique video
     * @param recordId 
     * @return  `String`
     */
     @AuraEnabled(cacheable=true)
-    public static String getLibraryUrl(String recordId){
-            String communityUrl = getLibraryBaseUrl();
-            return String.isNotBlank(communityUrl) ?
-                getParentFolderName(recordId) != null ?
-                    communityUrl + getParentFolderName(recordId).toLowerCase() + '/' + recordId
-                    : '' 
-                : '';
+    public static String getLibraryUrl(String recordId) {
+        String communityUrl = getLibraryBaseUrl();
+        return String.isNotBlank(communityUrl) ?
+            getParentFolderName(recordId) != null ?
+                communityUrl + getParentFolderName(recordId).toLowerCase() + '/' + recordId
+                : '' 
+            : '';
     }
 
     /**
