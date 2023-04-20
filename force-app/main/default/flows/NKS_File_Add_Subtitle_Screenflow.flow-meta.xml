@@ -5,7 +5,7 @@
         <name>Set_Content_Document_Url_and_Video_Relation</name>
         <label>Set Content Document Url and Video Relation</label>
         <locationX>50</locationX>
-        <locationY>1334</locationY>
+        <locationY>878</locationY>
         <assignmentItems>
             <assignToReference>Get_New_Subtitle.NKS_Content_Document_Link__c</assignToReference>
             <operator>Assign</operator>
@@ -41,7 +41,7 @@
     <decisions>
         <name>Check_File_Type</name>
         <label>Check File Type</label>
-        <locationX>226</locationX>
+        <locationX>182</locationX>
         <locationY>278</locationY>
         <defaultConnector>
             <targetReference>Unsupported_File_Type_Error_Screen</targetReference>
@@ -49,7 +49,14 @@
         <defaultConnectorLabel>Not Video</defaultConnectorLabel>
         <rules>
             <name>Is_MP4</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_File_Information.FileExtension</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>mp4</stringValue>
+                </rightValue>
+            </conditions>
             <conditions>
                 <leftValueReference>Get_File_Information.FileType</leftValueReference>
                 <operator>EqualTo</operator>
@@ -63,38 +70,6 @@
             <label>Is MP4</label>
         </rules>
     </decisions>
-    <decisions>
-        <name>Check_Subtitle_Folder_Exist</name>
-        <label>Check Subtitle Folder Exist</label>
-        <locationX>50</locationX>
-        <locationY>878</locationY>
-        <defaultConnector>
-            <targetReference>Create_Subtitle_Folder</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>No Folder</defaultConnectorLabel>
-        <rules>
-            <name>Subtitle_Folder_Exists</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Subtitle_Folder</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>Get_Subtitle_Folder.Id</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Get_New_Subtitle</targetReference>
-            </connector>
-            <label>Subtitle Folder Exists</label>
-        </rules>
-    </decisions>
     <description>Screen flow for adding a subtitle to a video file.</description>
     <dynamicChoiceSets>
         <name>Subtitle_Language_Choices</name>
@@ -105,13 +80,6 @@
         <picklistObject>ContentVersion</picklistObject>
     </dynamicChoiceSets>
     <environments>Default</environments>
-    <formulas>
-        <name>SUBTITLE_FOLDER_ID</name>
-        <dataType>String</dataType>
-        <expression>IF({!Subtitle_Folder_Exists} == true,
-{!Get_Subtitle_Folder.Id},
-{!Create_Subtitle_Folder} )</expression>
-    </formulas>
     <formulas>
         <name>URL_FORMULA</name>
         <dataType>String</dataType>
@@ -143,7 +111,7 @@
         <name>Create_Content_Document_Link</name>
         <label>Create Content Document Link</label>
         <locationX>50</locationX>
-        <locationY>1694</locationY>
+        <locationY>1238</locationY>
         <connector>
             <targetReference>Add_to_Folder</targetReference>
         </connector>
@@ -174,29 +142,6 @@
         <object>ContentDocumentLink</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
-    <recordCreates>
-        <name>Create_Subtitle_Folder</name>
-        <label>Create Subtitle Folder</label>
-        <locationX>138</locationX>
-        <locationY>998</locationY>
-        <connector>
-            <targetReference>Get_New_Subtitle</targetReference>
-        </connector>
-        <inputAssignments>
-            <field>Name</field>
-            <value>
-                <elementReference>SUBTITLE_FOLDER_NAME</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>ParentContentFolderId</field>
-            <value>
-                <elementReference>Get_Content_Folder_Item.ParentContentFolderId</elementReference>
-            </value>
-        </inputAssignments>
-        <object>ContentFolder</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordCreates>
     <recordLookups>
         <name>Get_Content_Folder_Item</name>
         <label>Get Content Folder Item</label>
@@ -224,7 +169,7 @@
         <description>Query the file information to verify that this is a video file.</description>
         <name>Get_File_Information</name>
         <label>Get File Information</label>
-        <locationX>226</locationX>
+        <locationX>182</locationX>
         <locationY>158</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -242,13 +187,14 @@
         <object>ContentDocument</object>
         <queriedFields>Id</queriedFields>
         <queriedFields>FileType</queriedFields>
+        <queriedFields>FileExtension</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
         <name>Get_Library</name>
         <label>Get Library</label>
         <locationX>50</locationX>
-        <locationY>1574</locationY>
+        <locationY>1118</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Create_Content_Document_Link</targetReference>
@@ -270,7 +216,7 @@
         <name>Get_New_Subtitle</name>
         <label>Get New Subtitle</label>
         <locationX>50</locationX>
-        <locationY>1214</locationY>
+        <locationY>758</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Set_Content_Document_Url_and_Video_Relation</targetReference>
@@ -285,35 +231,6 @@
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>ContentVersion</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <name>Get_Subtitle_Folder</name>
-        <label>Get Subtitle Folder</label>
-        <locationX>50</locationX>
-        <locationY>758</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Check_Subtitle_Folder_Exist</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>ParentContentFolderId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>Get_Content_Folder_Item.ParentContentFolderId</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>SUBTITLE_FOLDER_NAME</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>ContentFolder</object>
-        <queriedFields>Id</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
@@ -349,7 +266,7 @@
         <name>Add_to_Folder</name>
         <label>Add to Folder</label>
         <locationX>50</locationX>
-        <locationY>1814</locationY>
+        <locationY>1358</locationY>
         <filterLogic>and</filterLogic>
         <filters>
             <field>ChildRecordId</field>
@@ -361,7 +278,7 @@
         <inputAssignments>
             <field>ParentContentFolderId</field>
             <value>
-                <elementReference>SUBTITLE_FOLDER_ID</elementReference>
+                <elementReference>Get_Content_Folder_Item.ParentContentFolderId</elementReference>
             </value>
         </inputAssignments>
         <object>ContentFolderMember</object>
@@ -370,7 +287,7 @@
         <name>Update_Subtitle_Files</name>
         <label>Update Subtitle Files</label>
         <locationX>50</locationX>
-        <locationY>1454</locationY>
+        <locationY>998</locationY>
         <connector>
             <targetReference>Get_Library</targetReference>
         </connector>
@@ -385,7 +302,7 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Get_Subtitle_Folder</targetReference>
+            <targetReference>Get_New_Subtitle</targetReference>
         </connector>
         <fields>
             <name>Add_Subtitle_Screen_Section1</name>
@@ -544,7 +461,7 @@
     <screens>
         <name>Unsupported_File_Type_Error_Screen</name>
         <label>Unsupported File Type Error Screen</label>
-        <locationX>402</locationX>
+        <locationX>314</locationX>
         <locationY>398</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -558,7 +475,7 @@
         <showHeader>false</showHeader>
     </screens>
     <start>
-        <locationX>100</locationX>
+        <locationX>56</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_File_Information</targetReference>
