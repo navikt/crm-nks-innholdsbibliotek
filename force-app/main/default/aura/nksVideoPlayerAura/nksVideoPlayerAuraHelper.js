@@ -47,7 +47,7 @@
 
     // Subtitles
     getVideoTracks: function (component) {
-        let getTracksAction = component.get('c.getVideoTracks');
+        let getTracksAction = component.get('c.getVideoTracksInternally');
         getTracksAction.setParams({
             videoId: component.get('v.videoId')
         });
@@ -89,16 +89,19 @@
     },
 
     generateVideoPlayer: function (component) {
+        console.log('hei');
         let videoPlayer = '';
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
-            '<video height=720px; width=1280px;' + 
+            '<video height=100%; width=100%;' + 
             ' aria-label="' + videoTitle + '"' +  
             ' controls controlsList="nodownload"><source src="' +
             component.get('v.videoSrc') + '" type="video/mp4" >';
         });
 
         this.getVideoTracks(component).then((subTracks) => {
+            console.log('hallo');
+            console.log('subtracks: ', subTracks);
             if (subTracks && subTracks.length > 0) {
                 subTracks.forEach((track) => {
                     videoPlayer +=
