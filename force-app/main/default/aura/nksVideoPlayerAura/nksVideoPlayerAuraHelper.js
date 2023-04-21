@@ -89,7 +89,6 @@
     },
 
     generateVideoPlayer: function (component) {
-        console.log('hei');
         let videoPlayer = '';
         this.getVideoTitle(component).then((videoTitle) => {
             videoPlayer =
@@ -100,8 +99,6 @@
         });
 
         this.getVideoTracks(component).then((subTracks) => {
-            console.log('hallo');
-            console.log('subtracks: ', subTracks);
             if (subTracks && subTracks.length > 0) {
                 subTracks.forEach((track) => {
                     videoPlayer +=
