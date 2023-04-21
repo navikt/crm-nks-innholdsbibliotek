@@ -1,8 +1,8 @@
 <template>
-    <div if:true={fileType}>
+    <div if:true={isFileTypeMp4}>
         <c-nks-video-lib-linker record-id={recordId}></c-nks-video-lib-linker>
     </div>
-    <div class="slds-p-top_small" if:true={fileType}>
+    <div class="slds-p-top_small" if:true={isFileTypeMp4}>
         <c-nks-embed-generator record-id={recordId}></c-nks-embed-generator>
     </div>
 </template>
