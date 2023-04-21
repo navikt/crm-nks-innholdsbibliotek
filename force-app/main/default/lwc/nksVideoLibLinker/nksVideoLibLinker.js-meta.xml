@@ -3,7 +3,4 @@
     <apiVersion>55.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Video Library Link</masterLabel>
-    <targets>
-        <target>lightning__RecordPage</target>
-    </targets>
 </LightningComponentBundle>
