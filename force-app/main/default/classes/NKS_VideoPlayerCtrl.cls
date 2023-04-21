@@ -35,19 +35,24 @@ public with sharing class NKS_VideoPlayerCtrl {
         insert as system new ReportingData__c(CRM_Category__c = 'Video View', NKS_Video_Id__c = videoId);
     }
 
+    @AuraEnabled(cacheable=true)
+    public static String checkFileType(String recordId) {
+        return [SELECT FileExtension FROM ContentDocument WHERE Id = :recordId LIMIT 1]?.FileExtension;
+    }
+
     /**
     * @description Generate library url for a unique video
     * @param recordId 
     * @return  `String`
     */
     @AuraEnabled(cacheable=true)
-    public static String getLibraryUrl(String recordId){
-            String communityUrl = getLibraryBaseUrl();
-            return String.isNotBlank(communityUrl) ?
-                getParentFolderName(recordId) != null ?
-                    communityUrl + getParentFolderName(recordId).toLowerCase() + '/' + recordId
-                    : '' 
-                : '';
+    public static String getLibraryUrl(String recordId) {
+        String communityUrl = getLibraryBaseUrl();
+        return String.isNotBlank(communityUrl) ?
+            getParentFolderName(recordId) != null ?
+                communityUrl + getParentFolderName(recordId).toLowerCase() + '/' + recordId
+                : '' 
+            : '';
     }
 
     /**
@@ -63,6 +68,7 @@ public with sharing class NKS_VideoPlayerCtrl {
 
     /**
      * @description Returns a list of video tracks related to a content document video file
+     * Used for embedding to get around bug with Lightning Out and CORS on tracks related to a video
      * @param recordId 
      * @return  `List<VideoTrack>`
      */
@@ -73,6 +79,27 @@ public with sharing class NKS_VideoPlayerCtrl {
             Blob fileBody = subTrack.VersionData;
             String versionDataAsString = fileBody.toString();
             subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), versionDataAsString));
+        }
+        return subTracks;
+    }
+
+    /**
+     * @description Returns a list of video tracks related to a content document video file
+     * Used inside Salesforce and on Experience Site
+     * @param recordId 
+     * @return  `List<VideoTrack>`
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<VideoTrack> getVideoTracksInternally(String videoId) {
+        String src, baseUrl;
+        List<VideoTrack> subTracks = new List<VideoTrack>();
+        Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();
+        baseUrl = isGuest ? getLibraryBaseUrl() : Url.getSalesforceBaseUrl().toExternalForm();
+        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
+            src = isGuest ? 
+                baseUrl.replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
+                baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
+            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), src));
         }
         return subTracks;
     }
