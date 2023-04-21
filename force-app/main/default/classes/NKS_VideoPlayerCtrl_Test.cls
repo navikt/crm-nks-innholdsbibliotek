@@ -40,6 +40,18 @@ public class NKS_VideoPlayerCtrl_Test {
     }
 
     @isTest
+    static void testGetVideoTracksInternally() {
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        ?.ContentDocumentId;
+
+        Test.startTest();
+        List<NKS_VideoPlayerCtrl.VideoTrack> tracks = NKS_VideoPlayerCtrl.getVideoTracksInternally(videoId);
+        Test.stopTest();
+
+        System.assertEquals(1, tracks.size());
+    }
+
+    @isTest
     static void testGetVideoTracks() {
         String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
         ?.ContentDocumentId;
