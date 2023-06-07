@@ -153,4 +153,39 @@ public with sharing class NKS_VideoPlayerCtrl {
             this.numViewsYesterday = numViewsYesterday;
         }
     }
+
+    @AuraEnabled
+    public static void setThumbnailLink(String videoId, String thumbnailLink) {
+        ContentVersion cv = [SELECT Id, NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+        cv.NKS_Thumbnail_Link__c = thumbnailLink;
+        update cv;
+    }
+
+
+    // TODO: Add param to decide which environment it is (in salesforce, community or embed)
+    /*  
+        Inside org - window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId
+        In community - window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        Embedded - experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+    */
+    @AuraEnabled(cacheable=true)
+    public static String getStoredThumbnailLink(String videoId, String env, String windowOrigin) {
+        String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
+        System.debug('thumbnailLink: ' + thumbnailLink);
+        String recordId;
+        if (thumbnailLink != null) {
+            List<String> splitThumbnail = thumbnailLink.split('/');
+            recordId = splitThumbnail[splitThumbnail.size() - 1]; // Record id of Thumbnail record
+        }
+
+        final Map<String, String> allowedEnvs = new Map<String, String>{
+            'Standard' => thumbnailLink,
+            'Experience' => windowOrigin + (NKS_VideoPlayerCtrl.isSandbox() == true ? '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' : '/sfsites/c/sfc/servlet.shepherd/document/download/') + recordId,
+            'Embed' => NKS_VideoPlayerCtrl.getLibraryBaseUrl().replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        };
+        if (allowedEnvs.get(env) == null || recordId == null) {
+            return '';
+        }
+        return allowedEnvs.get(env);
+    }
 }

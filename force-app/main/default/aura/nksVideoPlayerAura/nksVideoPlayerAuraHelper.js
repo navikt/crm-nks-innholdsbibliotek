@@ -27,6 +27,32 @@
         }
     },
 
+    getThumbnailLink: function (component) {
+        let getThumbnail = component.get('c.getStoredThumbnailLink');
+        console.log(component.get('v.videoId'));
+        console.log(component.get('v.context'));
+        console.log(window.location.origin);
+        getThumbnail.setParams({
+            videoId: component.get('v.videoId'),
+            env: component.get('v.context'),
+            windowOrigin: window.location.origin
+        });
+        const thumbnailPromise = new Promise((resolve, reject) => {
+            getThumbnail.setCallback(this, function (response) {
+                const state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else if (state === 'ERROR') {
+                    let errors = response.getError();
+                    console.error(JSON.stringify(errors));
+                    reject(JSON.stringify(errors));
+                }
+            })
+        });
+        $A.enqueueAction(getThumbnail);
+        return thumbnailPromise;
+    },
+
     getInstanceType: function (component) {
         let getInstanceType = component.get('c.isSandbox');
         const instancePromise = new Promise((resolve, reject) => {
@@ -86,34 +112,38 @@
         });
         $A.enqueueAction(getVideoTitle);
         return videoTitlePromise;
-    },
+    },    
 
     generateVideoPlayer: function (component) {
         let videoPlayer = '';
         this.getVideoTitle(component).then((videoTitle) => {
-            videoPlayer =
-            '<video height=100%; width=100%;' + 
-            ' aria-label="' + videoTitle + '"' +  
-            ' controls controlsList="nodownload"><source src="' +
-            component.get('v.videoSrc') + '" type="video/mp4" >';
-        });
-
-        this.getVideoTracks(component).then((subTracks) => {
-            if (subTracks && subTracks.length > 0) {
-                subTracks.forEach((track) => {
-                    videoPlayer +=
-                        '<track kind="subtitles" srclang=' +
-                        track.srclang +
-                        ' label=' +
-                        track.languageLabel +
-                        ' src="' +
-                        track.src +
-                        '">';
-                });
-            }
-            videoPlayer += '</video>'; //Video end
-            component.set('v.videoPlayer', videoPlayer);
-        });
+            this.getThumbnailLink(component).then((thumbnail) => {
+                console.log('getTHumbnailLink: ', thumbnail);
+                videoPlayer =
+                '<video height=720px; width=1280px;' + 
+                ' aria-label="' + videoTitle + '"' +  
+                (thumbnail !== undefined ? ' poster="' + thumbnail + '"' : '') +
+                ' controls controlsList="nodownload"><source src="' +
+                component.get('v.videoSrc') + '" type="video/mp4" >';
+            });
+        }).finally(() => {
+            this.getVideoTracks(component).then((subTracks) => {
+                if (subTracks && subTracks.length > 0) {
+                    subTracks.forEach((track) => {
+                        videoPlayer +=
+                            '<track kind="subtitles" srclang=' +
+                            track.srclang +
+                            ' label=' +
+                            track.languageLabel +
+                            ' src="' +
+                            track.src +
+                            '">';
+                    });
+                }
+                videoPlayer += '</video>'; //Video end
+                component.set('v.videoPlayer', videoPlayer);
+            });
+        }); 
     },
 
     addVideoView: function (component) {
