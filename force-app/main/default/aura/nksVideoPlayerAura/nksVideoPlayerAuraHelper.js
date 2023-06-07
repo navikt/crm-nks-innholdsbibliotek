@@ -31,11 +31,7 @@
     },
 
     getThumbnailLink: function (component) {
-        console.log('Taper idiot');
         let getThumbnail = component.get('c.getStoredThumbnailLink');
-        console.log(component.get('v.videoId'));
-        console.log(component.get('v.context'));
-        console.log(window.location.origin);
         getThumbnail.setParams({
             videoId: component.get('v.videoId'),
             env: component.get('v.context'),
@@ -120,22 +116,16 @@
 
     generateVideoPlayer: function (component) {
         let videoPlayer = '';
-        this.getVideoTitle(component)
-            .then((videoTitle) => {
-                this.getThumbnailLink(component).then((thumbnail) => {
-                    console.log('getTHumbnailLink: ', thumbnail);
-                    videoPlayer =
-                        '<video height=720px; width=1280px;' +
-                        ' aria-label="' +
-                        videoTitle +
-                        '"' +
-                        (thumbnail !== undefined ? ' poster="' + thumbnail + '"' : '') +
-                        ' controls controlsList="nodownload"><source src="' +
-                        component.get('v.videoSrc') +
-                        '" type="video/mp4" >';
-                });
-            })
-            .finally(() => {
+        this.getVideoTitle(component).then((videoTitle) => {
+            this.getThumbnailLink(component).then((thumbnail) => {
+                videoPlayer =
+                '<video height=720px; width=1280px;' +
+                ' aria-label="' + videoTitle + '"' +
+                (thumbnail !== 'err' ? ' poster="' + thumbnail + '"' : '') +
+                ' controls controlsList="nodownload"><source src="' +
+                component.get('v.videoSrc') +
+                '" type="video/mp4" >';
+            }).finally(() => {
                 this.getVideoTracks(component).then((subTracks) => {
                     if (subTracks && subTracks.length > 0) {
                         subTracks.forEach((track) => {
@@ -153,6 +143,7 @@
                     component.set('v.videoPlayer', videoPlayer);
                 });
             });
+        })
     },
 
     addVideoView: function (component) {

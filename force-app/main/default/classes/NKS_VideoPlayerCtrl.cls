@@ -161,17 +161,17 @@ public with sharing class NKS_VideoPlayerCtrl {
         update cv;
     }
 
-
-    // TODO: Add param to decide which environment it is (in salesforce, community or embed)
     /*  
-        Inside org - window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId
-        In community - window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
-        Embedded - experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        Used in aura helper class to generate video HTML code. Cachable = false to instantly see changed thumbnail on refresh
+        - env: Standard (Inside Salesforce) - window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId
+        - env: Experience (On Experience Page) - window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        - env: Embed (Embedded) - experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
     */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(cacheable=false)
     public static String getStoredThumbnailLink(String videoId, String env, String windowOrigin) {
         String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
         System.debug('thumbnailLink: ' + thumbnailLink);
+        
         String recordId;
         if (thumbnailLink != null) {
             List<String> splitThumbnail = thumbnailLink.split('/');
@@ -184,8 +184,15 @@ public with sharing class NKS_VideoPlayerCtrl {
             'Embed' => NKS_VideoPlayerCtrl.getLibraryBaseUrl().replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
         };
         if (allowedEnvs.get(env) == null || recordId == null) {
-            return '';
+            return 'err';
         }
+        System.debug('getStoredThumbnailLink return: ' + allowedEnvs.get(env));
         return allowedEnvs.get(env);
+    }
+
+    // Used on record page in wire
+    @AuraEnabled(cacheable=true)
+    public static String getThumbnailLinkOnFile(String videoId) {
+        return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
     }
 }

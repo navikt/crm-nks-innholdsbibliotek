@@ -47,7 +47,9 @@
     getThumbnailLink: function (component) {
         let getThumbnail = component.get('c.getStoredThumbnailLink');
         getThumbnail.setParams({
-            videoId: component.get('v.videoId')
+            videoId: component.get('v.videoId'),
+            env: 'Embed',
+            windowOrigin: window.location.origin
         });
         const thumbnailPromise = new Promise((resolve, reject) => {
             getThumbnail.setCallback(this, function (response) {
@@ -97,35 +99,36 @@
                 videoPlayer =
                 '<video height=720px; width=1280px;' + 
                 ' aria-label="' + videoTitle + '"' +  
-                (thumbnail !== undefined ? ' poster="' + thumbnail + '"' : '') +
+                (thumbnail !== 'err' ? ' poster="' + thumbnail + '"' : '') +
                 ' controls controlsList="nodownload"><source src="' +
                 component.get('v.videoSrc') + '" type="video/mp4" >';
-            });
-        }).finally(() => {
-            this.getVideoTracks(component).then((subTracks) => {
-                if (subTracks && subTracks.length > 0) {
-                    let blob;
-                    subTracks.forEach((track) => {
-                        try {
-                            blob = new Blob([track.src], { type: 'text/plain' });
-                        } catch (e) {
-                            console.error('Could not create blob from VersionData. Error: ', e);
-                        }
-                        const url = window.URL.createObjectURL(blob);                     
-                        videoPlayer +=
-                            '<track kind="captions" srclang=' +
-                            track.srclang +
-                            ' label=' +
-                            track.languageLabel +
-                            ' src="' +
-                            url +
-                            '">';
-                    });
-                }
-                videoPlayer += '</video>'; //Video end
-                component.set('v.videoPlayer', videoPlayer);
-            });
-        }); 
+            
+            }).finally(() => {
+                this.getVideoTracks(component).then((subTracks) => {
+                    if (subTracks && subTracks.length > 0) {
+                        let blob;
+                        subTracks.forEach((track) => {
+                            try {
+                                blob = new Blob([track.src], { type: 'text/plain' });
+                            } catch (e) {
+                                console.error('Could not create blob from VersionData. Error: ', e);
+                            }
+                            const url = window.URL.createObjectURL(blob);                     
+                            videoPlayer +=
+                                '<track kind="captions" srclang=' +
+                                track.srclang +
+                                ' label=' +
+                                track.languageLabel +
+                                ' src="' +
+                                url +
+                                '">';
+                        });
+                    }
+                    videoPlayer += '</video>'; //Video end
+                    component.set('v.videoPlayer', videoPlayer);
+                });
+            }); 
+        });
     },
 
     addVideoView: function (component) {

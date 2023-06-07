@@ -1,34 +1,24 @@
 import { LightningElement, api, wire } from 'lwc';
 import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailLink';
-import getStoredThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.getStoredThumbnailLink';
+import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { refreshApex } from '@salesforce/apex';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
     @api isVideoFile = false; // True if on video file (mp4) - false if not (likely thumbnail)
 
-    @wire(getStoredThumbnailLink, { videoId: '$recordId', env: 'Standard', windowOrigin: ''})
-    wiredGetThumbnailLink(result) {
+    @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
+    wiredGetThumbnailLinkOnFile(result) {
         if (result.error) {
-            console.log(result.error);
+            console.error(result.error);
         } else if (result.data) {
             this.thumbnailLink = result.data;
         }
     }
 
-    connectedCallback() {
-        console.log('isVideoFile: ', this.isVideoFile);
-    }
-
-    renderedCallback() {
-        console.log('isVideoFile: ', this.isVideoFile);
-    }
-    attachThumbnail() {
-        console.log(this.recordId);
-        console.log(this.thumbnailLink);
+    saveThumbnailLink() {
+        console.log('Save thumbnail');
         setThumbnailLink({ videoId: this.recordId, thumbnailLink: this.thumbnailLink });
-        refreshApex(this.thumbnailLink);
         this.showSaveToast();
     }
 
@@ -60,6 +50,7 @@ export default class NksThumbnailGenerator extends LightningElement {
         this.dispatchEvent(evt);
     }
     
+    // Will only be shown and used if file is not MP4
     get showThumbnailLink() {
         return window.location.origin + '/sfc/servlet.shepherd/document/download/' + this.recordId;
     }
