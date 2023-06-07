@@ -1,0 +1,29 @@
+<template>
+    <br/>
+    <div if:false={isVideoFile}>
+        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Thumbnail link</h1>
+        <div class="slds-box slds-box_x-small slds-theme_shade">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item alignment-bump="right" size="11">
+                    <lightning-formatted-text value={showThumbnailLink}></lightning-formatted-text>
+                </lightning-layout-item>
+                <lightning-layout-item>
+                    <lightning-button-icon
+                        icon-name="utility:copy"
+                        onclick={handleCopy}
+                        variant="brand"
+                    ></lightning-button-icon>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </div>
+    <div if:true={isVideoFile}>
+        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Thumbnail</h1>
+        <div>
+            <div class="paddingclass lgc-bg">
+                <lightning-input type="text" label="Thumbnail-link" value={thumbnailLink} placeholder="Linken finner du i Preview-tabben på det bildet du vil bruke som thumbnail" onchange={handleInputChange}></lightning-input>
+            </div>
+            <lightning-button variant="brand" label="Save" title="Save thumbnail link" onclick={attachThumbnail} class="slds-m-left_x-small"></lightning-button>
+        </div>
+    </div>
+</template>
