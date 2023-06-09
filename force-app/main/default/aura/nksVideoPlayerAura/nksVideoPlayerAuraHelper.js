@@ -116,8 +116,8 @@
 
     generateVideoPlayer: function (component) {
         let videoPlayer = '';
-        this.getVideoTitle(component).then((videoTitle) => {
-            this.getThumbnailLink(component).then((thumbnail) => {
+        this.getThumbnailLink(component).then((thumbnail) => {
+            this.getVideoTitle(component).then((videoTitle) => {
                 videoPlayer =
                 '<video height=720px; width=1280px;' +
                 ' aria-label="' + videoTitle + '"' +
