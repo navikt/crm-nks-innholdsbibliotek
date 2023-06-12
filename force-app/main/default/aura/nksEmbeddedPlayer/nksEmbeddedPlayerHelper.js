@@ -98,7 +98,7 @@
         });
         this.getThumbnailLink(component).then((thumbnail) => {
             videoPlayer =
-            '<video height=720px; width=1280px;' + 
+            '<video height=100%; width=100%;' + 
             ' aria-label="' + videoTitle + '"' +
             (thumbnail !== 'err' ? ' poster="' + thumbnail + '"' : '') +
             ' controls controlsList="nodownload"><source src="' +

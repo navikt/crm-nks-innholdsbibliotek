@@ -170,7 +170,6 @@ public with sharing class NKS_VideoPlayerCtrl {
     @AuraEnabled(cacheable=false)
     public static String getStoredThumbnailLink(String videoId, String env, String windowOrigin) {
         String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
-        System.debug('thumbnailLink: ' + thumbnailLink);
         
         String recordId;
         if (thumbnailLink != null) {
@@ -186,7 +185,6 @@ public with sharing class NKS_VideoPlayerCtrl {
         if (allowedEnvs.get(env) == null || recordId == null) {
             return 'err';
         }
-        System.debug('getStoredThumbnailLink return: ' + allowedEnvs.get(env));
         return allowedEnvs.get(env);
     }
 

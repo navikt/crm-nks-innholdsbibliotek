@@ -119,7 +119,7 @@
         this.getThumbnailLink(component).then((thumbnail) => {
             this.getVideoTitle(component).then((videoTitle) => {
                 videoPlayer =
-                '<video height=720px; width=1280px;' +
+                '<video height=40%; width=60%;' +
                 ' aria-label="' + videoTitle + '"' +
                 (thumbnail !== 'err' ? ' poster="' + thumbnail + '"' : '') +
                 ' controls controlsList="nodownload"><source src="' +
