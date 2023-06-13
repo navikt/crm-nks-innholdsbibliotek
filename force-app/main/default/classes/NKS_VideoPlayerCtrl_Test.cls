@@ -15,6 +15,13 @@ public class NKS_VideoPlayerCtrl_Test {
             NKS_Related_Video__c = conDoc.Id,
             VersionData = Blob.valueOf('123TEST')
         );
+
+        insert new ContentVersion(
+            Title = 'TEST THUMBNAIL',
+            PathOnClient = 'testThumbnail.png',
+            NKS_Related_Video__c = conDoc.Id,
+            VersionData = Blob.valueOf('123TEST')
+        );
     }
 
     @isTest
@@ -87,4 +94,56 @@ public class NKS_VideoPlayerCtrl_Test {
         System.assertEquals(isSandboxQuery, isSandbox);
     }
 
+    @isTest
+    static void testSetThumbnailLink() {
+        ContentVersion video = [SELECT Id, ContentDocumentId, Title FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1];
+
+        Test.startTest();
+        NKS_VideoPlayerCtrl.setThumbnailLink(video.ContentDocumentId, 'testlink');
+        Test.stopTest();
+    
+        video = [SELECT NKS_Thumbnail_Link__c, Title FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1];
+
+        System.assertEquals('TEST VIDEO', video.Title);
+        System.assertEquals('testlink', video.NKS_Thumbnail_Link__c);
+    }
+
+    @isTest
+    static void testGetStoredThumbnailLinkEmbed() {
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        ?.ContentDocumentId;
+        NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
+
+        Test.startTest();
+        String thumbnailLink = NKS_VideoPlayerCtrl.getStoredThumbnailLink(videoId, 'Embed', 'windowOrigin');
+        Test.stopTest();
+        
+        System.assertNotEquals('err', thumbnailLink);
+    }
+
+    @isTest
+    static void testGetStoredThumbnailLinkStandard() {
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        ?.ContentDocumentId;
+        NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
+
+        Test.startTest();
+        String thumbnailLink = NKS_VideoPlayerCtrl.getStoredThumbnailLink(videoId, 'Standard', 'windowOrigin');
+        Test.stopTest();
+        
+        System.assertNotEquals('err', thumbnailLink);
+    }
+
+    @isTest
+    static void testGetStoredThumbnailLinkExperience() {
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        ?.ContentDocumentId;
+        NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
+
+        Test.startTest();
+        String thumbnailLink = NKS_VideoPlayerCtrl.getStoredThumbnailLink(videoId, 'Experience', 'windowOrigin');
+        Test.stopTest();
+        
+        System.assertNotEquals('err', thumbnailLink);
+    }
 }
