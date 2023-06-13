@@ -2,7 +2,11 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute access="GLOBAL" name="videoId" type="String" />
     <aura:attribute name="videoPlayer" type="String" />
+    <aura:attribute name="videoTitle" type="String" />
+    <aura:attribute name="videoSrc" type="String" />
+    <aura:attribute name="thumbnailLink" type="String" />
     <aura:attribute name="error" type="Boolean" default="false" />
+    
 
     <div style="position: relative">
         <aura:if isTrue="{!v.error}">
