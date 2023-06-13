@@ -1,9 +1,10 @@
 @isTest
 public class NKS_VideoPlayerCtrl_Test {
+    private static final String VIDEOTITLE = 'TEST VIDEO';
     @TestSetup
     static void makeData() {
         insert new ContentVersion(
-            Title = 'TEST VIDEO',
+            Title = VIDEOTITLE,
             PathOnClient = 'testVid.mp4',
             VersionData = Blob.valueOf('123TEST')
         );
@@ -19,7 +20,6 @@ public class NKS_VideoPlayerCtrl_Test {
         insert new ContentVersion(
             Title = 'TEST THUMBNAIL',
             PathOnClient = 'testThumbnail.png',
-            NKS_Related_Video__c = conDoc.Id,
             VersionData = Blob.valueOf('123TEST')
         );
     }
@@ -48,7 +48,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetVideoTracksInternally() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
 
         Test.startTest();
@@ -60,7 +60,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetVideoTracks() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
 
         Test.startTest();
@@ -72,14 +72,14 @@ public class NKS_VideoPlayerCtrl_Test {
     
     @isTest
     static void testGetVideoTitle() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
 
         Test.startTest();
         String videoTitle = NKS_VideoPlayerCtrl.getVideoTitle(videoId);
         Test.stopTest();
 
-        System.assertEquals('TEST VIDEO', videoTitle);
+        System.assertEquals(VIDEOTITLE, videoTitle);
     }
 
     @isTest
@@ -96,21 +96,21 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testSetThumbnailLink() {
-        ContentVersion video = [SELECT Id, ContentDocumentId, Title FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1];
+        ContentVersion video = [SELECT Id, ContentDocumentId, Title FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
 
         Test.startTest();
         NKS_VideoPlayerCtrl.setThumbnailLink(video.ContentDocumentId, 'testlink');
         Test.stopTest();
     
-        video = [SELECT NKS_Thumbnail_Link__c, Title FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1];
+        video = [SELECT NKS_Thumbnail_Link__c, Title FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
 
-        System.assertEquals('TEST VIDEO', video.Title);
+        System.assertEquals(VIDEOTITLE, video.Title);
         System.assertEquals('testlink', video.NKS_Thumbnail_Link__c);
     }
 
     @isTest
     static void testGetStoredThumbnailLinkEmbed() {
-        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
         NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
 
@@ -123,7 +123,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetStoredThumbnailLinkStandard() {
-        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
         NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
 
@@ -136,7 +136,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetStoredThumbnailLinkExperience() {
-        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
         NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
 

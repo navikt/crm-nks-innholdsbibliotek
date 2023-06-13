@@ -1,5 +1,4 @@
 public with sharing class NKS_VideoPlayerCtrl {
-
     @AuraEnabled
     public static VideoStats getVideoStats(String videoId){
         Integer numViewsTotal = 0, numViewsToday = 0, numViewsYesterday = 0;
