@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Undertekster" icon-name="utility:display_text">
+        <ul class="slds-m-around_medium">
+            <template for:each={languages} for:item="lang">
+                <li key={lang.Name} style="margin-bottom: 1rem;">
+                    <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{lang.Name}</h1>
+                    <div>
+                        <div class="padding-small lgc-bg">
+                            <lightning-input type="text" label="Undertekst-link" value={lang.subtitleLink} placeholder="Linken finner du i Preview-tabben på .srt eller .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
+                        </div>
+                        <lightning-button variant="brand" label="Save" title="Save subtitle link" onclick={saveSubtitleLink} class="slds-m-left_x-small"></lightning-button>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </lightning-card>
+</template>
