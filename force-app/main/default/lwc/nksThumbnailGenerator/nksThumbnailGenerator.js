@@ -17,7 +17,6 @@ export default class NksThumbnailGenerator extends LightningElement {
     }
 
     saveThumbnailLink() {
-        console.log('Save thumbnail');
         setThumbnailLink({ videoId: this.recordId, thumbnailLink: this.thumbnailLink });
         this.showSaveToast();
     }
