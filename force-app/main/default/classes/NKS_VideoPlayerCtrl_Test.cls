@@ -110,7 +110,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetStoredThumbnailLinkEmbed() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
         ?.ContentDocumentId;
         NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
 
@@ -123,7 +123,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetStoredThumbnailLinkStandard() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
         ?.ContentDocumentId;
         NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
 
@@ -136,7 +136,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetStoredThumbnailLinkExperience() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE NKS_Related_Video__c = NULL LIMIT 1]
         ?.ContentDocumentId;
         NKS_VideoPlayerCtrl.setThumbnailLink(videoId, 'testlink');
 
