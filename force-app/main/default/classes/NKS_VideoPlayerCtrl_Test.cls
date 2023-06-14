@@ -39,7 +39,7 @@ public class NKS_VideoPlayerCtrl_Test {
         NKS_VideoPlayerCtrl.addViewCount('12345TEST');
         NKS_VideoPlayerCtrl.addViewCount('12345TEST');
         Test.stopTest();
-        ReportingData__c vidView = [SELECT id FROM ReportingData__c WHERE NKS_Video_Id__c != NULL LIMIT 1];
+        ReportingData__c vidView = [SELECT Id FROM ReportingData__c WHERE NKS_Video_Id__c != NULL LIMIT 1];
         Test.setCreatedDate(vidView.Id, Date.today().addDays(-1));
         NKS_VideoPlayerCtrl.VideoStats stats = NKS_VideoPlayerCtrl.getVideoStats('12345TEST');
 
@@ -48,7 +48,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetVideoTracksInternally() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
 
         Test.startTest();
@@ -60,7 +60,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testGetVideoTracks() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
 
         Test.startTest();
@@ -72,7 +72,7 @@ public class NKS_VideoPlayerCtrl_Test {
     
     @isTest
     static void testGetVideoTitle() {
-        String videoId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
 
         Test.startTest();
@@ -96,7 +96,7 @@ public class NKS_VideoPlayerCtrl_Test {
 
     @isTest
     static void testSetThumbnailLink() {
-        ContentVersion video = [SELECT Id, ContentDocumentId, Title FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
+        ContentVersion video = [SELECT ContentDocumentId, Title FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
 
         Test.startTest();
         NKS_VideoPlayerCtrl.setThumbnailLink(video.ContentDocumentId, 'testlink');
