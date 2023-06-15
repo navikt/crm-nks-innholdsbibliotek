@@ -19,7 +19,6 @@
                 }
             });
         });
-
         $A.enqueueAction(getTracksAction);
         return trackPromise;
     },
@@ -33,6 +32,9 @@
                 const state = response.getState();
                 if (state === 'SUCCESS') {
                     resolve(response.getReturnValue());
+                    this.getThumbnailLink(component).then((thumbnail) => {
+                        component.set('v.thumbnailLink', thumbnail);
+                    });
                 } else if (state === 'ERROR') {
                     let errors = response.getError();
                     console.error(JSON.stringify(errors));
@@ -56,6 +58,35 @@
                 const state = response.getState();
                 if (state === 'SUCCESS') {
                     resolve(response.getReturnValue());
+                    this.getVideoTracks(component).then((subTracks) => {
+                        let videoPlayer =
+                        '<video height=100%; width=100%;' + 
+                        ' aria-label="' + component.get('v.videoTitle') + '"' +
+                        (component.get('v.thumbnailLink') !== 'err' ? ' poster="' + component.get('v.thumbnailLink') + '"' : '') +
+                        ' controls controlsList="nodownload"><source src="' +
+                        component.get('v.videoSrc') + '" type="video/mp4" >';
+                        if (subTracks && subTracks.length > 0) {
+                            let blob;
+                            subTracks.forEach((track) => {
+                                try {
+                                    blob = new Blob([track.src], { type: 'text/plain' });
+                                } catch (e) {
+                                    console.error('Could not create blob from VersionData. Error: ', e);
+                                }
+                                const url = window.URL.createObjectURL(blob);               
+                                videoPlayer +=
+                                    '<track kind="captions" srclang=' +
+                                    track.srclang +
+                                    ' label=' +
+                                    track.languageLabel +
+                                    ' src="' +
+                                    url +
+                                    '">';
+                            });
+                        }
+                        videoPlayer += '</video>'; //Video end
+                        component.set('v.videoPlayer', videoPlayer);
+                    });
                 } else if (state === 'ERROR') {
                     let errors = response.getError();
                     console.error(JSON.stringify(errors));
@@ -74,6 +105,9 @@
                 const state = response.getState();
                 if (state === 'SUCCESS') {
                     resolve(response.getReturnValue());
+                    this.getVideoTitle(component).then((title) => {
+                        component.set('v.videoTitle', title);
+                    });
                 } else if (state === 'ERROR') {
                     let errors = response.getError();
                     console.error(JSON.stringify(errors));
@@ -87,45 +121,9 @@
 
     // Called on init of component
     generateVideoPlayer: function (component) {
-        let videoSrc = '';
-        let videoPlayer = '';
-        let videoTitle = '';
+        // getExperienceSiteURL starts the chaining of promises and ends with getVideoTracks() which creates the HTML video tag with required attributes
         this.getExperienceSiteURL(component).then((experienceSiteURL) => {
-            videoSrc = experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId');        
-        }); 
-        this.getVideoTitle(component).then((title) => {
-            videoTitle = title;
-        });
-        this.getThumbnailLink(component).then((thumbnail) => {
-            videoPlayer =
-            '<video height=100%; width=100%;' + 
-            ' aria-label="' + videoTitle + '"' +
-            (thumbnail !== 'err' ? ' poster="' + thumbnail + '"' : '') +
-            ' controls controlsList="nodownload"><source src="' +
-            videoSrc + '" type="video/mp4" >';
-        });
-        this.getVideoTracks(component).then((subTracks) => {
-            if (subTracks && subTracks.length > 0) {
-                let blob;
-                subTracks.forEach((track) => {
-                    try {
-                        blob = new Blob([track.src], { type: 'text/plain' });
-                    } catch (e) {
-                        console.error('Could not create blob from VersionData. Error: ', e);
-                    }
-                    const url = window.URL.createObjectURL(blob);               
-                    videoPlayer +=
-                        '<track kind="captions" srclang=' +
-                        track.srclang +
-                        ' label=' +
-                        track.languageLabel +
-                        ' src="' +
-                        url +
-                        '">';
-                });
-            }
-            videoPlayer += '</video>'; //Video end
-            component.set('v.videoPlayer', videoPlayer);
+            component.set('v.videoSrc', experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId'));   
         });
     },
 
@@ -145,7 +143,6 @@
                 console.error(JSON.stringify(errors));
             }
         });
-
         $A.enqueueAction(viewCountAction);
     }
 });
