@@ -1,17 +1,21 @@
 <template>
-    <lightning-card title="Undertekster" icon-name="utility:display_text">
+    <div if:false={isFileTypeMp4}>
+        Undertekster kan kun legges til videofiler.
+    </div>
+    <lightning-card title="Undertekster" icon-name="utility:display_text" if:true={isFileTypeMp4}>
         <ul class="slds-m-around_medium">
-            <template for:each={languages} for:item="lang">
-                <li key={lang.Name} style="margin-bottom: 1rem;">
-                    <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{lang.Name}</h1>
+            <template for:each={subtitleLinks} for:item="subtitle">
+                <li key={subtitle.language} style="margin-bottom: 1rem;">
+                    <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{subtitle.language}</h1>
                     <div>
                         <div class="padding-small lgc-bg">
-                            <lightning-input type="text" label="Undertekst-link" value={lang.subtitleLink} placeholder="Linken finner du i Preview-tabben på .srt eller .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
+                            <lightning-input type="text" label="Undertekst-link" value={subtitle.link} id={subtitle.language} placeholder="Linken finner du i Preview-tabben på .srt eller .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
                         </div>
-                        <lightning-button variant="brand" label="Save" title="Save subtitle link" onclick={saveSubtitleLink} class="slds-m-left_x-small"></lightning-button>
                     </div>
                 </li>
             </template>
         </ul>
+        <!-- TODO: Only activate if changes are made -->
+        <lightning-button variant="brand" label="Save" title="Save subtitle link" onclick={saveSubtitleLink} class="slds-m-left_x-small"></lightning-button>
     </lightning-card>
 </template>

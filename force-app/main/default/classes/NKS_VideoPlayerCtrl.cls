@@ -192,4 +192,16 @@ public with sharing class NKS_VideoPlayerCtrl {
     public static String getThumbnailLinkOnFile(String videoId) {
         return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
     }
+
+    // Used on record page in wire
+    @AuraEnabled(cacheable=true)
+    public static ContentVersion getSubtitleLanguageLinksOnFile(String videoId) {
+        return [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+    }
+
+    @AuraEnabled
+    public static void saveSubtitleLanguageLinks(ContentVersion cvObj) {
+        ContentVersion cv = new ContentVersion(Id = cvObj.Id, NKS_Subtitle_Link_Norwegian__c = cvObj.NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c = cvObj.NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c = cvObj.NKS_Subtitle_Link_Polish__c);
+        update cv;
+    }
 }

@@ -1,50 +1,72 @@
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
+import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
+import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
+import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
+// TODO: Remember to package layout changes under "Undertekst" tab
 export default class NksSubtitles extends LightningElement {
-    // TODO: Add through wire and get the connected subtitles on different languages where isLatest = True
-    // TODO: Maybe show as a table to show name, language and file extension there? And then a button at the end with update/add
-    get languages() {
-        return [{Name: 'Norwegian'}, {Name: 'English'}, {Name: 'Polish'}];
-    }
+    @api recordId; // The Content Document we are on
+    contentVersionId; // The related CV Id of the Content Document
+    subtitleLinks = [];
 
-    /*@wire(getExistingSubtitlesOnFile, { videoId: '$recordId' })
-    wiredGetExistingSubtitles(result) {
+    @wire(getSubtitleLanguageLinksOnFile, { videoId: '$recordId' })
+    wiredgetSubtitleLanguageLinksOnFile(result) {
         if (result.error) {
             console.error(result.error);
         } else if (result.data) {
-            //this.subtitleLink = result.data;
+            console.log(JSON.stringify(result.data));
+            this.contentVersionId = result.data.Id;
+            this.subtitleLinks = this.setSubtitleLinkDataOnWire(Object.assign({}, result.data));
         }
-    }*/
+    }
+
+    isFileTypeMp4 = false;
+    @wire(getFileType, { recordId: '$recordId'})
+    wiredGetFileType(result) {
+        if (result.error) {
+            console.log(result.error);
+        } else if (result.data) {
+            this.isFileTypeMp4 = result.data === 'mp4';
+        }
+    }
+
+    
+    setSubtitleLinkDataOnWire(recordData) {
+        const languageMap = { NKS_Subtitle_Link_Norwegian__c: 'Norsk', NKS_Subtitle_Link_English__c: 'Engelsk', NKS_Subtitle_Link_Polish__c: 'Polsk' };
+        delete recordData.Id; // Do not create another input field based on Id
+        let data = [];
+        console.log('recordData: ', JSON.stringify(recordData));
+        for (const field in recordData) {
+            data.push({ language: languageMap[field], link: recordData[field], relatedField: field });
+        }
+        console.log(JSON.stringify(data));
+        return data;
+    }
 
     saveSubtitleLink() {
-        // TODO: Save subtitle link on file
+        let data = {};
+        this.subtitleLinks.forEach(element => {
+            data[element.relatedField] = element.link;
+        });
+        data.Id = this.contentVersionId;
+        console.log(JSON.stringify(data));
+        saveSubtitleLanguageLinks({ cvObj: data });
         this.showSaveToast();
     }
 
-    // TODO: Copy current iteration value in list 
-    subtitleLink;
     handleInputChange(event) {
-        this.subtitleLink = event.detail.value;
-    }
-
-    handleCopy() {
-        navigator.clipboard.writeText(this.subtitleLink);
-        this.showCopyToast();
-    }
-
-    showCopyToast() {
-        const evt = new ShowToastEvent({
-            message: 'Kopiert til utklippstavlen.',
-            variant: 'success',
-            mode: 'pester'
+        const strippedTargetId = event.target.id.split('-')[0]; // Remove added random integer
+        this.subtitleLinks.forEach(ele => {
+            if (ele.language === strippedTargetId) {
+                ele.link = event.detail.value;
+            }
         });
-        this.dispatchEvent(evt);
+        console.log(JSON.stringify(this.subtitleLinks));
     }
 
     showSaveToast() {
         const evt = new ShowToastEvent({
-            message: 'Thumbnail-link lagret.',
+            message: 'Undertekstlink lagret.',
             variant: 'success',
             mode: 'pester'
         });
