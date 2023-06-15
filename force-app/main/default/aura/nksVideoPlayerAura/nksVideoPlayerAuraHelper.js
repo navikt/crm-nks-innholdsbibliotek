@@ -17,14 +17,40 @@
             const videoId = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
             component.set('v.videoId', videoId);
             component.set('v.recordId', videoId);
-            this.getInstanceType(component).then((isSandbox) => {
-                videoSrc = isSandbox ? window.location.origin + '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId
-                : window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;      
-            }).finally(() => {
-                component.set('v.videoSrc', videoSrc);
-                this.generateVideoPlayer(component);
-            });   
+            this.getInstanceType(component)
+                .then((isSandbox) => {
+                    videoSrc = isSandbox
+                        ? window.location.origin + '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId
+                        : window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
+                })
+                .finally(() => {
+                    component.set('v.videoSrc', videoSrc);
+                    this.generateVideoPlayer(component);
+                });
         }
+    },
+
+    getThumbnailLink: function (component) {
+        let getThumbnail = component.get('c.getStoredThumbnailLink');
+        getThumbnail.setParams({
+            videoId: component.get('v.videoId'),
+            env: component.get('v.context'),
+            windowOrigin: window.location.origin
+        });
+        const thumbnailPromise = new Promise((resolve, reject) => {
+            getThumbnail.setCallback(this, function (response) {
+                const state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else if (state === 'ERROR') {
+                    let errors = response.getError();
+                    console.error(JSON.stringify(errors));
+                    reject(JSON.stringify(errors));
+                }
+            });
+        });
+        $A.enqueueAction(getThumbnail);
+        return thumbnailPromise;
     },
 
     getInstanceType: function (component) {
@@ -39,7 +65,7 @@
                     console.error(JSON.stringify(errors));
                     reject(JSON.stringify(errors));
                 }
-            })
+            });
         });
         $A.enqueueAction(getInstanceType);
         return instancePromise;
@@ -70,7 +96,7 @@
 
     getVideoTitle: function (component) {
         let getVideoTitle = component.get('c.getVideoTitle');
-        getVideoTitle.setParams({videoId: component.get('v.videoId')});
+        getVideoTitle.setParams({ videoId: component.get('v.videoId') });
 
         const videoTitlePromise = new Promise((resolve, reject) => {
             getVideoTitle.setCallback(this, function (response) {
@@ -90,30 +116,34 @@
 
     generateVideoPlayer: function (component) {
         let videoPlayer = '';
-        this.getVideoTitle(component).then((videoTitle) => {
-            videoPlayer =
-            '<video height=100%; width=100%;' + 
-            ' aria-label="' + videoTitle + '"' +  
-            ' controls controlsList="nodownload"><source src="' +
-            component.get('v.videoSrc') + '" type="video/mp4" >';
-        });
-
-        this.getVideoTracks(component).then((subTracks) => {
-            if (subTracks && subTracks.length > 0) {
-                subTracks.forEach((track) => {
-                    videoPlayer +=
-                        '<track kind="subtitles" srclang=' +
-                        track.srclang +
-                        ' label=' +
-                        track.languageLabel +
-                        ' src="' +
-                        track.src +
-                        '">';
+        this.getThumbnailLink(component).then((thumbnail) => {
+            this.getVideoTitle(component).then((videoTitle) => {
+                videoPlayer =
+                '<video height=40%; width=60%;' +
+                ' aria-label="' + videoTitle + '"' +
+                (thumbnail !== 'err' ? ' poster="' + thumbnail + '"' : '') +
+                ' controls controlsList="nodownload"><source src="' +
+                component.get('v.videoSrc') +
+                '" type="video/mp4" >';
+            }).finally(() => {
+                this.getVideoTracks(component).then((subTracks) => {
+                    if (subTracks && subTracks.length > 0) {
+                        subTracks.forEach((track) => {
+                            videoPlayer +=
+                                '<track kind="subtitles" srclang=' +
+                                track.srclang +
+                                ' label=' +
+                                track.languageLabel +
+                                ' src="' +
+                                track.src +
+                                '">';
+                        });
+                    }
+                    videoPlayer += '</video>'; //Video end
+                    component.set('v.videoPlayer', videoPlayer);
                 });
-            }
-            videoPlayer += '</video>'; //Video end
-            component.set('v.videoPlayer', videoPlayer);
-        });
+            });
+        })
     },
 
     addVideoView: function (component) {

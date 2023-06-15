@@ -1,5 +1,4 @@
 public with sharing class NKS_VideoPlayerCtrl {
-
     @AuraEnabled
     public static VideoStats getVideoStats(String videoId){
         Integer numViewsTotal = 0, numViewsToday = 0, numViewsYesterday = 0;
@@ -152,5 +151,45 @@ public with sharing class NKS_VideoPlayerCtrl {
             this.numViewsTotal = numViewsTotal;
             this.numViewsYesterday = numViewsYesterday;
         }
+    }
+
+    @AuraEnabled
+    public static void setThumbnailLink(String videoId, String thumbnailLink) {
+        ContentVersion cv = [SELECT Id, NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+        cv.NKS_Thumbnail_Link__c = thumbnailLink;
+        update cv;
+    }
+
+    /*  
+        Used in aura helper class to generate video HTML code. Cachable = false to instantly see changed thumbnail on refresh
+        - env: Standard (Inside Salesforce) - window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId
+        - env: Experience (On Experience Page) - window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        - env: Embed (Embedded) - experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getStoredThumbnailLink(String videoId, String env, String windowOrigin) {
+        String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
+        
+        String recordId;
+        if (thumbnailLink != null) {
+            List<String> splitThumbnail = thumbnailLink.split('/');
+            recordId = splitThumbnail[splitThumbnail.size() - 1]; // Record id of Thumbnail record
+        }
+
+        final Map<String, String> allowedEnvs = new Map<String, String>{
+            'Standard' => thumbnailLink,
+            'Experience' => windowOrigin + (NKS_VideoPlayerCtrl.isSandbox() == true ? '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' : '/sfsites/c/sfc/servlet.shepherd/document/download/') + recordId,
+            'Embed' => NKS_VideoPlayerCtrl.getLibraryBaseUrl().replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        };
+        if (allowedEnvs.get(env) == null || recordId == null) {
+            return 'err';
+        }
+        return allowedEnvs.get(env);
+    }
+
+    // Used on record page in wire
+    @AuraEnabled(cacheable=true)
+    public static String getThumbnailLinkOnFile(String videoId) {
+        return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
     }
 }
