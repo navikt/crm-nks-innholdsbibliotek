@@ -3,7 +3,11 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
-// TODO: Remember to package layout changes under "Undertekst" tab
+import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
+// TODO: Remember to package layout changes under "Undertekst" tab and fix Details
+// TODO: Write tests
+// TODO: Get the undertekst fields in the aura component and use them
+// TODO: Legg thumbnail i egen tab og undertekst i egen tab
 export default class NksSubtitles extends LightningElement {
     @api recordId; // The Content Document we are on
     contentVersionId; // The related CV Id of the Content Document
@@ -29,8 +33,17 @@ export default class NksSubtitles extends LightningElement {
             this.isFileTypeMp4 = result.data === 'mp4';
         }
     }
-
     
+    videoTrackURL;
+    @wire(showVideoTrackURL, { videoId: '$recordId'})
+    wiredShowVideoTrackURL(result) {
+        if (result.error) {
+            console.log(result.error);
+        } else if (result.data) {
+            this.videoTrackURL = result.data;
+        }
+    }
+
     setSubtitleLinkDataOnWire(recordData) {
         const languageMap = { NKS_Subtitle_Link_Norwegian__c: 'Norsk', NKS_Subtitle_Link_English__c: 'Engelsk', NKS_Subtitle_Link_Polish__c: 'Polsk' };
         delete recordData.Id; // Do not create another input field based on Id
@@ -67,6 +80,20 @@ export default class NksSubtitles extends LightningElement {
     showSaveToast() {
         const evt = new ShowToastEvent({
             message: 'Undertekstlink lagret.',
+            variant: 'success',
+            mode: 'pester'
+        });
+        this.dispatchEvent(evt);
+    }
+
+    handleCopy() {
+        navigator.clipboard.writeText(this.videoTrackURL);
+        this.showCopyToast();
+    }
+
+    showCopyToast() {
+        const evt = new ShowToastEvent({
+            message: 'Kopiert til utklippstavlen.',
             variant: 'success',
             mode: 'pester'
         });

@@ -65,19 +65,44 @@ public with sharing class NKS_VideoPlayerCtrl {
         return String.isNotBlank(communityUrl) ? communityUrl.removeEnd(communityUrl.substringAfterLast('/')) : '';
     }
 
+    // Helper Method
+    public static void createTrackRecordAndPutInMap(String srclang, String languageLabel, String src) {
+        List<String> splitSrc = src.split('/');
+        String recordId = splitSrc[splitSrc.size() - 1];
+        trackMap.put(recordId, new VideoTrack(srclang, languageLabel, src));
+    }
+
     /**
      * @description Returns a list of video tracks related to a content document video file
      * Used for embedding to get around bug with Lightning Out and CORS on tracks related to a video
      * @param recordId 
      * @return  `List<VideoTrack>`
      */
+    private static Map<Id, VideoTrack> trackMap = new Map<Id, VideoTrack>();
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
+        ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true];
+        trackMap.clear();
+
+        // TODO: Do this smarter - If a field is null it is not returned in Query. Check with Sobject methods to avoid many Ifs
+        if (cv.NKS_Subtitle_Link_Norwegian__c != null) {
+            NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('no', 'Norwegian', cv.NKS_Subtitle_Link_Norwegian__c);
+        }
+        if (cv.NKS_Subtitle_Link_English__c != null) {
+            NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('en', 'English', cv.NKS_Subtitle_Link_English__c);
+        }
+        if (cv.NKS_Subtitle_Link_Polish__c != null) {
+            NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('pl', 'Polish', cv.NKS_Subtitle_Link_Polish__c);
+        }
+        
         List<VideoTrack> subTracks = new List<VideoTrack>();
-        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, VersionData, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
-            Blob fileBody = subTrack.VersionData;
+        for (ContentVersion contentVersion : [SELECT ContentDocumentId, VersionData FROM ContentVersion WHERE ContentDocumentId IN :trackMap.keySet() AND IsLatest = true]) {
+            Blob fileBody = contentVersion.VersionData;
             String versionDataAsString = fileBody.toString();
-            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), versionDataAsString));
+            if (trackMap.get(contentVersion.ContentDocumentId) != null) {
+                trackMap.get(contentVersion.ContentDocumentId).src = versionDataAsString;
+                subTracks.add(trackMap.get(contentVersion.ContentDocumentId));
+            }
         }
         return subTracks;
     }
@@ -88,19 +113,54 @@ public with sharing class NKS_VideoPlayerCtrl {
      * @param recordId 
      * @return  `List<VideoTrack>`
      */
+
+    
+     // TODO: If a field is null it is not returned in Query. Check with Sobject methods
     @AuraEnabled(cacheable=true)
-    public static List<VideoTrack> getVideoTracksInternally(String videoId) {
-        String src, baseUrl;
+    public static List<VideoTrack> getVideoTracksInternally(String videoId) { 
+        Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();            
+        ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true];
+        
+        
+       /* List<String> fieldsNotNullList = new List<String>(); // TODO: Schema describe and get fields in one liner. Then do for-loop below with langMap
+
+
+        Map<String, List<String>> langMap = new Map<String, List<String>>{
+            'NKS_Subtitle_Link_Norwegian__c' => new List<String>{'no', 'Norwegian'},
+            'NKS_Subtitle_Link_English__c' => new List<String>{'en', 'English'},
+            'NKS_Subtitle_Link_Polish__c' => new List<String>{'pl', 'Polish'}
+        };*/
+
+         // TODO: Do this smarter
         List<VideoTrack> subTracks = new List<VideoTrack>();
-        Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();
-        baseUrl = isGuest ? getLibraryBaseUrl() : Url.getSalesforceBaseUrl().toExternalForm();
-        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
-            src = isGuest ? 
-                baseUrl.replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
-                baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
-            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), src));
+        if (cv.NKS_Subtitle_Link_Norwegian__c != null) {
+            subTracks.add(new VideoTrack('no', 'Norwegian', cv.NKS_Subtitle_Link_Norwegian__c));
+        }
+        if (cv.NKS_Subtitle_Link_English__c != null) {
+            subTracks.add(new VideoTrack('en', 'English', cv.NKS_Subtitle_Link_English__c));
+        }
+        if (cv.NKS_Subtitle_Link_Polish__c != null) {
+            subTracks.add(new VideoTrack('pl', 'Polish', cv.NKS_Subtitle_Link_Polish__c));
+        }
+        if (!isGuest) {
+            return subTracks;
+        }
+        // isGuest - Different URL for Experience Site
+        String url = getLibraryBaseUrl().replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/';
+        List<String> splitSrc;
+        for (VideoTrack track : subTracks) {
+            splitSrc = track.src.split('/');
+            track.src = url + splitSrc[splitSrc.size() - 1]; // RecordId of Subtitle/Track (Content Document) record
         }
         return subTracks;
+    }
+
+    // Always returns internal URL. Experience URL is handled in getVideoTracksInternally
+    // TODO: Subtitles not working inside Salesforce? Has it always been like this? Investigate.
+    @AuraEnabled(cacheable=true)
+    public static String showVideoTrackURL(String videoId) {
+        String baseUrl = Url.getSalesforceBaseUrl().toExternalForm();
+        return baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + videoId;
     }
 
     /**
@@ -194,9 +254,13 @@ public with sharing class NKS_VideoPlayerCtrl {
     }
 
     // Used on record page in wire
+    // TODO: If a field contains no value it is not included in result from Query
     @AuraEnabled(cacheable=true)
     public static ContentVersion getSubtitleLanguageLinksOnFile(String videoId) {
-        return [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+        List<String> queryFields = new List<String>{'NKS_Subtitle_Link_Norwegian__c', 'NKS_Subtitle_Link_English__c', 'NKS_Subtitle_Link_Polish__c'};
+        ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+        // TODO: Sobject.get() to get the fields missing?
+        return cv;
     }
 
     @AuraEnabled
