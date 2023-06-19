@@ -85,7 +85,6 @@
                             });
                         }
                         videoPlayer += '</video>'; //Video end
-                        console.log(videoPlayer);
                         component.set('v.videoPlayer', videoPlayer);
                     });
                 } else if (state === 'ERROR') {
