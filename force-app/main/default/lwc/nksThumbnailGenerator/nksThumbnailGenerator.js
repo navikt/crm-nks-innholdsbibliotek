@@ -5,7 +5,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
-    @api isVideoFile = false; // True if on video file (mp4) - false if not (likely thumbnail)
+    @api isVideoFile = false; // True if on video file (mp4)
+    @api isSubtitleFile = false; // True if on subtitle file (avoid showing on thumbnail file)
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
     wiredGetThumbnailLinkOnFile(result) {
@@ -14,6 +15,11 @@ export default class NksThumbnailGenerator extends LightningElement {
         } else if (result.data) {
             this.thumbnailLink = result.data;
         }
+    }
+
+    isThumbnailFile = false; // Easier than adding all the possible image variants
+    connectedCallback() {
+        this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile; 
     }
 
     saveThumbnailLink() {
