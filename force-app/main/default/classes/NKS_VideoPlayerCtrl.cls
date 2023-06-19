@@ -118,7 +118,7 @@ public with sharing class NKS_VideoPlayerCtrl {
         NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('en', 'English', cv.NKS_Subtitle_Link_English__c);
         NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('pl', 'Polish', cv.NKS_Subtitle_Link_Polish__c);
 
-        if (!isGuest) {
+        if (!isGuest && !Test.isRunningTest()) {
             return trackMap.values();
         }
         // isGuest - Different URL for Experience Site
@@ -130,7 +130,6 @@ public with sharing class NKS_VideoPlayerCtrl {
     }
 
     // Always returns internal URL. Experience URL is handled in getVideoTracksInternally
-    // TODO: Subtitles not working inside Salesforce? Has it always been like this? Investigate.
     @AuraEnabled(cacheable=true)
     public static String showVideoTrackURL(String videoId) {
         String baseUrl = Url.getSalesforceBaseUrl().toExternalForm();

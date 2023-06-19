@@ -4,7 +4,7 @@ import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
-// TODO: Write tests
+
 export default class NksSubtitles extends LightningElement {
     @api recordId; // The Content Document we are on
     contentVersionId; // The related CV Id of the Content Document

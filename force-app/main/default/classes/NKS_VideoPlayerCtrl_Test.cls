@@ -6,7 +6,10 @@ public class NKS_VideoPlayerCtrl_Test {
         insert new ContentVersion(
             Title = VIDEOTITLE,
             PathOnClient = 'testVid.mp4',
-            VersionData = Blob.valueOf('123TEST')
+            VersionData = Blob.valueOf('123TEST'),
+            NKS_Subtitle_Link_Norwegian__c = 'TEST NORWEGIAN',
+            NKS_Subtitle_Link_English__c = 'TEST ENGLISH',
+            NKS_Subtitle_Link_Polish__c = 'TEST POLISH'
         );
         ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
 
@@ -55,7 +58,7 @@ public class NKS_VideoPlayerCtrl_Test {
         List<NKS_VideoPlayerCtrl.VideoTrack> tracks = NKS_VideoPlayerCtrl.getVideoTracksInternally(videoId);
         Test.stopTest();
 
-        System.assertEquals(1, tracks.size());
+        System.assertEquals(3, tracks.size());
     }
 
     @isTest
@@ -67,7 +70,7 @@ public class NKS_VideoPlayerCtrl_Test {
         List<NKS_VideoPlayerCtrl.VideoTrack> tracks = NKS_VideoPlayerCtrl.getVideoTracks(videoId);
         Test.stopTest();
 
-        System.assertEquals(1, tracks.size());
+        System.assertEquals(3, tracks.size());
     }
     
     @isTest
@@ -145,5 +148,37 @@ public class NKS_VideoPlayerCtrl_Test {
         Test.stopTest();
         
         System.assertNotEquals('err', thumbnailLink);
+    }
+
+    @isTest
+    static void testGetSubtitleLanguageLinksOnFile() {
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
+        ?.ContentDocumentId;
+
+        Test.startTest();
+        ContentVersion cv = NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile(videoId);
+        Test.stopTest();
+        
+        System.assertNotEquals(null, cv.NKS_Subtitle_Link_Norwegian__c);
+        System.assertNotEquals(null, cv.NKS_Subtitle_Link_English__c);
+        System.assertNotEquals(null, cv.NKS_Subtitle_Link_Polish__c);
+    }
+
+    @isTest
+    static void testSaveSubtitleLanguageLinks() {
+        ContentVersion cv = [SELECT Id, NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
+        cv.NKS_Subtitle_Link_Norwegian__c = 'TEST_NO';
+        cv.NKS_Subtitle_Link_English__c = 'TEST_EN';
+        cv.NKS_Subtitle_Link_Polish__c = 'TEST_PL';
+
+        Test.startTest();
+        NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks(cv);
+        Test.stopTest();
+
+        cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
+        
+        System.assertEquals('TEST_NO', cv.NKS_Subtitle_Link_Norwegian__c);
+        System.assertEquals('TEST_EN', cv.NKS_Subtitle_Link_English__c);
+        System.assertEquals('TEST_PL', cv.NKS_Subtitle_Link_Polish__c);
     }
 }
