@@ -4,9 +4,7 @@ import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
-// TODO: Remember to package layout changes under "Undertekst" tab and fix Details
 // TODO: Write tests
-// TODO: Legg thumbnail i egen tab og undertekst i egen tab
 export default class NksSubtitles extends LightningElement {
     @api recordId; // The Content Document we are on
     contentVersionId; // The related CV Id of the Content Document
@@ -23,12 +21,14 @@ export default class NksSubtitles extends LightningElement {
     }
 
     isFileTypeMp4 = false;
+    isSubtitleFile = false;
     @wire(getFileType, { recordId: '$recordId'})
     wiredGetFileType(result) {
         if (result.error) {
             console.log(result.error);
         } else if (result.data) {
             this.isFileTypeMp4 = result.data === 'mp4';
+            this.isSubtitleFile = result.data === 'vtt';
         }
     }
     
