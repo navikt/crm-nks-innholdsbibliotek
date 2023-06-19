@@ -6,7 +6,6 @@ import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.save
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
 // TODO: Remember to package layout changes under "Undertekst" tab and fix Details
 // TODO: Write tests
-// TODO: Get the undertekst fields in the aura component and use them
 // TODO: Legg thumbnail i egen tab og undertekst i egen tab
 export default class NksSubtitles extends LightningElement {
     @api recordId; // The Content Document we are on
@@ -18,7 +17,6 @@ export default class NksSubtitles extends LightningElement {
         if (result.error) {
             console.error(result.error);
         } else if (result.data) {
-            console.log(JSON.stringify(result.data));
             this.contentVersionId = result.data.Id;
             this.subtitleLinks = this.setSubtitleLinkDataOnWire(Object.assign({}, result.data));
         }
@@ -48,7 +46,6 @@ export default class NksSubtitles extends LightningElement {
         const languageMap = { NKS_Subtitle_Link_Norwegian__c: 'Norsk', NKS_Subtitle_Link_English__c: 'Engelsk', NKS_Subtitle_Link_Polish__c: 'Polsk' };
         delete recordData.Id; // Do not create another input field based on Id
         let data = [];
-        console.log('recordData: ', JSON.stringify(recordData));
         for (const field in recordData) {
             data.push({ language: languageMap[field], link: recordData[field], relatedField: field });
         }
@@ -69,9 +66,9 @@ export default class NksSubtitles extends LightningElement {
 
     handleInputChange(event) {
         const strippedTargetId = event.target.id.split('-')[0]; // Remove added random integer
-        this.subtitleLinks.forEach(ele => {
-            if (ele.language === strippedTargetId) {
-                ele.link = event.detail.value;
+        this.subtitleLinks.forEach(element => {
+            if (element.language === strippedTargetId) {
+                element.link = event.detail.value;
             }
         });
         console.log(JSON.stringify(this.subtitleLinks));
