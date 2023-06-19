@@ -144,6 +144,12 @@
         </itemInstances>
         <itemInstances>
             <componentInstance>
+                <componentName>nksVideoStats</componentName>
+                <identifier>c_nksVideoStats</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>relatedListComponentOverride</name>
                     <value>NONE</value>
