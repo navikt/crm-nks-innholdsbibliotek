@@ -3,7 +3,7 @@ public class NKS_VideoPlayerCtrl_Test {
     private static final String VIDEOTITLE = 'TEST VIDEO';
     @TestSetup
     static void makeData() {
-        insert new ContentVersion(
+        ContentVersion videoCv = new ContentVersion(
             Title = VIDEOTITLE,
             PathOnClient = 'testVid.mp4',
             VersionData = Blob.valueOf('123TEST'),
@@ -11,12 +11,12 @@ public class NKS_VideoPlayerCtrl_Test {
             NKS_Subtitle_Link_English__c = 'TEST ENGLISH',
             NKS_Subtitle_Link_Polish__c = 'TEST POLISH'
         );
+        insert videoCv;
         ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
 
         insert new ContentVersion(
             Title = 'TEST SUBTITLE',
             PathOnClient = 'testSub.vtt',
-            NKS_Related_Video__c = conDoc.Id,
             VersionData = Blob.valueOf('123TEST')
         );
 
@@ -25,6 +25,9 @@ public class NKS_VideoPlayerCtrl_Test {
             PathOnClient = 'testThumbnail.png',
             VersionData = Blob.valueOf('123TEST')
         );
+        Id contentDocId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1]?.Id;
+        videoCv.NKS_Subtitle_Link_Norwegian__c += '/' + contentDocId;
+        update videoCv;
     }
 
     @isTest
@@ -180,5 +183,17 @@ public class NKS_VideoPlayerCtrl_Test {
         System.assertEquals('TEST_NO', cv.NKS_Subtitle_Link_Norwegian__c);
         System.assertEquals('TEST_EN', cv.NKS_Subtitle_Link_English__c);
         System.assertEquals('TEST_PL', cv.NKS_Subtitle_Link_Polish__c);
+    }
+
+    @isTest
+    static void testShowVideoTrackURL() {
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
+        ?.ContentDocumentId;
+
+        Test.startTest();
+        String videoTrackUrl = NKS_VideoPlayerCtrl.showVideoTrackURL(videoId);
+        Test.stopTest();
+
+        System.assertNotEquals(null, videoTrackUrl);
     }
 }

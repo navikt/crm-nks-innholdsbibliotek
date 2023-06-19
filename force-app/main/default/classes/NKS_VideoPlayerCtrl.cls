@@ -66,6 +66,7 @@ public with sharing class NKS_VideoPlayerCtrl {
     }
 
     // Helper Method for getVideoTracks and getVideoTracksInternally - puts tracks in map by Content Version Id
+    @TestVisible
     private static Map<String, VideoTrack> trackMap = new Map<String, VideoTrack>();
     public static void createTrackRecordAndPutInMap(String srclang, String languageLabel, String src) {
         if (src == null) {
