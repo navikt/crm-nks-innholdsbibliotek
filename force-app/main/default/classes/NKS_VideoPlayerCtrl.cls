@@ -113,13 +113,7 @@ public with sharing class NKS_VideoPlayerCtrl {
         Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();            
         ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true];
         
-        trackMap.clear();
-        // Initialize fields in case SOQL query did not return fields because they are set to null
-        // This is done to make sure input field shows in HTML
-        cv.NKS_Subtitle_Link_Norwegian__c = cv.NKS_Subtitle_Link_Norwegian__c;
-        cv.NKS_Subtitle_Link_English__c = cv.NKS_Subtitle_Link_English__c;
-        cv.NKS_Subtitle_Link_Polish__c = cv.NKS_Subtitle_Link_Polish__c;
-        
+        trackMap.clear();        
         NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('no', 'Norwegian', cv.NKS_Subtitle_Link_Norwegian__c);
         NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('en', 'English', cv.NKS_Subtitle_Link_English__c);
         NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('pl', 'Polish', cv.NKS_Subtitle_Link_Polish__c);
@@ -234,12 +228,14 @@ public with sharing class NKS_VideoPlayerCtrl {
     }
 
     // Used on record page in wire
-    // TODO: If a field contains no value it is not included in result from Query
     @AuraEnabled(cacheable=true)
     public static ContentVersion getSubtitleLanguageLinksOnFile(String videoId) {
-        List<String> queryFields = new List<String>{'NKS_Subtitle_Link_Norwegian__c', 'NKS_Subtitle_Link_English__c', 'NKS_Subtitle_Link_Polish__c'};
         ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
-        // TODO: Sobject.get() to get the fields missing?
+        // Initialize fields in case SOQL query did not return fields because they are set to null
+        // This is done to make sure input field shows in HTML
+        cv.NKS_Subtitle_Link_Norwegian__c = cv.NKS_Subtitle_Link_Norwegian__c == null ? '' : cv.NKS_Subtitle_Link_Norwegian__c;
+        cv.NKS_Subtitle_Link_English__c = cv.NKS_Subtitle_Link_English__c == null ? '' : cv.NKS_Subtitle_Link_English__c;
+        cv.NKS_Subtitle_Link_Polish__c = cv.NKS_Subtitle_Link_Polish__c == null ? '' : cv.NKS_Subtitle_Link_Polish__c;
         return cv;
     }
 
