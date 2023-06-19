@@ -154,6 +154,31 @@ public class NKS_VideoPlayerCtrl_Test {
     }
 
     @isTest
+    static void testGetThumbnailLinkOnFile() {
+        ContentVersion cv = [SELECT NKS_Thumbnail_Link__c, ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
+        cv.NKS_Thumbnail_Link__c = 'TEST LINK';
+        update cv;
+
+        Test.startTest();
+        String thumbnailLink = NKS_VideoPlayerCtrl.getThumbnailLinkOnFile(cv.ContentDocumentId);
+        Test.stopTest();
+
+        System.assertEquals('TEST LINK', thumbnailLink);
+    }
+
+    @isTest
+    static void testCheckFileType() {
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
+        ?.ContentDocumentId;
+
+        Test.startTest();
+        String fileType = NKS_VideoPlayerCtrl.checkFileType(videoId);
+        Test.stopTest();
+
+        System.assertEquals('mp4', fileType);
+    }
+
+    @isTest
     static void testGetSubtitleLanguageLinksOnFile() {
         String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
         ?.ContentDocumentId;
