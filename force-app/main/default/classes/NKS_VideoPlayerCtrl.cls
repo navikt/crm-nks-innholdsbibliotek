@@ -211,7 +211,7 @@ public with sharing class NKS_VideoPlayerCtrl {
 
         final Map<String, String> allowedEnvs = new Map<String, String>{
             'Standard' => thumbnailLink,
-            'Experience' => windowOrigin + (NKS_VideoPlayerCtrl.isSandbox() == true ? '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' : '/sfsites/c/sfc/servlet.shepherd/document/download/') + recordId,
+            'Experience' => windowOrigin + (NKS_VideoPlayerCtrl.isSandbox() ? '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' : '/sfsites/c/sfc/servlet.shepherd/document/download/') + recordId,
             'Embed' => NKS_VideoPlayerCtrl.getLibraryBaseUrl().replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
         };
         if (allowedEnvs.get(env) == null || recordId == null) {
