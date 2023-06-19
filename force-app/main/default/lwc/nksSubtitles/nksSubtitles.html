@@ -1,6 +1,20 @@
 <template>
     <div if:false={isFileTypeMp4}>
-        Undertekster kan kun legges til videofiler.
+        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Undertekst link</h1>
+        <div class="slds-box slds-box_x-small slds-theme_shade">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item alignment-bump="right" size="11">
+                    <lightning-formatted-text value={videoTrackURL}></lightning-formatted-text>
+                </lightning-layout-item>
+                <lightning-layout-item>
+                    <lightning-button-icon
+                        icon-name="utility:copy"
+                        onclick={handleCopy}
+                        variant="brand"
+                    ></lightning-button-icon>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
     </div>
     <lightning-card title="Undertekster" icon-name="utility:display_text" if:true={isFileTypeMp4}>
         <ul class="slds-m-around_medium">
