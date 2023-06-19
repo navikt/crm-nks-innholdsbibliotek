@@ -65,7 +65,8 @@ public with sharing class NKS_VideoPlayerCtrl {
         return String.isNotBlank(communityUrl) ? communityUrl.removeEnd(communityUrl.substringAfterLast('/')) : '';
     }
 
-    // Helper Method - puts tracks in map by Content Version Id
+    // Helper Method for getVideoTracks and getVideoTracksInternally - puts tracks in map by Content Version Id
+    private static Map<String, VideoTrack> trackMap = new Map<String, VideoTrack>();
     public static void createTrackRecordAndPutInMap(String srclang, String languageLabel, String src) {
         if (src == null) {
             return;
@@ -81,7 +82,6 @@ public with sharing class NKS_VideoPlayerCtrl {
      * @param recordId 
      * @return  `List<VideoTrack>`
      */
-    private static Map<String, VideoTrack> trackMap = new Map<String, VideoTrack>();
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
         ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true];
