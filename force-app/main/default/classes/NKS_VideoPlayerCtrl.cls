@@ -81,7 +81,7 @@ public with sharing class NKS_VideoPlayerCtrl {
      * @param recordId 
      * @return  `List<VideoTrack>`
      */
-    private static Map<Id, VideoTrack> trackMap = new Map<Id, VideoTrack>();
+    private static Map<String, VideoTrack> trackMap = new Map<String, VideoTrack>();
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
         ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true];
@@ -123,7 +123,7 @@ public with sharing class NKS_VideoPlayerCtrl {
         }
         // isGuest - Different URL for Experience Site
         String url = getLibraryBaseUrl().replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/';
-        for (Id key : trackMap.keySet()) {
+        for (String key : trackMap.keySet()) {
             trackMap.get(key).src = url + key; // Set "url + recordId"
         }
         return trackMap.values();

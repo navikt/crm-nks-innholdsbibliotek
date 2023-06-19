@@ -49,7 +49,6 @@ export default class NksSubtitles extends LightningElement {
         for (const field in recordData) {
             data.push({ language: languageMap[field], link: recordData[field], relatedField: field });
         }
-        console.log(JSON.stringify(data));
         return data;
     }
 
@@ -59,7 +58,6 @@ export default class NksSubtitles extends LightningElement {
             data[element.relatedField] = element.link;
         });
         data.Id = this.contentVersionId;
-        console.log(JSON.stringify(data));
         saveSubtitleLanguageLinks({ cvObj: data });
         this.showSaveToast();
     }
@@ -71,7 +69,6 @@ export default class NksSubtitles extends LightningElement {
                 element.link = event.detail.value;
             }
         });
-        console.log(JSON.stringify(this.subtitleLinks));
     }
 
     showSaveToast() {
