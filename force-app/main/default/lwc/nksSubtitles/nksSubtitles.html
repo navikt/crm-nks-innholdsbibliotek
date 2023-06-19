@@ -1,6 +1,6 @@
 <template>
     <div if:true={isSubtitleFile}>
-        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Undertekstlenke</h1>
+        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Undertekst link</h1>
         <div class="slds-box slds-box_x-small slds-theme_shade">
             <lightning-layout multiple-rows>
                 <lightning-layout-item alignment-bump="right" size="11">
@@ -23,7 +23,7 @@
                     <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{subtitle.language}</h1>
                     <div>
                         <div class="padding-small lgc-bg">
-                            <lightning-input type="text" label="Undertekstlenke" value={subtitle.link} id={subtitle.language} placeholder="Lenken finner du i Undertekst-fanen på .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
+                            <lightning-input type="text" label="Undertekst-link" value={subtitle.link} id={subtitle.language} placeholder="Linken finner du i Preview-tabben på .srt eller .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
                         </div>
                     </div>
                 </li>
