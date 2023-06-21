@@ -44,28 +44,25 @@ export default class NksThumbnailGenerator extends LightningElement {
     }
 
     handleCopy() {
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(this.showThumbnailLink);
-            this.showCopyToast();
-        } else {
-            let textArea = document.createElement('textarea');
-            textArea.value = this.showThumbnailLink;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            document.execCommand('copy');
-            textArea.remove();
-            this.showCopyToast();
-        }        
+        let copyValue = this.showThumbnailLink;
+        let hiddenInput = document.createElement('input');
+        hiddenInput.value = copyValue;
+        document.body.appendChild(hiddenInput);
+        hiddenInput.focus();
+        hiddenInput.select();
+        try {
+            var successful = document.execCommand('copy');
+            this.showCopyToast(successful ? 'success' : 'error');
+        } catch (error) {
+            this.showCopyToast('error');
+        }
+        document.body.removeChild(hiddenInput);
     }
 
-    showCopyToast() {
+    showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: 'Kopiert til utklippstavlen.',
-            variant: 'success',
+            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere',
+            variant: status,
             mode: 'pester'
         });
         this.dispatchEvent(evt);
