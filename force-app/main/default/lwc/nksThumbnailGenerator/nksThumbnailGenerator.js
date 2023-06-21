@@ -18,8 +18,8 @@ export default class NksThumbnailGenerator extends LightningElement {
     }
 
     isThumbnailFile = false; // Easier than adding all the possible image variants
-    connectedCallback() {
-        this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile; 
+    renderedCallback() {
+        this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile;
     }
 
     saveThumbnailLink() {
