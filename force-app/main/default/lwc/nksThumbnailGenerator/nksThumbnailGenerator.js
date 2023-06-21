@@ -29,7 +29,7 @@ export default class NksThumbnailGenerator extends LightningElement {
         } else if (result.data) {
             this.isVideoFile = this.videoFileTypes.includes(result.data);
             this.isSubtitleFile = this.subtitleFileTypes.includes(result.data);
-            this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile;
+            this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile; // Easier than checking all the image variants
         }
     }
 
@@ -44,8 +44,22 @@ export default class NksThumbnailGenerator extends LightningElement {
     }
 
     handleCopy() {
-        navigator.clipboard.writeText(this.showThumbnailLink);
-        this.showCopyToast();
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(this.showThumbnailLink);
+            this.showCopyToast();
+        } else {
+            let textArea = document.createElement('textarea');
+            textArea.value = this.showThumbnailLink;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            document.execCommand('copy');
+            textArea.remove();
+            this.showCopyToast();
+        }        
     }
 
     showCopyToast() {
