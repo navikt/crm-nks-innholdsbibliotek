@@ -16,7 +16,7 @@
             </lightning-layout>
         </div>
     </div>
-    <lightning-card title="Undertekster" icon-name="utility:display_text" if:true={isFileTypeMp4}>
+    <lightning-card title="Undertekster" icon-name="utility:display_text" if:true={isVideoFile}>
         <ul class="slds-m-around_medium">
             <template for:each={subtitleLinks} for:item="subtitle">
                 <li key={subtitle.language} style="margin-bottom: 1rem;">
