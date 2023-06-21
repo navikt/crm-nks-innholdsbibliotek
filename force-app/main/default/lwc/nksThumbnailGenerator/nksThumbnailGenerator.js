@@ -1,12 +1,14 @@
 import { LightningElement, api, wire } from 'lwc';
 import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailLink';
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
+import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
-    @api isVideoFile = false; // True if on video file (mp4)
-    @api isSubtitleFile = false; // True if on subtitle file (avoid showing on thumbnail file)
+    isVideoFile = false;
+    isSubtitleFile = false;
+    isThumbnailFile = false;
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
     wiredGetThumbnailLinkOnFile(result) {
@@ -17,9 +19,18 @@ export default class NksThumbnailGenerator extends LightningElement {
         }
     }
 
-    isThumbnailFile = false; // Easier than adding all the possible image variants
-    renderedCallback() {
-        this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile;
+    
+    videoFileTypes = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'avchd'];
+    subtitleFileTypes = ['vtt']; // Does not support .srt at the moment
+    @wire(getFileType, { recordId: '$recordId'})
+    wiredGetFileType(result) {
+        if (result.error) {
+            console.log(result.error);
+        } else if (result.data) {
+            this.isVideoFile = this.videoFileTypes.includes(result.data);
+            this.isSubtitleFile = this.subtitleFileTypes.includes(result.data);
+            this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile;
+        }
     }
 
     saveThumbnailLink() {
