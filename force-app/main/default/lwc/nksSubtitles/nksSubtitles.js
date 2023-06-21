@@ -95,6 +95,7 @@ export default class NksSubtitles extends LightningElement {
             this.showCopyToast('error');
         }
         document.body.removeChild(hiddenInput);
+        this.template.querySelector('[data-id="subtitle-copy-button"]').focus(); // Put focus back on copy button - for UU
     }
 
     showCopyToast(status) {
