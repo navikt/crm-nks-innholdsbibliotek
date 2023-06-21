@@ -34,6 +34,7 @@ export default class NksEmbedGenerator extends LightningElement {
             this.showCopyToast('error');
         }
         document.body.removeChild(hiddenInput);
+        this.template.querySelector('[data-id="copy-button"]').focus(); // Put focus back on copy button - for UU
     }
 
     showCopyToast(status) {
