@@ -33,7 +33,7 @@ export default class NksVideoLibLinker extends LightningElement {
             this.showCopyToast('error');
         }
         document.body.removeChild(hiddenInput);
-        this.template.querySelector('[data-id="copy-button"]').focus(); // Put focus back on copy button - for UU
+        this.template.querySelector('[data-id="video-copy-button"]').focus(); // Put focus back on copy button - for UU
     }
 
     showCopyToast(status) {
