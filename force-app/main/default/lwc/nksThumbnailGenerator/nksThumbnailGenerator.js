@@ -1,14 +1,12 @@
 import { LightningElement, api, wire } from 'lwc';
 import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailLink';
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
-import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { isVideoFile, isSubtitleFile } from 'c/utils';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
-    isVideoFile = false;
-    isSubtitleFile = false;
-    isThumbnailFile = false;
+    @api filetype;
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
     wiredGetThumbnailLinkOnFile(result) {
@@ -16,20 +14,6 @@ export default class NksThumbnailGenerator extends LightningElement {
             console.error(result.error);
         } else if (result.data) {
             this.thumbnailLink = result.data;
-        }
-    }
-
-    
-    videoFileTypes = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'avchd'];
-    subtitleFileTypes = ['vtt']; // Does not support .srt at the moment
-    @wire(getFileType, { recordId: '$recordId'})
-    wiredGetFileType(result) {
-        if (result.error) {
-            console.log(result.error);
-        } else if (result.data) {
-            this.isVideoFile = this.videoFileTypes.includes(result.data);
-            this.isSubtitleFile = this.subtitleFileTypes.includes(result.data);
-            this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile; // Easier than checking all the image variants
         }
     }
 
@@ -76,6 +60,19 @@ export default class NksThumbnailGenerator extends LightningElement {
             mode: 'pester'
         });
         this.dispatchEvent(evt);
+    }
+
+    get isVideoFile() {
+        return isVideoFile(this.filetype);
+    }
+
+    get isSubtitleFile() {
+        return isSubtitleFile(this.filetype);
+    }
+
+    // Easier than checking all the image variants
+    get isThumbnailFile() { 
+        return !this.isVideoFile && !this.isSubtitleFile;
     }
     
     // Will only be shown and used if file is not MP4
