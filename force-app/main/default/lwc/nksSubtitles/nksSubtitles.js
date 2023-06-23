@@ -20,17 +20,22 @@ export default class NksSubtitles extends LightningElement {
         }
     }
 
-    isVideoFile = false;
-    isSubtitleFile = false;
-    videoFileTypes = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'avchd'];
+    filetype;
     @wire(getFileType, { recordId: '$recordId'})
     wiredGetFileType(result) {
         if (result.error) {
             console.log(result.error);
         } else if (result.data) {
-            this.isVideoFile = this.videoFileTypes.includes(result.data);
-            this.isSubtitleFile = result.data === 'vtt'; // .srt not yet supported
+            this.filetype = result.data;
         }
+    }
+
+    get isVideoFile() {
+        return isVideoFile(this.filetype);
+    }
+
+    get isSubtitleFile() {
+        return isSubtitleFile(this.filetype);
     }
     
     videoTrackURL;
