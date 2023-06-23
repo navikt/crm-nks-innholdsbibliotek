@@ -2,11 +2,11 @@ import { LightningElement, api, wire } from 'lwc';
 import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailLink';
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { isVideoFile, isSubtitleFile } from 'c/utils';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
-    @api isVideoFile = false; // True if on video file (mp4)
-    @api isSubtitleFile = false; // True if on subtitle file (avoid showing on thumbnail file)
+    @api filetype;
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
     wiredGetThumbnailLinkOnFile(result) {
@@ -15,11 +15,6 @@ export default class NksThumbnailGenerator extends LightningElement {
         } else if (result.data) {
             this.thumbnailLink = result.data;
         }
-    }
-
-    isThumbnailFile = false; // Easier than adding all the possible image variants
-    renderedCallback() {
-        this.isThumbnailFile = !this.isVideoFile && !this.isSubtitleFile;
     }
 
     saveThumbnailLink() {
@@ -33,14 +28,26 @@ export default class NksThumbnailGenerator extends LightningElement {
     }
 
     handleCopy() {
-        navigator.clipboard.writeText(this.showThumbnailLink);
-        this.showCopyToast();
+        let copyValue = this.showThumbnailLink;
+        let hiddenInput = document.createElement('input');
+        hiddenInput.value = copyValue;
+        document.body.appendChild(hiddenInput);
+        hiddenInput.focus();
+        hiddenInput.select();
+        try {
+            var successful = document.execCommand('copy');
+            this.showCopyToast(successful ? 'success' : 'error');
+        } catch (error) {
+            this.showCopyToast('error');
+        }
+        document.body.removeChild(hiddenInput);
+        this.template.querySelector('[data-id="thumbnail-copy-button"]').focus(); // Put focus back on copy button - for UU
     }
 
-    showCopyToast() {
+    showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: 'Kopiert til utklippstavlen.',
-            variant: 'success',
+            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere.',
+            variant: status,
             mode: 'pester'
         });
         this.dispatchEvent(evt);
@@ -53,6 +60,19 @@ export default class NksThumbnailGenerator extends LightningElement {
             mode: 'pester'
         });
         this.dispatchEvent(evt);
+    }
+
+    get isVideoFile() {
+        return isVideoFile(this.filetype);
+    }
+
+    get isSubtitleFile() {
+        return isSubtitleFile(this.filetype);
+    }
+
+    // Easier than checking all the image variants
+    get isThumbnailFile() { 
+        return !this.isVideoFile && !this.isSubtitleFile;
     }
     
     // Will only be shown and used if file is not MP4
