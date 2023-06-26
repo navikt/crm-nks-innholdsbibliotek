@@ -25,7 +25,7 @@
                     <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{subtitle.language}</h1>
                     <div>
                         <div class="padding-small lgc-bg">
-                            <lightning-input type="text" label="Undertekstlenke" value={subtitle.link} id={subtitle.language} placeholder="Lenken finner du i Undertekst-fanen på .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
+                            <lightning-input type="text" label="Undertekstlenke" value={subtitle.link} data-id={subtitle.language} placeholder="Lenken finner du i Undertekst-fanen på .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
                         </div>
                     </div>
                 </li>

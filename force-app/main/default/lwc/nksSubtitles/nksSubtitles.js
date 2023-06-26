@@ -4,6 +4,7 @@ import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
+import { isVideoFile, isSubtitleFile } from 'c/utils';
 
 export default class NksSubtitles extends LightningElement {
     @api recordId; // The Content Document we are on
@@ -64,23 +65,25 @@ export default class NksSubtitles extends LightningElement {
             data[element.relatedField] = element.link;
         });
         data.Id = this.contentVersionId;
-        saveSubtitleLanguageLinks({ cvObj: data });
-        this.showSaveToast();
-    }
-
-    handleInputChange(event) {
-        const strippedTargetId = event.target.id.split('-')[0]; // Remove added random integer
-        this.subtitleLinks.forEach(element => {
-            if (element.language === strippedTargetId) {
-                element.link = event.detail.value;
-            }
+        saveSubtitleLanguageLinks({ cvObj: data }).then(() => {
+            this.showSaveToast('success');
+        }).catch(err => {
+            console.error(err);
+            this.showSaveToast('error');
         });
     }
 
-    showSaveToast() {
+    handleInputChange(event) {
+        let obj = this.subtitleLinks.find(x => x.language === event.target.dataset.id);
+        if (typeof obj !== undefined) {
+            obj.link = event.detail.value;
+        }
+    }
+
+    showSaveToast(status) {
         const evt = new ShowToastEvent({
-            message: 'Undertekstlink lagret.',
-            variant: 'success',
+            message: status === 'success' ? 'Undertekstlink lagret.' : 'Kunne ikke lagre.',
+            variant: status,
             mode: 'pester'
         });
         this.dispatchEvent(evt);
