@@ -16,10 +16,10 @@ const columns = [
     { label: 'Språk', fieldName: 'languageLabel' },
     { label: 'Link', fieldName: 'src' },
     {
-        type: "button", label: '', initialWidth: 110, typeAttributes: {
+        type: "button", initialWidth: 110, typeAttributes: {
             label: 'Slett',
             name: 'Delete',
-            title: 'Slett',
+            title: 'Slett undertekstrelasjon',
             disabled: false,
             value: 'delete',
             iconName:'utility:delete',
