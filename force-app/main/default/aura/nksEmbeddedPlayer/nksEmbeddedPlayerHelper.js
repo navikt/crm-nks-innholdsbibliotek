@@ -75,11 +75,11 @@
                                 }
                                 const url = window.URL.createObjectURL(blob);               
                                 videoPlayer +=
-                                    '<track kind="captions" srclang=' +
+                                    '<track kind="captions" srclang="' +
                                     track.srclang +
-                                    ' label=' +
+                                    '" label="' +
                                     track.languageLabel +
-                                    ' src="' +
+                                    '" src="' +
                                     url +
                                     '">';
                             });
