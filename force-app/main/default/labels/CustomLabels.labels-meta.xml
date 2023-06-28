@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>NKS_Subtitle_Language_Norwegian</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label to show on subtitle list</shortDescription>
+        <value>Norwegian</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitle_Language_English</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label to show on subtitle list</shortDescription>
+        <value>English</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitle_Language_Polish</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label to show on subtitle list</shortDescription>
+        <value>Polish</value>
+    </labels>
+    <labels>
         <fullName>NKS_Video_Stats_Title</fullName>
         <categories>Video, Asset Library, UI</categories>
         <language>en_US</language>

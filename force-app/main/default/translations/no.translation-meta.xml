@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
     <customLabels>
+        <label>Norsk</label>
+        <name>NKS_Subtitle_Language_Norwegian</name>
+    </customLabels>
+    <customLabels>
+        <label>Engelsk</label>
+        <name>NKS_Subtitle_Language_English</name>
+    </customLabels>
+    <customLabels>
+        <label>Polsk</label>
+        <name>NKS_Subtitle_Language_Polish</name>
+    </customLabels>
+    <customLabels>
         <label>Bibliotekslenke</label>
         <name>NKS_Video_Library_Link</name>
     </customLabels>
