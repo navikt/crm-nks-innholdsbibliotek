@@ -82,7 +82,7 @@ public with sharing class NKS_VideoPlayerCtrl {
             splitSrc = track.src.split('/');
             contentDocumentIdsByVideoTrack.put(splitSrc[splitSrc.size() - 1], track);
         }
-        
+
         for (ContentVersion contentVersion : [SELECT ContentDocumentId, VersionData FROM ContentVersion WHERE ContentDocumentId IN :contentDocumentIdsByVideoTrack.keySet() AND IsLatest = true]) {
             Blob fileBody = contentVersion.VersionData;
             String versionDataAsString = fileBody.toString();
@@ -188,7 +188,6 @@ public with sharing class NKS_VideoPlayerCtrl {
         return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
     }
 
-    // TODO: Check if this can be done by other functions
     @AuraEnabled(cacheable=true)
     public static String getContentVersionIdOnContentDocument(String videoId) {
         return [SELECT Id FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1].Id;
@@ -196,7 +195,7 @@ public with sharing class NKS_VideoPlayerCtrl {
 
     // Used on record page in wire
     @AuraEnabled(cacheable=true)
-    public static Object getSubtitleLanguageLinksOnFile(String videoId) {
+    public static String getSubtitleLanguageLinksOnFile(String videoId) {
         ContentVersion cv = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
         return cv.NKS_Subtitle_Links__c != null ? cv.NKS_Subtitle_Links__c : '{}';
     }

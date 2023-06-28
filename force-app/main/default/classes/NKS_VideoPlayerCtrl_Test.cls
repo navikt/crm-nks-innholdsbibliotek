@@ -7,27 +7,19 @@ public class NKS_VideoPlayerCtrl_Test {
             Title = VIDEOTITLE,
             PathOnClient = 'testVid.mp4',
             VersionData = Blob.valueOf('123TEST'),
-            NKS_Subtitle_Link_Norwegian__c = 'TEST NORWEGIAN',
-            NKS_Subtitle_Link_English__c = 'TEST ENGLISH',
-            NKS_Subtitle_Link_Polish__c = 'TEST POLISH'
+            NKS_Subtitle_Links__c = '[{"srclang":"no","languageLabel":"Norwegian","src":"testlink/0693O000002w0YWQAY"},{"srclang":"en","languageLabel":"English","src":"testlink/0693O000002w0YRQAY"},{"srclang":"pl","languageLabel":"Polish","src":"testlink/0693O000002w0YSQAY"}]'
         );
         insert videoCv;
-        ContentDocument conDoc = [SELECT Id FROM ContentDocument LIMIT 1];
-
         insert new ContentVersion(
             Title = 'TEST SUBTITLE',
             PathOnClient = 'testSub.vtt',
             VersionData = Blob.valueOf('123TEST')
         );
-
         insert new ContentVersion(
             Title = 'TEST THUMBNAIL',
             PathOnClient = 'testThumbnail.png',
             VersionData = Blob.valueOf('123TEST')
         );
-        Id contentDocId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1]?.Id;
-        videoCv.NKS_Subtitle_Link_Norwegian__c += '/' + contentDocId;
-        update videoCv;
     }
 
     @isTest
@@ -184,30 +176,24 @@ public class NKS_VideoPlayerCtrl_Test {
         ?.ContentDocumentId;
 
         Test.startTest();
-        ContentVersion cv = NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile(videoId);
+        String jsonString = NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile(videoId);
         Test.stopTest();
         
-        System.assertNotEquals(null, cv.NKS_Subtitle_Link_Norwegian__c);
-        System.assertNotEquals(null, cv.NKS_Subtitle_Link_English__c);
-        System.assertNotEquals(null, cv.NKS_Subtitle_Link_Polish__c);
+        System.assertNotEquals(null, jsonString);
+        System.assertNotEquals('{}', jsonString);
     }
 
     @isTest
     static void testSaveSubtitleLanguageLinks() {
-        ContentVersion cv = [SELECT Id, NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
-        cv.NKS_Subtitle_Link_Norwegian__c = 'TEST_NO';
-        cv.NKS_Subtitle_Link_English__c = 'TEST_EN';
-        cv.NKS_Subtitle_Link_Polish__c = 'TEST_PL';
+        ContentVersion cv = [SELECT Id FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
 
         Test.startTest();
-        NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks(cv);
+        NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks('[{JSON: "testJson"}]', cv.Id);
         Test.stopTest();
 
-        cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
+        cv = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1];
         
-        System.assertEquals('TEST_NO', cv.NKS_Subtitle_Link_Norwegian__c);
-        System.assertEquals('TEST_EN', cv.NKS_Subtitle_Link_English__c);
-        System.assertEquals('TEST_PL', cv.NKS_Subtitle_Link_Polish__c);
+        System.assertEquals('[{JSON: "testJson"}]', cv.NKS_Subtitle_Links__c);
     }
 
     @isTest
@@ -220,5 +206,17 @@ public class NKS_VideoPlayerCtrl_Test {
         Test.stopTest();
 
         System.assertNotEquals(null, videoTrackUrl);
+    }
+
+    @isTest
+    static void testGetContentVersionIdOnContentDocument(){
+        String videoId = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = :VIDEOTITLE LIMIT 1]
+        ?.ContentDocumentId;
+
+        Test.startTest();
+        String cvId = NKS_VideoPlayerCtrl.getContentVersionIdOnContentDocument(videoId);
+        Test.stopTest();
+        
+        System.assertNotEquals(null, cvId);
     }
 }
