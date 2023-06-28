@@ -65,18 +65,6 @@ public with sharing class NKS_VideoPlayerCtrl {
         return String.isNotBlank(communityUrl) ? communityUrl.removeEnd(communityUrl.substringAfterLast('/')) : '';
     }
 
-    // Helper Method for getVideoTracks and getVideoTracksInternally - puts tracks in map by Content Version Id
-    @TestVisible
-    private static Map<String, VideoTrack> trackMap = new Map<String, VideoTrack>();
-    public static void createTrackRecordAndPutInMap(String srclang, String languageLabel, String src) {
-        if (src == null) {
-            return;
-        }
-        List<String> splitSrc = src.split('/');
-        String recordId = splitSrc[splitSrc.size() - 1];
-        trackMap.put(recordId, new VideoTrack(srclang, languageLabel, src));
-    }
-
     /**
      * @description Returns a list of video tracks related to a content document video file
      * Used for embedding to get around bug with Lightning Out and CORS on tracks related to a video
@@ -85,21 +73,24 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
-        ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true];
-        
-        trackMap.clear();
-        NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('no', 'Norwegian', cv.NKS_Subtitle_Link_Norwegian__c);
-        NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('en', 'English', cv.NKS_Subtitle_Link_English__c);
-        NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('pl', 'Polish', cv.NKS_Subtitle_Link_Polish__c);
+        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true].NKS_Subtitle_Links__c;
+        List<VideoTrack> videoTracks = (List<VideoTrack>)JSON.deserialize(subtitlesAsJson, List<VideoTrack>.class);
 
-        for (ContentVersion contentVersion : [SELECT ContentDocumentId, VersionData FROM ContentVersion WHERE ContentDocumentId IN :trackMap.keySet() AND IsLatest = true]) {
+        Map<Id, VideoTrack> contentDocumentIdsByVideoTrack = new Map<Id, VideoTrack>();
+        List<String> splitSrc;
+        for (VideoTrack track : videoTracks) {
+            splitSrc = track.src.split('/');
+            contentDocumentIdsByVideoTrack.put(splitSrc[splitSrc.size() - 1], track);
+        }
+        
+        for (ContentVersion contentVersion : [SELECT ContentDocumentId, VersionData FROM ContentVersion WHERE ContentDocumentId IN :contentDocumentIdsByVideoTrack.keySet() AND IsLatest = true]) {
             Blob fileBody = contentVersion.VersionData;
             String versionDataAsString = fileBody.toString();
-            if (trackMap.get(contentVersion.ContentDocumentId) != null) {
-                trackMap.get(contentVersion.ContentDocumentId).src = versionDataAsString;
+            if (contentDocumentIdsByVideoTrack.get(contentVersion.ContentDocumentId) != null) {
+                contentDocumentIdsByVideoTrack.get(contentVersion.ContentDocumentId).src = versionDataAsString;
             }
         }
-        return trackMap.values();
+        return contentDocumentIdsByVideoTrack.values();
     }
 
     /**
@@ -112,22 +103,22 @@ public with sharing class NKS_VideoPlayerCtrl {
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracksInternally(String videoId) { 
         Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();            
-        ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true];
-        
-        trackMap.clear();        
-        NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('no', 'Norwegian', cv.NKS_Subtitle_Link_Norwegian__c);
-        NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('en', 'English', cv.NKS_Subtitle_Link_English__c);
-        NKS_VideoPlayerCtrl.createTrackRecordAndPutInMap('pl', 'Polish', cv.NKS_Subtitle_Link_Polish__c);
+        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true].NKS_Subtitle_Links__c;
+        List<VideoTrack> videoTracks = (List<VideoTrack>)JSON.deserialize(subtitlesAsJson, List<VideoTrack>.class);
 
         if (!isGuest && !Test.isRunningTest()) {
-            return trackMap.values();
+            return videoTracks;
         }
         // isGuest - Different URL for Experience Site
         String url = getLibraryBaseUrl().replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/';
-        for (String key : trackMap.keySet()) {
-            trackMap.get(key).src = url + key; // Set "url + recordId"
+        String recordId;
+        List<String> splitSrc;
+        for (VideoTrack track : videoTracks) {
+            splitSrc = track.src.split('/');
+            recordId = splitSrc[splitSrc.size() - 1]; // Record id at end of url
+            track.src = url + recordId;
         }
-        return trackMap.values();
+        return videoTracks;
     }
 
     // Always returns internal URL. Experience URL is handled in getVideoTracksInternally
@@ -155,36 +146,6 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     private static String getParentFolderName(String recordId) {
         return [SELECT Id, ParentContentFolder.Name FROM ContentFolderItem WHERE Id =: recordId LIMIT 1]?.ParentContentFolder?.Name; 
-    }
-
-    public class VideoTrack {
-        @AuraEnabled
-        public String srclang;
-        @AuraEnabled
-        public String languageLabel;
-        @AuraEnabled
-        public String src;
-
-        public VideoTrack(String srclang, String languageLabel, String src) {
-            this.src = src;
-            this.srclang = srclang;
-            this.languageLabel = languageLabel;
-        }
-    }
-
-    public class VideoStats {
-        @AuraEnabled
-        public Integer numViewsTotal;
-        @AuraEnabled
-        public Integer numViewsToday;
-        @AuraEnabled
-        public Integer numViewsYesterday;
-
-        public VideoStats(Integer numViewsTotal, Integer numViewsToday, Integer numViewsYesterday) {
-            this.numViewsToday = numViewsToday;
-            this.numViewsTotal = numViewsTotal;
-            this.numViewsYesterday = numViewsYesterday;
-        }
     }
 
     @AuraEnabled
@@ -227,21 +188,52 @@ public with sharing class NKS_VideoPlayerCtrl {
         return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
     }
 
+    // TODO: Check if this can be done by other functions
+    @AuraEnabled(cacheable=true)
+    public static String getContentVersionIdOnContentDocument(String videoId) {
+        return [SELECT Id FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1].Id;
+    }
+
     // Used on record page in wire
     @AuraEnabled(cacheable=true)
-    public static ContentVersion getSubtitleLanguageLinksOnFile(String videoId) {
-        ContentVersion cv = [SELECT NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
-        // Initialize fields in case SOQL query did not return fields because they are set to null
-        // This is done to make sure input field shows in HTML
-        cv.NKS_Subtitle_Link_Norwegian__c = cv.NKS_Subtitle_Link_Norwegian__c == null ? '' : cv.NKS_Subtitle_Link_Norwegian__c;
-        cv.NKS_Subtitle_Link_English__c = cv.NKS_Subtitle_Link_English__c == null ? '' : cv.NKS_Subtitle_Link_English__c;
-        cv.NKS_Subtitle_Link_Polish__c = cv.NKS_Subtitle_Link_Polish__c == null ? '' : cv.NKS_Subtitle_Link_Polish__c;
-        return cv;
+    public static Object getSubtitleLanguageLinksOnFile(String videoId) {
+        ContentVersion cv = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+        return cv.NKS_Subtitle_Links__c != null ? cv.NKS_Subtitle_Links__c : '{}';
     }
 
     @AuraEnabled
-    public static void saveSubtitleLanguageLinks(ContentVersion cvObj) {
-        ContentVersion cv = new ContentVersion(Id = cvObj.Id, NKS_Subtitle_Link_Norwegian__c = cvObj.NKS_Subtitle_Link_Norwegian__c, NKS_Subtitle_Link_English__c = cvObj.NKS_Subtitle_Link_English__c, NKS_Subtitle_Link_Polish__c = cvObj.NKS_Subtitle_Link_Polish__c);
+    public static void saveSubtitleLanguageLinks(String subtitlesAsJson, String id) {
+        ContentVersion cv = new ContentVersion(Id = id, NKS_Subtitle_Links__c = subtitlesAsJson);
         update cv;
+    }
+
+    public class VideoTrack {
+        @AuraEnabled
+        public String srclang;
+        @AuraEnabled
+        public String languageLabel;
+        @AuraEnabled
+        public String src;
+
+        public VideoTrack(String srclang, String languageLabel, String src) {
+            this.src = src;
+            this.srclang = srclang;
+            this.languageLabel = languageLabel;
+        }
+    }
+
+    public class VideoStats {
+        @AuraEnabled
+        public Integer numViewsTotal;
+        @AuraEnabled
+        public Integer numViewsToday;
+        @AuraEnabled
+        public Integer numViewsYesterday;
+
+        public VideoStats(Integer numViewsTotal, Integer numViewsToday, Integer numViewsYesterday) {
+            this.numViewsToday = numViewsToday;
+            this.numViewsTotal = numViewsTotal;
+            this.numViewsYesterday = numViewsYesterday;
+        }
     }
 }

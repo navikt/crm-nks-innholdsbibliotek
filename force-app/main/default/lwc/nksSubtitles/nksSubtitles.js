@@ -3,21 +3,55 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
+import getContentVersionIdOnContentDocument from '@salesforce/apex/NKS_VideoPlayerCtrl.getContentVersionIdOnContentDocument';
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
 import { isVideoFile, isSubtitleFile } from 'c/utils';
+import { refreshApex } from '@salesforce/apex';
+import NORWEGIAN_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_Norwegian';
+import ENGLISH_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_English';
+import POLISH_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_Polish';
+
+
+const columns = [
+    { label: 'Språk', fieldName: 'languageLabel' },
+    { label: 'Link', fieldName: 'src' },
+    {
+        type: "button", label: '', initialWidth: 110, typeAttributes: {
+            label: 'Slett',
+            name: 'Delete',
+            title: 'Slett',
+            disabled: false,
+            value: 'delete',
+            iconName:'utility:delete',
+            variant:'destructive'
+        }
+    }
+];
 
 export default class NksSubtitles extends LightningElement {
     @api recordId; // The Content Document we are on
     contentVersionId; // The related CV Id of the Content Document
     subtitleLinks = [];
+    subtitleLink = '';
+    columns = columns;
 
+    _wiredSubtitles;
     @wire(getSubtitleLanguageLinksOnFile, { videoId: '$recordId' })
     wiredgetSubtitleLanguageLinksOnFile(result) {
+        this._wiredSubtitles = result;
         if (result.error) {
             console.error(result.error);
         } else if (result.data) {
-            this.contentVersionId = result.data.Id;
-            this.subtitleLinks = this.setSubtitleLinkDataOnWire(Object.assign({}, result.data));
+            this.subtitleLinks = JSON.parse(result.data);
+        }
+    }
+
+    @wire(getContentVersionIdOnContentDocument, { videoId: '$recordId' })
+    wiredGetContentVersionIdOnContentDocument(result) {
+        if (result.error) {
+            console.error(result.error);
+        } else if (result.data) {
+            this.contentVersionId = result.data;
         }
     }
 
@@ -39,6 +73,7 @@ export default class NksSubtitles extends LightningElement {
         return isSubtitleFile(this.filetype);
     }
     
+    // When on subtitle file type
     videoTrackURL;
     @wire(showVideoTrackURL, { videoId: '$recordId'})
     wiredShowVideoTrackURL(result) {
@@ -49,23 +84,21 @@ export default class NksSubtitles extends LightningElement {
         }
     }
 
-    setSubtitleLinkDataOnWire(recordData) {
-        const languageMap = { NKS_Subtitle_Link_Norwegian__c: 'Norsk', NKS_Subtitle_Link_English__c: 'Engelsk', NKS_Subtitle_Link_Polish__c: 'Polsk' };
-        delete recordData.Id; // Do not create another input field based on Id
-        let data = [];
-        for (const field in recordData) {
-            data.push({ language: languageMap[field], link: recordData[field], relatedField: field });
-        }
-        return data;
+    get isSavedButtonDisabled() {
+        return this.comboboxValue === '' || this.subtitleLink === '';
     }
 
     saveSubtitleLink() {
-        let data = {};
-        this.subtitleLinks.forEach(element => {
-            data[element.relatedField] = element.link;
-        });
-        data.Id = this.contentVersionId;
-        saveSubtitleLanguageLinks({ cvObj: data }).then(() => {
+        let data = {srclang: this.comboboxValue, languageLabel: this.comboboxOptions.find(x => x.value === this.comboboxValue)?.label, src: this.subtitleLink};
+        let obj = this.subtitleLinks?.find(x => x.srclang === this.comboboxValue);
+        // Replace if language already exists in list
+        if (obj !== undefined) {
+            Object.assign(obj, data);
+        } else {
+            this.subtitleLinks.push(data);
+        }
+        saveSubtitleLanguageLinks({ subtitlesAsJson: JSON.stringify(this.subtitleLinks), id: this.contentVersionId }).then(() => {
+            refreshApex(this._wiredSubtitles);
             this.showSaveToast('success');
         }).catch(err => {
             console.error(err);
@@ -73,11 +106,35 @@ export default class NksSubtitles extends LightningElement {
         });
     }
 
-    handleInputChange(event) {
-        let obj = this.subtitleLinks.find(x => x.language === event.target.dataset.id);
-        if (typeof obj !== undefined) {
-            obj.link = event.detail.value;
+    deleteSubtitleLink(event) {
+        const row = event.detail.row;
+        const index = this.subtitleLinks.indexOf(row);
+        if (index > -1) {
+            this.subtitleLinks.splice(index, 1);
         }
+        saveSubtitleLanguageLinks({ subtitlesAsJson: JSON.stringify(this.subtitleLinks), id: this.contentVersionId }).then(() => {
+            refreshApex(this._wiredSubtitles);
+        }).catch(err => {
+            console.error(err);
+        });
+    }
+
+    handleInputChange(event) {
+       this.subtitleLink = event.detail.value;
+    }
+
+    comboboxValue = '';
+    get comboboxOptions() {
+        return [
+            { label: NORWEGIAN_LABEL, value: 'no' },
+            { label: ENGLISH_LABEL, value: 'en' },
+            { label: POLISH_LABEL, value: 'pl' },
+        ];
+    }
+
+    handleComboboxChange(event) {
+        this.comboboxValue = event.detail.value;
+        this.subtitleLink = '';
     }
 
     showSaveToast(status) {

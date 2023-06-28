@@ -19,18 +19,27 @@
         </div>
     </div>
     <lightning-card title="Undertekster" icon-name="utility:display_text" if:true={isVideoFile}>
-        <ul class="slds-m-around_medium">
-            <template for:each={subtitleLinks} for:item="subtitle">
-                <li key={subtitle.language} style="margin-bottom: 1rem;">
-                    <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{subtitle.language}</h1>
-                    <div>
-                        <div class="padding-small lgc-bg">
-                            <lightning-input type="text" label="Undertekstlenke" value={subtitle.link} data-id={subtitle.language} placeholder="Lenken finner du i Undertekst-fanen på .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </div>
-                </li>
-            </template>
-        </ul>
-        <lightning-button variant="brand" label="Save" title="Save subtitle link" onclick={saveSubtitleLink} class="slds-m-left_x-small"></lightning-button>
+        <div style="display: flex; margin-bottom: 1rem;">
+            <lightning-combobox
+            style="width: 50%;"
+            name="languagePicker"
+            label="Språk"
+            value={comboboxValue}
+            placeholder="Velg språk for undertekst"
+            options={comboboxOptions}
+            onchange={handleComboboxChange}>
+            </lightning-combobox>
+            <lightning-input style="width: 50%; margin-left: 2rem;" type="text" label="Undertekstlenke" value={subtitleLink} placeholder="Lenken finner du i Undertekst-fanen på .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
+        </div>
+        <lightning-button variant="brand" label="Save" title="Lagre undertekst" onclick={saveSubtitleLink} disabled={isSavedButtonDisabled}></lightning-button>
+        <div style="margin-top: 2rem;">
+            <lightning-datatable
+                data={subtitleLinks}
+                columns={columns}
+                key-field="id"
+                onrowaction={deleteSubtitleLink}
+                hide-checkbox-column="true"
+             ></lightning-datatable>   
+        </div>     
     </lightning-card>
 </template>
