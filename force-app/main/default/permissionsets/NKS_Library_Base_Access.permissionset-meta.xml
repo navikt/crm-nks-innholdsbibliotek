@@ -42,17 +42,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>ContentVersion.NKS_Subtitle_Link_English__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>ContentVersion.NKS_Subtitle_Link_Norwegian__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>ContentVersion.NKS_Subtitle_Link_Polish__c</field>
+        <field>ContentVersion.NKS_Subtitle_Links__c</field>
         <readable>true</readable>
     </fieldPermissions>
 
