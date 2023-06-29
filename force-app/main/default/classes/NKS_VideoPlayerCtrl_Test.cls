@@ -32,6 +32,15 @@ public class NKS_VideoPlayerCtrl_Test {
     }
 
     @isTest
+    static void testCreateVideoTrack() {
+        Test.startTest();
+        NKS_VideoPlayerCtrl.VideoTrack track = new NKS_VideoPlayerCtrl.VideoTrack('no', 'Norwegian', 'src');
+        Test.stopTest();
+
+        System.assertNotEquals(null, track);
+    }
+
+    @isTest
     static void testGetVideoStats() {
         Test.startTest();
         NKS_VideoPlayerCtrl.addViewCount('12345TEST');
