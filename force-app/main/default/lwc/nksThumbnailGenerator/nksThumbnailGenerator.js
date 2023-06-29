@@ -51,7 +51,7 @@ export default class NksThumbnailGenerator extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: COPY_FAIL,
+            message: label.COPY_FAIL,
             variant: status,
             mode: 'pester'
         });
@@ -60,7 +60,7 @@ export default class NksThumbnailGenerator extends LightningElement {
 
     showSaveToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? THUMBNAIL_SAVE : SAVE_FAIL,
+            message: status === 'success' ? label.THUMBNAIL_SAVE : label.SAVE_FAIL,
             variant: 'success',
             mode: 'pester'
         });

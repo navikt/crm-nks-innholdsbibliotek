@@ -39,6 +39,8 @@ export default class NksSubtitles extends LightningElement {
             console.error(result.error);
         } else if (result.data) {
             this.subtitleLinks = JSON.parse(result.data);
+            //this.subtitleLinks = this.subtitleLinks.map((x) => ({ ...x, languageLabel: this.comboboxOptions.find(y => y.value === x.srclang)?.label }));
+            console.log(JSON.stringify(this.subtitleLinks));
         }
     }
 
@@ -109,9 +111,9 @@ export default class NksSubtitles extends LightningElement {
     comboboxValue = '';
     get comboboxOptions() {
         return [
-            { label: NORWEGIAN_LABEL, value: 'no', internationalLabel: 'Norwegian' },
-            { label: ENGLISH_LABEL, value: 'en', internationalLabel: 'English' },
-            { label: POLISH_LABEL, value: 'pl', internationalLabel: 'Polish' },
+            { label: label.NORWEGIAN_LABEL, value: 'no', internationalLabel: 'Norwegian' },
+            { label: label.ENGLISH_LABEL, value: 'en', internationalLabel: 'English' },
+            { label: label.POLISH_LABEL, value: 'pl', internationalLabel: 'Polish' },
         ];
     }
 
@@ -122,7 +124,7 @@ export default class NksSubtitles extends LightningElement {
 
     showSaveToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? SAVE_SUCCESS : SAVE_FAIL,
+            message: status === 'success' ? label.SAVE_SUCCESS : label.SAVE_FAIL,
             variant: status,
             mode: 'pester'
         });

@@ -4,8 +4,8 @@ import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTra
 import { isSubtitleFile, label } from 'c/utils';
 
 export default class NksSubtitleLinker extends LightningElement {
-    @api filetype;
     @api recordId;
+    @api filetype;
     label = label;
 
     get isSubtitleFile() {
@@ -40,7 +40,7 @@ export default class NksSubtitleLinker extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: COPY_FAIL,
+            message: label.COPY_FAIL,
             variant: status,
             mode: 'pester'
         });

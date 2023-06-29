@@ -36,7 +36,7 @@ export default class NksVideoLibLinker extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: COPY_FAIL,
+            message: label.COPY_FAIL,
             variant: status,
             mode: 'pester'
         });
