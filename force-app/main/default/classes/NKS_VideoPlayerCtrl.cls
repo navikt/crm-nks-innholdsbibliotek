@@ -104,6 +104,9 @@ public with sharing class NKS_VideoPlayerCtrl {
     public static List<VideoTrack> getVideoTracksInternally(String videoId) { 
         Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();            
         String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true].NKS_Subtitle_Links__c;
+        if (subtitlesAsJson == null) {
+            return new List<VideoTrack>();
+        }
         List<VideoTrack> videoTracks = (List<VideoTrack>)JSON.deserialize(subtitlesAsJson, List<VideoTrack>.class);
 
         if (!isGuest && !Test.isRunningTest()) {
