@@ -2,7 +2,8 @@ import { LightningElement, api, wire } from 'lwc';
 import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailLink';
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { isVideoFile, isSubtitleFile, label } from 'c/utils';
+import { isVideoFile, isSubtitleFile } from 'c/utils';
+import label from 'c/utils';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;

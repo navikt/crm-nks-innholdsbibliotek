@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import getExperienceUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryUrl';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { label } from 'c/utils';
+import label from 'c/utils';
 
 export default class NksVideoLibLinker extends LightningElement {
     @api recordId;
