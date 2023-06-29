@@ -1,19 +1,20 @@
 <template>
-    <lightning-layout multiple-rows>
-        <lightning-layout-item size="12">
-            <h1 class="slds-text-heading_small slds-text-title_bold">{labels.VIDEO_LIBRARY_LINK}</h1>
-        </lightning-layout-item>
-        <lightning-layout-item size="12">
-            <a>{libraryUrl}</a>
-            <lightning-button-icon
-                data-id="video-copy-button"
-                value={libraryUrl}
-                class="slds-var-p-left_xx-small"
-                alternative-text="Kopier"
-                icon-name="utility:copy"
-                variant="bare"
-                onclick={handleCopy}
-            ></lightning-button-icon>
-        </lightning-layout-item>
-    </lightning-layout>
+    <h1 class="slds-text-heading_small slds-text-title_bold">{labels.VIDEO_LIBRARY_LINK}</h1>
+    <div class="slds-box slds-box_x-small slds-theme_shade">
+        <lightning-layout multiple-rows>
+            <lightning-layout-item alignment-bump="right" size="11">
+                <a href={libraryUrl}>{libraryUrl}</a>
+            </lightning-layout-item>
+            <lightning-layout-item >
+                <lightning-button-icon
+                    data-id="video-copy-button"
+                    value={libraryUrl}
+                    alternative-text="Kopier"
+                    icon-name="utility:copy"
+                    variant="brand"
+                    onclick={handleCopy}
+                ></lightning-button-icon>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
 </template>
