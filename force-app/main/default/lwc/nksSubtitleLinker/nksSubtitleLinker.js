@@ -1,10 +1,18 @@
 import { LightningElement, wire, api } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
 import { isSubtitleFile } from 'c/utils';
+import SUBTITLE_LINK from '@salesforce/label/c.NKS_Subtitle_Link';
+import COPY_SUCCESS from '@salesforce/label/c.NKS_Copy_Message_Success';
+import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
 
 export default class NksSubtitleLinker extends LightningElement {
     @api filetype;
     @api recordId;
+
+    labels = {
+        SUBTITLE_LINK
+    };
 
     get isSubtitleFile() {
         return isSubtitleFile(this.filetype);
@@ -39,7 +47,7 @@ export default class NksSubtitleLinker extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere.',
+            message: status === 'success' ? COPY_SUCCESS : COPY_FAIL,
             variant: status,
             mode: 'pester'
         });

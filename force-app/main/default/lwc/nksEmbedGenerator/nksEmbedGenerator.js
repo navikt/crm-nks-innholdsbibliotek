@@ -1,10 +1,17 @@
 import { LightningElement, api } from 'lwc';
 import getExperienceUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryBaseUrl';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import EMBEDDING_CODE from '@salesforce/label/c.NKS_Embedding_Code';
+import COPY_SUCCESS from '@salesforce/label/c.NKS_Copy_Message_Success';
+import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
 
 export default class NksEmbedGenerator extends LightningElement {
     libraryBaseUrl;
     @api recordId;
+
+    labels = {
+        EMBEDDING_CODE
+    };
 
     connectedCallback() {
         this.apexGetLibraryUrl();
@@ -39,7 +46,7 @@ export default class NksEmbedGenerator extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere.',
+            message: status === 'success' ? COPY_SUCCESS : COPY_FAIL,
             variant: status,
             mode: 'pester'
         });

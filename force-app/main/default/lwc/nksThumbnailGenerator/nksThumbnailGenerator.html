@@ -1,7 +1,7 @@
 <template>
     <br/>
     <div if:true={isThumbnailFile}>
-        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Thumbnail-lenke</h1>
+        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{labels.THUMBNAIL_LINK}</h1>
         <div class="slds-box slds-box_x-small slds-theme_shade">
             <lightning-layout multiple-rows>
                 <lightning-layout-item alignment-bump="right" size="11">
@@ -23,9 +23,9 @@
         <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Thumbnail</h1>
         <div>
             <div class="padding-small lgc-bg">
-                <lightning-input type="text" label="Thumbnail-lenke" value={thumbnailLink} placeholder="Lenken finner du i Detaljer-fanen på filen du vil bruke som thumbnail" onchange={handleInputChange}></lightning-input>
+                <lightning-input type="text" label={labels.THUMBNAIL_LINK} value={thumbnailLink} placeholder={labels.THUMBNAIL_PLACEHOLDER} onchange={handleInputChange}></lightning-input>
             </div>
-            <lightning-button variant="brand" label="Lagre" title="Lagre thumbnail lenke" onclick={saveThumbnailLink} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" label={labels.SAVE} title="Lagre thumbnail lenke" onclick={saveThumbnailLink} class="slds-m-left_x-small"></lightning-button>
         </div>
     </div>
 </template>

@@ -9,15 +9,27 @@ import { refreshApex } from '@salesforce/apex';
 import NORWEGIAN_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_Norwegian';
 import ENGLISH_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_English';
 import POLISH_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_Polish';
+import DELETE from '@salesforce/label/c.NKS_Button_Delete';
+import SAVE from '@salesforce/label/c.NKS_Button_Save';
+import LANGUAGE from '@salesforce/label/c.NKS_Subtitle_Column_Header';
+import LINK from '@salesforce/label/c.NKS_Subtitle_Link';
+import SAVE_SUCCESS from '@salesforce/label/c.NKS_Save_Message_Success';
+import SAVE_FAIL from '@salesforce/label/c.NKS_Save_Message_Fail';
+import SUBTITLE_WARNING from '@salesforce/label/c.NKS_Subtitle_Warning';
+import SUBTITLE_COMBOBOX_PLACEHOLDER from '@salesforce/label/c.NKS_Subtitle_Combobox_Placeholder';
+import SUBTITLE_PLACEHOLDER from '@salesforce/label/c.NKS_Subtitle_Placeholder';
+import SUBTITLE_LINK from '@salesforce/label/c.NKS_Subtitle_Link'; 
+import SUBTITLE_HEADER from '@salesforce/label/c.NKS_Subtitles';
+
 
 
 const columns = [
-    { label: 'Språk', fieldName: 'languageLabel' },
-    { label: 'Link', fieldName: 'src' },
+    { label: LANGUAGE, fieldName: 'languageLabel' },
+    { label: LINK, fieldName: 'src' },
     {
         type: "button", initialWidth: 110, typeAttributes: {
-            label: 'Slett',
-            name: 'Delete',
+            label: DELETE,
+            name: DELETE,
             title: 'Slett undertekstrelasjon',
             disabled: false,
             value: 'delete',
@@ -29,10 +41,19 @@ const columns = [
 
 export default class NksSubtitles extends LightningElement {
     @api recordId; // The Content Document we are on
-    contentVersionId; // The related CV Id of the Content Document
+    contentVersionId; // The related Content Version Id of the Content Document
     subtitleLinks = [];
     subtitleLink = '';
     columns = columns;
+
+    labels = {
+        SAVE,
+        SUBTITLE_WARNING,
+        SUBTITLE_COMBOBOX_PLACEHOLDER,
+        SUBTITLE_PLACEHOLDER,
+        SUBTITLE_LINK,
+        SUBTITLE_HEADER
+    };
 
     _wiredSubtitles;
     @wire(getSubtitleLanguageLinksOnFile, { videoId: '$recordId' })
@@ -81,6 +102,8 @@ export default class NksSubtitles extends LightningElement {
         } else {
             this.subtitleLinks.push(data);
         }
+
+        //TODO: Before saving - always set labels to english
         saveSubtitleLanguageLinks({ subtitlesAsJson: JSON.stringify(this.subtitleLinks), id: this.contentVersionId }).then(() => {
             refreshApex(this._wiredSubtitles);
             this.showSaveToast('success');
@@ -124,7 +147,7 @@ export default class NksSubtitles extends LightningElement {
 
     showSaveToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? 'Undertekstlink lagret.' : 'Kunne ikke lagre.',
+            message: status === 'success' ? SAVE_SUCCESS : SAVE_FAIL,
             variant: status,
             mode: 'pester'
         });

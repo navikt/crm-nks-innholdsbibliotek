@@ -1,6 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>NKS_Button_Delete</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Delete button</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Button_Save</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Save button</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Copy_Message_Fail</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Copy message</shortDescription>
+        <value>Could not copy.</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Copy_Message_Success</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Copy message</shortDescription>
+        <value>Copied to clipboard.</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Embedding_Code</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Embedding code</shortDescription>
+        <value>Embedding code</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Save_Message_Fail</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Save message</shortDescription>
+        <value>Could not save.</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Save_Message_Success</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Save message</shortDescription>
+        <value>Subtitle link saved.</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitles</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitle header</shortDescription>
+        <value>Subtitles</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitle_Column_Header</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitle column header</shortDescription>
+        <value>Language</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitle_Combobox_Placeholder</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitle placeholder for combobox</shortDescription>
+        <value>Select subtitle language</value>
+    </labels>
+    <labels>
         <fullName>NKS_Subtitle_Language_Norwegian</fullName>
         <categories>Video, Asset Library, UI</categories>
         <language>en_US</language>
@@ -23,6 +103,54 @@
         <protected>false</protected>
         <shortDescription>Label to show on subtitle list</shortDescription>
         <value>Polish</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitle_Link</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitle link</shortDescription>
+        <value>Subtitle link</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitle_Placeholder</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitle placeholder</shortDescription>
+        <value>You can find the subtitle link in the Details tab of the subtitle file</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Subtitle_Warning</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitle warning for filetype</shortDescription>
+        <value>Subtitles can only be added to video files.</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Thumbnail_Link</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thumbnail link</shortDescription>
+        <value>Thumbnail link</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Thumbnail_Placeholder</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thumbnail placeholder</shortDescription>
+        <value>You can find the thumbnail link in the Details tab of the thumbnail file</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Thumbnail_Save</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thumbnail save message</shortDescription>
+        <value>Thumbnail link saved.</value>
     </labels>
     <labels>
         <fullName>NKS_Video_Stats_Title</fullName>

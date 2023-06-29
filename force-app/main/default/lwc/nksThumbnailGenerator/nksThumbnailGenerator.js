@@ -3,10 +3,23 @@ import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailL
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { isVideoFile, isSubtitleFile } from 'c/utils';
+import COPY_SUCCESS from '@salesforce/label/c.NKS_Copy_Message_Success';
+import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
+import THUMBNAIL_SAVE from '@salesforce/label/c.NKS_Thumbnail_Save';
+import SAVE_FAIL from '@salesforce/label/c.NKS_Save_Message_Fail';
+import THUMBNAIL_LINK from '@salesforce/label/c.NKS_Thumbnail_Link';
+import SAVE from '@salesforce/label/c.NKS_Button_Save';
+import THUMBNAIL_PLACEHOLDER from '@salesforce/label/c.NKS_Thumbnail_Placeholder';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
     @api filetype;
+
+    labels = {
+        THUMBNAIL_LINK,
+        SAVE,
+        THUMBNAIL_PLACEHOLDER
+    };
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
     wiredGetThumbnailLinkOnFile(result) {
@@ -18,8 +31,13 @@ export default class NksThumbnailGenerator extends LightningElement {
     }
 
     saveThumbnailLink() {
-        setThumbnailLink({ videoId: this.recordId, thumbnailLink: this.thumbnailLink });
-        this.showSaveToast();
+        setThumbnailLink({ videoId: this.recordId, thumbnailLink: this.thumbnailLink }).then(() => {
+            this.showSaveToast('success');
+        }).catch(err => {
+            console.error(err);
+            this.showSaveToast('error');
+        });
+        
     }
 
     thumbnailLink;
@@ -46,16 +64,16 @@ export default class NksThumbnailGenerator extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere.',
+            message: status === 'success' ? COPY_SUCCESS : COPY_FAIL,
             variant: status,
             mode: 'pester'
         });
         this.dispatchEvent(evt);
     }
 
-    showSaveToast() {
+    showSaveToast(status) {
         const evt = new ShowToastEvent({
-            message: 'Thumbnail-link lagret.',
+            message: status === 'success' ? THUMBNAIL_SAVE : SAVE_FAIL,
             variant: 'success',
             mode: 'pester'
         });
