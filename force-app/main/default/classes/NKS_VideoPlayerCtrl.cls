@@ -74,8 +74,11 @@ public with sharing class NKS_VideoPlayerCtrl {
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
         String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true].NKS_Subtitle_Links__c;
+        if (subtitlesAsJson == null) {
+            return new List<VideoTrack>();
+        }
         List<VideoTrack> videoTracks = (List<VideoTrack>)JSON.deserialize(subtitlesAsJson, List<VideoTrack>.class);
-
+        
         Map<Id, VideoTrack> contentDocumentIdsByVideoTrack = new Map<Id, VideoTrack>();
         List<String> splitSrc;
         for (VideoTrack track : videoTracks) {
