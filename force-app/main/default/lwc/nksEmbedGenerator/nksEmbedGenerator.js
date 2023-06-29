@@ -2,7 +2,6 @@ import { LightningElement, api } from 'lwc';
 import getExperienceUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryBaseUrl';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import EMBEDDING_CODE from '@salesforce/label/c.NKS_Embedding_Code';
-import COPY_SUCCESS from '@salesforce/label/c.NKS_Copy_Message_Success';
 import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
 
 export default class NksEmbedGenerator extends LightningElement {
@@ -35,8 +34,7 @@ export default class NksEmbedGenerator extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
-            var successful = document.execCommand('copy');
-            this.showCopyToast(successful ? 'success' : 'error');
+            document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');
         }
@@ -46,7 +44,7 @@ export default class NksEmbedGenerator extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? COPY_SUCCESS : COPY_FAIL,
+            message: COPY_FAIL,
             variant: status,
             mode: 'pester'
         });

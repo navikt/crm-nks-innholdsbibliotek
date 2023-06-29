@@ -3,7 +3,6 @@ import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailL
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { isVideoFile, isSubtitleFile } from 'c/utils';
-import COPY_SUCCESS from '@salesforce/label/c.NKS_Copy_Message_Success';
 import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
 import THUMBNAIL_SAVE from '@salesforce/label/c.NKS_Thumbnail_Save';
 import SAVE_FAIL from '@salesforce/label/c.NKS_Save_Message_Fail';
@@ -55,8 +54,7 @@ export default class NksThumbnailGenerator extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
-            var successful = document.execCommand('copy');
-            this.showCopyToast(successful ? 'success' : 'error');
+            document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');
         }
@@ -66,7 +64,7 @@ export default class NksThumbnailGenerator extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? COPY_SUCCESS : COPY_FAIL,
+            message: COPY_FAIL,
             variant: status,
             mode: 'pester'
         });

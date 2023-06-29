@@ -25,14 +25,6 @@
         <value>Could not copy.</value>
     </labels>
     <labels>
-        <fullName>NKS_Copy_Message_Success</fullName>
-        <categories>Video, Asset Library, UI</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Copy message</shortDescription>
-        <value>Copied to clipboard.</value>
-    </labels>
-    <labels>
         <fullName>NKS_Embedding_Code</fullName>
         <categories>Video, Asset Library, UI</categories>
         <language>en_US</language>

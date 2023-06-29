@@ -13,10 +13,6 @@
         <name>NKS_Copy_Message_Fail</name>
     </customLabels>
     <customLabels>
-        <label>Kopiert til utklippstavlen.</label>
-        <name>NKS_Copy_Message_Success</name>
-    </customLabels>
-    <customLabels>
         <label>Embeddingkode</label>
         <name>NKS_Embedding_Code</name>
     </customLabels>

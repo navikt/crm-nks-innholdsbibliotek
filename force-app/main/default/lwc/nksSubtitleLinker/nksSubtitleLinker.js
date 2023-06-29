@@ -3,7 +3,6 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
 import { isSubtitleFile } from 'c/utils';
 import SUBTITLE_LINK from '@salesforce/label/c.NKS_Subtitle_Link';
-import COPY_SUCCESS from '@salesforce/label/c.NKS_Copy_Message_Success';
 import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
 
 export default class NksSubtitleLinker extends LightningElement {
@@ -36,8 +35,7 @@ export default class NksSubtitleLinker extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
-            var successful = document.execCommand('copy');
-            this.showCopyToast(successful ? 'success' : 'error');
+            document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');
         }
@@ -47,7 +45,7 @@ export default class NksSubtitleLinker extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? COPY_SUCCESS : COPY_FAIL,
+            message: COPY_FAIL,
             variant: status,
             mode: 'pester'
         });
