@@ -1,17 +1,12 @@
 import { LightningElement, wire, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
-import { isSubtitleFile } from 'c/utils';
-import SUBTITLE_LINK from '@salesforce/label/c.NKS_Subtitle_Link';
-import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
+import { isSubtitleFile, label } from 'c/utils';
 
 export default class NksSubtitleLinker extends LightningElement {
     @api filetype;
     @api recordId;
-
-    labels = {
-        SUBTITLE_LINK
-    };
+    label = label;
 
     get isSubtitleFile() {
         return isSubtitleFile(this.filetype);

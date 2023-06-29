@@ -1,16 +1,12 @@
 import { LightningElement, api } from 'lwc';
 import getExperienceUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryBaseUrl';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import EMBEDDING_CODE from '@salesforce/label/c.NKS_Embedding_Code';
-import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
+import { label } from 'c/utils';
 
 export default class NksEmbedGenerator extends LightningElement {
-    libraryBaseUrl;
     @api recordId;
-
-    labels = {
-        EMBEDDING_CODE
-    };
+    libraryBaseUrl;
+    label = label;
 
     connectedCallback() {
         this.apexGetLibraryUrl();

@@ -1,19 +1,19 @@
 <template>
-    <h3 if:false={isVideoFile} style="text-align: center;">{labels.SUBTITLE_WARNING}</h3>
-    <lightning-card title={labels.SUBTITLE_HEADER} icon-name="utility:display_text" if:true={isVideoFile}>
+    <h3 if:false={isVideoFile} style="text-align: center;">{label.SUBTITLE_WARNING}</h3>
+    <lightning-card title={label.SUBTITLE_HEADER} icon-name="utility:display_text" if:true={isVideoFile}>
         <div style="display: flex; margin-bottom: 1rem;">
             <lightning-combobox
                 style="width: 50%;"
                 name="languagePicker"
-                label={labels.LANGUAGE}
+                label={label.LANGUAGE}
                 value={comboboxValue}
-                placeholder={labels.SUBTITLE_COMBOBOX_PLACEHOLDER}
+                placeholder={label.SUBTITLE_COMBOBOX_PLACEHOLDER}
                 options={comboboxOptions}
                 onchange={handleComboboxChange}>
             </lightning-combobox>
-            <lightning-input style="width: 50%; margin-left: 2rem;" type="text" label={labels.SUBTITLE_LINK} value={subtitleLink} placeholder={labels.SUBTITLE_PLACEHOLDER} onchange={handleInputChange}></lightning-input>
+            <lightning-input style="width: 50%; margin-left: 2rem;" type="text" label={label.SUBTITLE_LINK} value={subtitleLink} placeholder={label.SUBTITLE_PLACEHOLDER} onchange={handleInputChange}></lightning-input>
         </div>
-        <lightning-button variant="brand" label={labels.SAVE} title={labels.SUBTITLE_BUTTON_TITLE} onclick={saveSubtitleLink} disabled={isSavedButtonDisabled}></lightning-button>
+        <lightning-button variant="brand" label={label.SAVE} title={label.SUBTITLE_BUTTON_TITLE} onclick={saveSubtitleLink} disabled={isSavedButtonDisabled}></lightning-button>
         <div style="margin-top: 2rem;">
             <lightning-datatable
                 data={subtitleLinks}

@@ -4,25 +4,8 @@ import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
 import getContentVersionIdOnContentDocument from '@salesforce/apex/NKS_VideoPlayerCtrl.getContentVersionIdOnContentDocument';
-import { isVideoFile } from 'c/utils';
+import { isVideoFile, label } from 'c/utils';
 import { refreshApex } from '@salesforce/apex';
-import NORWEGIAN_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_Norwegian';
-import ENGLISH_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_English';
-import POLISH_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_Polish';
-import DELETE from '@salesforce/label/c.NKS_Button_Delete';
-import SAVE from '@salesforce/label/c.NKS_Button_Save';
-import LANGUAGE from '@salesforce/label/c.NKS_Subtitle_Column_Header';
-import LINK from '@salesforce/label/c.NKS_Subtitle_Link';
-import SAVE_SUCCESS from '@salesforce/label/c.NKS_Save_Message_Success';
-import SAVE_FAIL from '@salesforce/label/c.NKS_Save_Message_Fail';
-import SUBTITLE_WARNING from '@salesforce/label/c.NKS_Subtitle_Warning';
-import SUBTITLE_COMBOBOX_PLACEHOLDER from '@salesforce/label/c.NKS_Subtitle_Combobox_Placeholder';
-import SUBTITLE_PLACEHOLDER from '@salesforce/label/c.NKS_Subtitle_Placeholder';
-import SUBTITLE_LINK from '@salesforce/label/c.NKS_Subtitle_Link'; 
-import SUBTITLE_HEADER from '@salesforce/label/c.NKS_Subtitles';
-import SUBTITLE_BUTTON_TITLE from '@salesforce/label/c.NKS_Subtitle_Button_Title';
-
-
 
 const columns = [
     { label: LANGUAGE, fieldName: 'languageLabel' },
@@ -46,16 +29,7 @@ export default class NksSubtitles extends LightningElement {
     subtitleLinks = [];
     subtitleLink = '';
     columns = columns;
-
-    labels = {
-        SAVE,
-        SUBTITLE_WARNING,
-        SUBTITLE_COMBOBOX_PLACEHOLDER,
-        SUBTITLE_PLACEHOLDER,
-        SUBTITLE_LINK,
-        SUBTITLE_HEADER,
-        SUBTITLE_BUTTON_TITLE
-    };
+    label = label;
 
     _wiredSubtitles;
     @wire(getSubtitleLanguageLinksOnFile, { videoId: '$recordId' })
@@ -105,7 +79,6 @@ export default class NksSubtitles extends LightningElement {
             this.subtitleLinks.push(data);
         }
 
-        //TODO: Before saving - always set labels to english
         saveSubtitleLanguageLinks({ subtitlesAsJson: JSON.stringify(this.subtitleLinks), id: this.contentVersionId }).then(() => {
             refreshApex(this._wiredSubtitles);
             this.showSaveToast('success');

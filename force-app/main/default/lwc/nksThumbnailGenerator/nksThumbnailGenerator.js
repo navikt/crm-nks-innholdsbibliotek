@@ -2,25 +2,12 @@ import { LightningElement, api, wire } from 'lwc';
 import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailLink';
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { isVideoFile, isSubtitleFile } from 'c/utils';
-import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
-import THUMBNAIL_SAVE from '@salesforce/label/c.NKS_Thumbnail_Save';
-import SAVE_FAIL from '@salesforce/label/c.NKS_Save_Message_Fail';
-import THUMBNAIL_LINK from '@salesforce/label/c.NKS_Thumbnail_Link';
-import SAVE from '@salesforce/label/c.NKS_Button_Save';
-import THUMBNAIL_PLACEHOLDER from '@salesforce/label/c.NKS_Thumbnail_Placeholder';
-import THUMBNAIL_BUTTON_TITLE from '@salesforce/label/c.NKS_Thumbnail_Button_Title';
+import { isVideoFile, isSubtitleFile, label } from 'c/utils';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
     @api filetype;
-
-    labels = {
-        THUMBNAIL_LINK,
-        SAVE,
-        THUMBNAIL_PLACEHOLDER,
-        THUMBNAIL_BUTTON_TITLE
-    };
+    label = label;
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
     wiredGetThumbnailLinkOnFile(result) {

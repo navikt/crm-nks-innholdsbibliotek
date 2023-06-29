@@ -1,15 +1,12 @@
 import { LightningElement, api } from 'lwc';
 import getExperienceUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryUrl';
-import VIDEO_LIBRARY_LINK from '@salesforce/label/c.NKS_Video_Library_Link';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import COPY_FAIL from '@salesforce/label/c.NKS_Copy_Message_Fail';
+import { label } from 'c/utils';
 
 export default class NksVideoLibLinker extends LightningElement {
     @api recordId;
-    labels = {
-        VIDEO_LIBRARY_LINK
-    };
-
+    label = label;
+    
     libraryUrl;
     connectedCallback() {
         getExperienceUrl({ recordId: this.recordId })
