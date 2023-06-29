@@ -203,7 +203,7 @@ public with sharing class NKS_VideoPlayerCtrl {
     @AuraEnabled(cacheable=true)
     public static String getSubtitleLanguageLinksOnFile(String videoId) {
         ContentVersion cv = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1];
-        return cv.NKS_Subtitle_Links__c != null ? cv.NKS_Subtitle_Links__c : '{}';
+        return cv.NKS_Subtitle_Links__c != null ? cv.NKS_Subtitle_Links__c : '[]';
     }
 
     @AuraEnabled

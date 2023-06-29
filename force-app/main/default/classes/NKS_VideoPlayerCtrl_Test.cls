@@ -204,7 +204,7 @@ public class NKS_VideoPlayerCtrl_Test {
         Test.stopTest();
         
         System.assertNotEquals(null, jsonString);
-        System.assertNotEquals('{}', jsonString);
+        System.assertNotEquals('[]', jsonString);
     }
 
     @isTest

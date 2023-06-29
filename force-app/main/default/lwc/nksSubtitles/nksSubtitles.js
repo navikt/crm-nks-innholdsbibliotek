@@ -4,16 +4,17 @@ import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
 import getContentVersionIdOnContentDocument from '@salesforce/apex/NKS_VideoPlayerCtrl.getContentVersionIdOnContentDocument';
-import { isVideoFile, label } from 'c/utils';
+import { isVideoFile } from 'c/utils';
 import { refreshApex } from '@salesforce/apex';
+import label from 'c/utils';
 
 const columns = [
-    { label: LANGUAGE, fieldName: 'languageLabel' },
-    { label: LINK, fieldName: 'src' },
+    { label: label.LANGUAGE, fieldName: 'languageLabel' },
+    { label: label.LINK, fieldName: 'src' },
     {
         type: "button", initialWidth: 110, typeAttributes: {
-            label: DELETE,
-            name: DELETE,
+            label: label.DELETE,
+            name: label.DELETE,
             title: 'Slett undertekstrelasjon',
             disabled: false,
             value: 'delete',
@@ -39,8 +40,10 @@ export default class NksSubtitles extends LightningElement {
             console.error(result.error);
         } else if (result.data) {
             this.subtitleLinks = JSON.parse(result.data);
-            //this.subtitleLinks = this.subtitleLinks.map((x) => ({ ...x, languageLabel: this.comboboxOptions.find(y => y.value === x.srclang)?.label }));
-            console.log(JSON.stringify(this.subtitleLinks));
+            // Convert languageLabel to translated version on load
+            if (this.subtitleLinks.length > 0) {
+                this.subtitleLinks = this.subtitleLinks.map((x) => ({ ...x, languageLabel: this.comboboxOptions.find(y => y.value === x.srclang)?.label }));
+            }
         }
     }
 
@@ -72,7 +75,7 @@ export default class NksSubtitles extends LightningElement {
     }
 
     saveSubtitleLink() {
-        let data = {srclang: this.comboboxValue, languageLabel: this.comboboxOptions.find(x => x.value === this.comboboxValue)?.internationalLabel, src: this.subtitleLink};
+        let data = {srclang: this.comboboxValue, languageLabel: this.comboboxOptions.find(x => x.value === this.comboboxValue)?.label, src: this.subtitleLink};
         let obj = this.subtitleLinks.find(x => x.srclang === this.comboboxValue);
         // Replace if language already exists in list
         if (obj !== undefined) {
@@ -80,7 +83,9 @@ export default class NksSubtitles extends LightningElement {
         } else {
             this.subtitleLinks.push(data);
         }
-
+        // Convert language to international label before save
+        this.subtitleLinks = this.subtitleLinks.map((x) => ({ ...x, languageLabel: this.comboboxOptions.find(y => y.value === x.srclang)?.internationalLabel }));
+        
         saveSubtitleLanguageLinks({ subtitlesAsJson: JSON.stringify(this.subtitleLinks), id: this.contentVersionId }).then(() => {
             refreshApex(this._wiredSubtitles);
             this.showSaveToast('success');
