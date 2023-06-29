@@ -16,10 +16,25 @@ public class NKS_VideoPlayerCtrl_Test {
             VersionData = Blob.valueOf('123TEST')
         );
         insert new ContentVersion(
+            Title = 'TEST SUBTITLE2',
+            PathOnClient = 'testSub.vtt',
+            VersionData = Blob.valueOf('123TEST')
+        );
+        insert new ContentVersion(
+            Title = 'TEST SUBTITLE3',
+            PathOnClient = 'testSub.vtt',
+            VersionData = Blob.valueOf('123TEST')
+        );
+        insert new ContentVersion(
             Title = 'TEST THUMBNAIL',
             PathOnClient = 'testThumbnail.png',
             VersionData = Blob.valueOf('123TEST')
         );
+        ContentVersion subtitle = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE' LIMIT 1];
+        ContentVersion subtitle2 = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE2' LIMIT 1];
+        ContentVersion subtitle3 = [SELECT ContentDocumentId FROM ContentVersion WHERE Title = 'TEST SUBTITLE3' LIMIT 1];
+        videoCv.NKS_Subtitle_Links__c = '[{"srclang":"no","languageLabel":"Norwegian","src":"testlink/' + subtitle.ContentDocumentId + '"},{"srclang":"en","languageLabel":"English","src":"testlink/' + subtitle2.ContentDocumentId + '"},{"srclang":"pl","languageLabel":"Polish","src":"testlink/' + subtitle3.ContentDocumentId + '"}]';
+        update videoCv;
     }
 
     @isTest
