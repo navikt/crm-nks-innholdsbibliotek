@@ -6,14 +6,14 @@ export default class NksVideoDetails extends LightningElement {
     @api recordId;
     isVideoFile = false;
 
-    wiredData;
+    filetype;
     @wire(getFileType, { recordId: '$recordId'})
     wiredGetFileType(result) {
         if (result.error) {
             console.log(result.error);
         } else if (result.data) {
             this.isVideoFile = isVideoFile(result.data);
-            this.wiredData = result.data;
+            this.filetype = result.data;
         }
     }
 }

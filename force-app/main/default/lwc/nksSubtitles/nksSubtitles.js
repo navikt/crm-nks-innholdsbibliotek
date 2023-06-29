@@ -4,8 +4,7 @@ import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
 import getSubtitleLanguageLinksOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getSubtitleLanguageLinksOnFile';
 import saveSubtitleLanguageLinks from '@salesforce/apex/NKS_VideoPlayerCtrl.saveSubtitleLanguageLinks';
 import getContentVersionIdOnContentDocument from '@salesforce/apex/NKS_VideoPlayerCtrl.getContentVersionIdOnContentDocument';
-import showVideoTrackURL from '@salesforce/apex/NKS_VideoPlayerCtrl.showVideoTrackURL';
-import { isVideoFile, isSubtitleFile } from 'c/utils';
+import { isVideoFile } from 'c/utils';
 import { refreshApex } from '@salesforce/apex';
 import NORWEGIAN_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_Norwegian';
 import ENGLISH_LABEL from '@salesforce/label/c.NKS_Subtitle_Language_English';
@@ -69,28 +68,13 @@ export default class NksSubtitles extends LightningElement {
         return isVideoFile(this.filetype);
     }
 
-    get isSubtitleFile() {
-        return isSubtitleFile(this.filetype);
-    }
-    
-    // When on subtitle file type
-    videoTrackURL;
-    @wire(showVideoTrackURL, { videoId: '$recordId'})
-    wiredShowVideoTrackURL(result) {
-        if (result.error) {
-            console.log(result.error);
-        } else if (result.data) {
-            this.videoTrackURL = result.data;
-        }
-    }
-
     get isSavedButtonDisabled() {
         return this.comboboxValue === '' || this.subtitleLink === '';
     }
 
     saveSubtitleLink() {
-        let data = {srclang: this.comboboxValue, languageLabel: this.comboboxOptions.find(x => x.value === this.comboboxValue)?.label, src: this.subtitleLink};
-        let obj = this.subtitleLinks?.find(x => x.srclang === this.comboboxValue);
+        let data = {srclang: this.comboboxValue, languageLabel: this.comboboxOptions.find(x => x.value === this.comboboxValue)?.internationalLabel, src: this.subtitleLink};
+        let obj = this.subtitleLinks.find(x => x.srclang === this.comboboxValue);
         // Replace if language already exists in list
         if (obj !== undefined) {
             Object.assign(obj, data);
@@ -123,12 +107,13 @@ export default class NksSubtitles extends LightningElement {
        this.subtitleLink = event.detail.value;
     }
 
+    // internationalLabel makes sure the subtitle selection on the video is always in English regardless of user language in Salesforce
     comboboxValue = '';
     get comboboxOptions() {
         return [
-            { label: NORWEGIAN_LABEL, value: 'no' },
-            { label: ENGLISH_LABEL, value: 'en' },
-            { label: POLISH_LABEL, value: 'pl' },
+            { label: NORWEGIAN_LABEL, value: 'no', internationalLabel: 'Norwegian' },
+            { label: ENGLISH_LABEL, value: 'en', internationalLabel: 'English' },
+            { label: POLISH_LABEL, value: 'pl', internationalLabel: 'Polish' },
         ];
     }
 
@@ -140,32 +125,6 @@ export default class NksSubtitles extends LightningElement {
     showSaveToast(status) {
         const evt = new ShowToastEvent({
             message: status === 'success' ? 'Undertekstlink lagret.' : 'Kunne ikke lagre.',
-            variant: status,
-            mode: 'pester'
-        });
-        this.dispatchEvent(evt);
-    }
-
-    handleCopy() {
-        let copyValue = this.videoTrackURL;
-        let hiddenInput = document.createElement('input');
-        hiddenInput.value = copyValue;
-        document.body.appendChild(hiddenInput);
-        hiddenInput.focus();
-        hiddenInput.select();
-        try {
-            var successful = document.execCommand('copy');
-            this.showCopyToast(successful ? 'success' : 'error');
-        } catch (error) {
-            this.showCopyToast('error');
-        }
-        document.body.removeChild(hiddenInput);
-        this.template.querySelector('[data-id="subtitle-copy-button"]').focus(); // Put focus back on copy button - for UU
-    }
-
-    showCopyToast(status) {
-        const evt = new ShowToastEvent({
-            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere.',
             variant: status,
             mode: 'pester'
         });

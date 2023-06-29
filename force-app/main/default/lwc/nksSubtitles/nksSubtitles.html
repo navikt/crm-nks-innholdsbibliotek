@@ -1,23 +1,5 @@
 <template>
-    <div if:true={isSubtitleFile}>
-        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Undertekstlenke</h1>
-        <div class="slds-box slds-box_x-small slds-theme_shade">
-            <lightning-layout multiple-rows>
-                <lightning-layout-item alignment-bump="right" size="11">
-                    <lightning-formatted-text value={videoTrackURL}></lightning-formatted-text>
-                </lightning-layout-item>
-                <lightning-layout-item>
-                    <lightning-button-icon
-                        data-id="subtitle-copy-button"
-                        icon-name="utility:copy"
-                        alternative-text="Kopier"
-                        onclick={handleCopy}
-                        variant="brand"
-                    ></lightning-button-icon>
-                </lightning-layout-item>
-            </lightning-layout>
-        </div>
-    </div>
+    <h3 if:false={isVideoFile} style="text-align: center;">Undertekster kan kun legges til videofiler.</h3>
     <lightning-card title="Undertekster" icon-name="utility:display_text" if:true={isVideoFile}>
         <div style="display: flex; margin-bottom: 1rem;">
             <lightning-combobox
@@ -29,7 +11,7 @@
             options={comboboxOptions}
             onchange={handleComboboxChange}>
             </lightning-combobox>
-            <lightning-input style="width: 50%; margin-left: 2rem;" type="text" label="Undertekstlenke" value={subtitleLink} placeholder="Lenken finner du i Undertekst-fanen på .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
+            <lightning-input style="width: 50%; margin-left: 2rem;" type="text" label="Undertekstlenke" value={subtitleLink} placeholder="Lenken finner du i Detaljer-fanen på .vtt filen du vil bruke som undertekst" onchange={handleInputChange}></lightning-input>
         </div>
         <lightning-button variant="brand" label="Save" title="Lagre undertekst" onclick={saveSubtitleLink} disabled={isSavedButtonDisabled}></lightning-button>
         <div style="margin-top: 2rem;">
