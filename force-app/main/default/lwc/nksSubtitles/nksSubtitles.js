@@ -20,6 +20,7 @@ import SUBTITLE_COMBOBOX_PLACEHOLDER from '@salesforce/label/c.NKS_Subtitle_Comb
 import SUBTITLE_PLACEHOLDER from '@salesforce/label/c.NKS_Subtitle_Placeholder';
 import SUBTITLE_LINK from '@salesforce/label/c.NKS_Subtitle_Link'; 
 import SUBTITLE_HEADER from '@salesforce/label/c.NKS_Subtitles';
+import SUBTITLE_BUTTON_TITLE from '@salesforce/label/c.NKS_Subtitle_Button_Title';
 
 
 
@@ -52,7 +53,8 @@ export default class NksSubtitles extends LightningElement {
         SUBTITLE_COMBOBOX_PLACEHOLDER,
         SUBTITLE_PLACEHOLDER,
         SUBTITLE_LINK,
-        SUBTITLE_HEADER
+        SUBTITLE_HEADER,
+        SUBTITLE_BUTTON_TITLE
     };
 
     _wiredSubtitles;

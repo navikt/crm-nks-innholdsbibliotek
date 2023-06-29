@@ -10,6 +10,7 @@ import SAVE_FAIL from '@salesforce/label/c.NKS_Save_Message_Fail';
 import THUMBNAIL_LINK from '@salesforce/label/c.NKS_Thumbnail_Link';
 import SAVE from '@salesforce/label/c.NKS_Button_Save';
 import THUMBNAIL_PLACEHOLDER from '@salesforce/label/c.NKS_Thumbnail_Placeholder';
+import THUMBNAIL_BUTTON_TITLE from '@salesforce/label/c.NKS_Thumbnail_Button_Title';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
@@ -18,7 +19,8 @@ export default class NksThumbnailGenerator extends LightningElement {
     labels = {
         THUMBNAIL_LINK,
         SAVE,
-        THUMBNAIL_PLACEHOLDER
+        THUMBNAIL_PLACEHOLDER,
+        THUMBNAIL_BUTTON_TITLE
     };
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })

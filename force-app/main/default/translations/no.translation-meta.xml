@@ -33,6 +33,10 @@
         <name>NKS_Subtitles</name>
     </customLabels>
     <customLabels>
+        <label>Lagre undertekst</label>
+        <name>NKS_Subtitle_Button_Title</name>
+    </customLabels>
+    <customLabels>
         <label>Språk</label>
         <name>NKS_Subtitle_Column_Header</name>
     </customLabels>
@@ -71,6 +75,10 @@
     <customLabels>
         <label>Undertekster</label>
         <name>NKS_Tab_Subtitles</name>
+    </customLabels>
+    <customLabels>
+        <label>Lagre thumbnail-lenke</label>
+        <name>NKS_Thumbnail_Button_Title</name>
     </customLabels>
     <customLabels>
         <label>Thumbnail-lenke</label>

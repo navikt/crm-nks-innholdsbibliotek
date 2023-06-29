@@ -65,6 +65,14 @@
         <value>Subtitles</value>
     </labels>
     <labels>
+        <fullName>NKS_Subtitle_Button_Title</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitle save button title</shortDescription>
+        <value>Save subtitle</value>
+    </labels>
+    <labels>
         <fullName>NKS_Subtitle_Column_Header</fullName>
         <categories>Video, Asset Library, UI</categories>
         <language>en_US</language>
@@ -143,6 +151,14 @@
         <protected>false</protected>
         <shortDescription>Subtitles tab</shortDescription>
         <value>Subtitles</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Thumbnail_Button_Title</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thumbnail save button title</shortDescription>
+        <value>Save thumbnail link</value>
     </labels>
     <labels>
         <fullName>NKS_Thumbnail_Link</fullName>
