@@ -129,6 +129,22 @@
         <value>Subtitles can only be added to video files.</value>
     </labels>
     <labels>
+        <fullName>NKS_Tab_Details</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Details tab</shortDescription>
+        <value>Details</value>
+    </labels>
+    <labels>
+        <fullName>NKS_Tab_Subtitles</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Subtitles tab</shortDescription>
+        <value>Subtitles</value>
+    </labels>
+    <labels>
         <fullName>NKS_Thumbnail_Link</fullName>
         <categories>Video, Asset Library, UI</categories>
         <language>en_US</language>

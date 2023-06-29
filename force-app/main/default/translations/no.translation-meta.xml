@@ -65,6 +65,14 @@
         <name>NKS_Subtitle_Warning</name>
     </customLabels>
     <customLabels>
+        <label>Detaljer</label>
+        <name>NKS_Tab_Details</name>
+    </customLabels>
+    <customLabels>
+        <label>Undertekster</label>
+        <name>NKS_Tab_Subtitles</name>
+    </customLabels>
+    <customLabels>
         <label>Thumbnail-lenke</label>
         <name>NKS_Thumbnail_Link</name>
     </customLabels>
