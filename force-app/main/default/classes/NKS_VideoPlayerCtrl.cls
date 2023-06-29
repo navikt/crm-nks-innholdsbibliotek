@@ -73,7 +73,7 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
-        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true].NKS_Subtitle_Links__c;
+        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true]?.NKS_Subtitle_Links__c;
         if (subtitlesAsJson == null) {
             return new List<VideoTrack>();
         }
@@ -106,7 +106,7 @@ public with sharing class NKS_VideoPlayerCtrl {
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracksInternally(String videoId) { 
         Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();            
-        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true].NKS_Subtitle_Links__c;
+        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true]?.NKS_Subtitle_Links__c;
         if (subtitlesAsJson == null) {
             return new List<VideoTrack>();
         }
@@ -141,7 +141,7 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static String getVideoTitle(String videoId) {
-        String cvTitle = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId LIMIT 1]?.Title;
+        String cvTitle = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId AND IsLatest = true LIMIT 1]?.Title;
         return cvTitle != null ? cvTitle : 'Video mangler tittel';
     }
 
@@ -156,7 +156,7 @@ public with sharing class NKS_VideoPlayerCtrl {
 
     @AuraEnabled
     public static void setThumbnailLink(String videoId, String thumbnailLink) {
-        ContentVersion cv = [SELECT Id, NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+        ContentVersion cv = [SELECT Id, NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1];
         cv.NKS_Thumbnail_Link__c = thumbnailLink;
         update cv;
     }
@@ -169,7 +169,7 @@ public with sharing class NKS_VideoPlayerCtrl {
     */
     @AuraEnabled(cacheable=false)
     public static String getStoredThumbnailLink(String videoId, String env, String windowOrigin) {
-        String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
+        String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1]?.NKS_Thumbnail_Link__c;
         
         String recordId;
         if (thumbnailLink != null) {
@@ -191,18 +191,18 @@ public with sharing class NKS_VideoPlayerCtrl {
     // Used on record page in wire
     @AuraEnabled(cacheable=true)
     public static String getThumbnailLinkOnFile(String videoId) {
-        return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
+        return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1]?.NKS_Thumbnail_Link__c;
     }
 
     @AuraEnabled(cacheable=true)
     public static String getContentVersionIdOnContentDocument(String videoId) {
-        return [SELECT Id FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1].Id;
+        return [SELECT Id FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1].Id;
     }
 
     // Used on record page in wire
     @AuraEnabled(cacheable=true)
     public static String getSubtitleLanguageLinksOnFile(String videoId) {
-        ContentVersion cv = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
+        ContentVersion cv = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1];
         return cv.NKS_Subtitle_Links__c != null ? cv.NKS_Subtitle_Links__c : '{}';
     }
 
