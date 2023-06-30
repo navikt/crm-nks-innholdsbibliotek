@@ -130,11 +130,11 @@
                     if (subTracks && subTracks.length > 0) {
                         subTracks.forEach((track) => {
                             videoPlayer +=
-                                '<track kind="subtitles" srclang=' +
+                                '<track kind="subtitles" srclang="' +
                                 track.srclang +
-                                ' label=' +
+                                '" label="' +
                                 track.languageLabel +
-                                ' src="' +
+                                '" src="' +
                                 track.src +
                                 '">';
                         });

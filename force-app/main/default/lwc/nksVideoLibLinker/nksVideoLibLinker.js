@@ -1,22 +1,21 @@
 import { LightningElement, api } from 'lwc';
 import getExperienceUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryUrl';
-import VIDEO_LIBRARY_LINK from '@salesforce/label/c.NKS_Video_Library_Link';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import label from 'c/utils';
 
 export default class NksVideoLibLinker extends LightningElement {
     @api recordId;
-    labels = {
-        VIDEO_LIBRARY_LINK
-    };
-
+    label = label;
+    
     libraryUrl;
-
     connectedCallback() {
         getExperienceUrl({ recordId: this.recordId })
             .then((url) => {
                 this.libraryUrl = url;
             })
-            .catch((error) => {});
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     handleCopy(event) {
@@ -27,8 +26,7 @@ export default class NksVideoLibLinker extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
-            var successful = document.execCommand('copy');
-            this.showCopyToast(successful ? 'success' : 'error');
+            document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');
         }
@@ -38,7 +36,7 @@ export default class NksVideoLibLinker extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere',
+            message: label.COPY_FAIL,
             variant: status,
             mode: 'pester'
         });

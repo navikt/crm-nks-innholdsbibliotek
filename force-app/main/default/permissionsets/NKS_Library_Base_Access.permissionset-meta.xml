@@ -40,6 +40,12 @@
         <field>ContentVersion.NKS_Thumbnail_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ContentVersion.NKS_Subtitle_Links__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+
     <hasActivationRequired>false</hasActivationRequired>
     <label>NKS - Library Base Access</label>
     <license>Salesforce</license>

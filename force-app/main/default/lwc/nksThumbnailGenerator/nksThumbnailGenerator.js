@@ -3,10 +3,12 @@ import setThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.setThumbnailL
 import getThumbnailLinkOnFile from '@salesforce/apex/NKS_VideoPlayerCtrl.getThumbnailLinkOnFile';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { isVideoFile, isSubtitleFile } from 'c/utils';
+import label from 'c/utils';
 
 export default class NksThumbnailGenerator extends LightningElement {
     @api recordId;
     @api filetype;
+    label = label;
 
     @wire(getThumbnailLinkOnFile, { videoId: '$recordId' })
     wiredGetThumbnailLinkOnFile(result) {
@@ -18,8 +20,13 @@ export default class NksThumbnailGenerator extends LightningElement {
     }
 
     saveThumbnailLink() {
-        setThumbnailLink({ videoId: this.recordId, thumbnailLink: this.thumbnailLink });
-        this.showSaveToast();
+        setThumbnailLink({ videoId: this.recordId, thumbnailLink: this.thumbnailLink }).then(() => {
+            this.showSaveToast('success');
+        }).catch(err => {
+            console.error(err);
+            this.showSaveToast('error');
+        });
+        
     }
 
     thumbnailLink;
@@ -35,8 +42,7 @@ export default class NksThumbnailGenerator extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
-            var successful = document.execCommand('copy');
-            this.showCopyToast(successful ? 'success' : 'error');
+            document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');
         }
@@ -46,16 +52,16 @@ export default class NksThumbnailGenerator extends LightningElement {
 
     showCopyToast(status) {
         const evt = new ShowToastEvent({
-            message: status === 'success' ? 'Kopiert til utklippstavlen.' : 'Kunne ikke kopiere.',
+            message: label.COPY_FAIL,
             variant: status,
             mode: 'pester'
         });
         this.dispatchEvent(evt);
     }
 
-    showSaveToast() {
+    showSaveToast(status) {
         const evt = new ShowToastEvent({
-            message: 'Thumbnail-link lagret.',
+            message: status === 'success' ? label.THUMBNAIL_SAVE : label.SAVE_FAIL,
             variant: 'success',
             mode: 'pester'
         });

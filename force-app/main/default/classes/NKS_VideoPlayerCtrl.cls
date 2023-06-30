@@ -73,13 +73,27 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static List<VideoTrack> getVideoTracks(String videoId) {
-        List<VideoTrack> subTracks = new List<VideoTrack>();
-        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, VersionData, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
-            Blob fileBody = subTrack.VersionData;
-            String versionDataAsString = fileBody.toString();
-            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), versionDataAsString));
+        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true]?.NKS_Subtitle_Links__c;
+        if (subtitlesAsJson == null) {
+            return new List<VideoTrack>();
         }
-        return subTracks;
+        List<VideoTrack> videoTracks = (List<VideoTrack>)JSON.deserialize(subtitlesAsJson, List<VideoTrack>.class);
+        
+        Map<Id, VideoTrack> contentDocumentIdsByVideoTrack = new Map<Id, VideoTrack>();
+        List<String> splitSrc;
+        for (VideoTrack track : videoTracks) {
+            splitSrc = track.src.split('/');
+            contentDocumentIdsByVideoTrack.put(splitSrc[splitSrc.size() - 1], track);
+        }
+
+        for (ContentVersion contentVersion : [SELECT ContentDocumentId, VersionData FROM ContentVersion WHERE ContentDocumentId IN :contentDocumentIdsByVideoTrack.keySet() AND IsLatest = true]) {
+            Blob fileBody = contentVersion.VersionData;
+            String versionDataAsString = fileBody.toString();
+            if (contentDocumentIdsByVideoTrack.get(contentVersion.ContentDocumentId) != null) {
+                contentDocumentIdsByVideoTrack.get(contentVersion.ContentDocumentId).src = versionDataAsString;
+            }
+        }
+        return contentDocumentIdsByVideoTrack.values();
     }
 
     /**
@@ -88,19 +102,36 @@ public with sharing class NKS_VideoPlayerCtrl {
      * @param recordId 
      * @return  `List<VideoTrack>`
      */
+
     @AuraEnabled(cacheable=true)
-    public static List<VideoTrack> getVideoTracksInternally(String videoId) {
-        String src, baseUrl;
-        List<VideoTrack> subTracks = new List<VideoTrack>();
-        Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();
-        baseUrl = isGuest ? getLibraryBaseUrl() : Url.getSalesforceBaseUrl().toExternalForm();
-        for (ContentVersion subTrack : [SELECT Id, ContentDocumentId, NKS_Subtitle_Language__c, toLabel(NKS_Subtitle_Language__c) languageLabel FROM ContentVersion WHERE NKS_Related_Video__c =: videoId AND IsLatest = true]) {
-            src = isGuest ? 
-                baseUrl.replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId : 
-                baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + subTrack.ContentDocumentId;
-            subTracks.add(new VideoTrack(subTrack.NKS_Subtitle_Language__c, (String)subTrack.get('languageLabel'), src));
+    public static List<VideoTrack> getVideoTracksInternally(String videoId) { 
+        Boolean isGuest = Auth.CommunitiesUtil.isGuestUser();            
+        String subtitlesAsJson = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true]?.NKS_Subtitle_Links__c;
+        if (subtitlesAsJson == null) {
+            return new List<VideoTrack>();
         }
-        return subTracks;
+        List<VideoTrack> videoTracks = (List<VideoTrack>)JSON.deserialize(subtitlesAsJson, List<VideoTrack>.class);
+
+        if (!isGuest && !Test.isRunningTest()) {
+            return videoTracks;
+        }
+        // isGuest - Different URL for Experience Site
+        String url = getLibraryBaseUrl().replace('/s', '') + 'sfsites/c/sfc/servlet.shepherd/document/download/';
+        String recordId;
+        List<String> splitSrc;
+        for (VideoTrack track : videoTracks) {
+            splitSrc = track.src.split('/');
+            recordId = splitSrc[splitSrc.size() - 1]; // Record id at end of url
+            track.src = url + recordId;
+        }
+        return videoTracks;
+    }
+
+    // Always returns internal URL. Experience URL is handled in getVideoTracksInternally
+    @AuraEnabled(cacheable=true)
+    public static String showVideoTrackURL(String videoId) {
+        String baseUrl = Url.getSalesforceBaseUrl().toExternalForm();
+        return baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + videoId;
     }
 
     /**
@@ -110,7 +141,7 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     @AuraEnabled(cacheable=true)
     public static String getVideoTitle(String videoId) {
-        String cvTitle = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId LIMIT 1]?.Title;
+        String cvTitle = [SELECT Title FROM ContentVersion WHERE ContentDocumentId =: videoId AND IsLatest = true LIMIT 1]?.Title;
         return cvTitle != null ? cvTitle : 'Video mangler tittel';
     }
 
@@ -121,6 +152,64 @@ public with sharing class NKS_VideoPlayerCtrl {
      */
     private static String getParentFolderName(String recordId) {
         return [SELECT Id, ParentContentFolder.Name FROM ContentFolderItem WHERE Id =: recordId LIMIT 1]?.ParentContentFolder?.Name; 
+    }
+
+    @AuraEnabled
+    public static void setThumbnailLink(String videoId, String thumbnailLink) {
+        ContentVersion cv = [SELECT Id, NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1];
+        cv.NKS_Thumbnail_Link__c = thumbnailLink;
+        update cv;
+    }
+
+    /*  
+        Used in aura helper class to generate video HTML code. Cachable = false to instantly see changed thumbnail on refresh
+        - env: Standard (Inside Salesforce) - window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId
+        - env: Experience (On Experience Page) - window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        - env: Embed (Embedded) - experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getStoredThumbnailLink(String videoId, String env, String windowOrigin) {
+        String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1]?.NKS_Thumbnail_Link__c;
+        
+        String recordId;
+        if (thumbnailLink != null) {
+            List<String> splitThumbnail = thumbnailLink.split('/');
+            recordId = splitThumbnail[splitThumbnail.size() - 1]; // Record id of Thumbnail record
+        }
+
+        final Map<String, String> allowedEnvs = new Map<String, String>{
+            'Standard' => thumbnailLink,
+            'Experience' => windowOrigin + (NKS_VideoPlayerCtrl.isSandbox() ? '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' : '/sfsites/c/sfc/servlet.shepherd/document/download/') + recordId,
+            'Embed' => NKS_VideoPlayerCtrl.getLibraryBaseUrl().replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
+        };
+        if (allowedEnvs.get(env) == null || recordId == null) {
+            return 'err';
+        }
+        return allowedEnvs.get(env);
+    }
+
+    // Used on record page in wire
+    @AuraEnabled(cacheable=true)
+    public static String getThumbnailLinkOnFile(String videoId) {
+        return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1]?.NKS_Thumbnail_Link__c;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static String getContentVersionIdOnContentDocument(String videoId) {
+        return [SELECT Id FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1].Id;
+    }
+
+    // Used on record page in wire
+    @AuraEnabled(cacheable=true)
+    public static String getSubtitleLanguageLinksOnFile(String videoId) {
+        ContentVersion cv = [SELECT NKS_Subtitle_Links__c FROM ContentVersion WHERE ContentDocumentId = :videoId AND IsLatest = true LIMIT 1];
+        return cv.NKS_Subtitle_Links__c != null ? cv.NKS_Subtitle_Links__c : '[]';
+    }
+
+    @AuraEnabled
+    public static void saveSubtitleLanguageLinks(String subtitlesAsJson, String id) {
+        ContentVersion cv = new ContentVersion(Id = id, NKS_Subtitle_Links__c = subtitlesAsJson);
+        update cv;
     }
 
     public class VideoTrack {
@@ -151,45 +240,5 @@ public with sharing class NKS_VideoPlayerCtrl {
             this.numViewsTotal = numViewsTotal;
             this.numViewsYesterday = numViewsYesterday;
         }
-    }
-
-    @AuraEnabled
-    public static void setThumbnailLink(String videoId, String thumbnailLink) {
-        ContentVersion cv = [SELECT Id, NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1];
-        cv.NKS_Thumbnail_Link__c = thumbnailLink;
-        update cv;
-    }
-
-    /*  
-        Used in aura helper class to generate video HTML code. Cachable = false to instantly see changed thumbnail on refresh
-        - env: Standard (Inside Salesforce) - window.location.origin + '/sfc/servlet.shepherd/document/download/' + recordId
-        - env: Experience (On Experience Page) - window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
-        - env: Embed (Embedded) - experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
-    */
-    @AuraEnabled(cacheable=false)
-    public static String getStoredThumbnailLink(String videoId, String env, String windowOrigin) {
-        String thumbnailLink = [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
-        
-        String recordId;
-        if (thumbnailLink != null) {
-            List<String> splitThumbnail = thumbnailLink.split('/');
-            recordId = splitThumbnail[splitThumbnail.size() - 1]; // Record id of Thumbnail record
-        }
-
-        final Map<String, String> allowedEnvs = new Map<String, String>{
-            'Standard' => thumbnailLink,
-            'Experience' => windowOrigin + (NKS_VideoPlayerCtrl.isSandbox() ? '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' : '/sfsites/c/sfc/servlet.shepherd/document/download/') + recordId,
-            'Embed' => NKS_VideoPlayerCtrl.getLibraryBaseUrl().replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + recordId
-        };
-        if (allowedEnvs.get(env) == null || recordId == null) {
-            return 'err';
-        }
-        return allowedEnvs.get(env);
-    }
-
-    // Used on record page in wire
-    @AuraEnabled(cacheable=true)
-    public static String getThumbnailLinkOnFile(String videoId) {
-        return [SELECT NKS_Thumbnail_Link__c FROM ContentVersion WHERE ContentDocumentId = :videoId LIMIT 1]?.NKS_Thumbnail_Link__c;
     }
 }

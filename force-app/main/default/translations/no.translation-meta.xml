@@ -1,6 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
     <customLabels>
+        <label>Slett</label>
+        <name>NKS_Button_Delete</name>
+    </customLabels>
+    <customLabels>
+        <label>Lagre</label>
+        <name>NKS_Button_Save</name>
+    </customLabels>
+    <customLabels>
+        <label>Kunne ikke kopiere.</label>
+        <name>NKS_Copy_Message_Fail</name>
+    </customLabels>
+    <customLabels>
+        <label>Embeddingkode</label>
+        <name>NKS_Embedding_Code</name>
+    </customLabels>
+    <customLabels>
+        <label>Kunne ikke lagre.</label>
+        <name>NKS_Save_Message_Fail</name>
+    </customLabels>
+    <customLabels>
+        <label>Undertekstlenke lagret.</label>
+        <name>NKS_Save_Message_Success</name>
+    </customLabels>
+    <customLabels>
+        <label>Undertekster</label>
+        <name>NKS_Subtitles</name>
+    </customLabels>
+    <customLabels>
+        <label>Lagre undertekst</label>
+        <name>NKS_Subtitle_Button_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>Språk</label>
+        <name>NKS_Subtitle_Column_Header</name>
+    </customLabels>
+    <customLabels>
+        <label>Velg språk for undertekst</label>
+        <name>NKS_Subtitle_Combobox_Placeholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Norsk</label>
+        <name>NKS_Subtitle_Language_Norwegian</name>
+    </customLabels>
+    <customLabels>
+        <label>Engelsk</label>
+        <name>NKS_Subtitle_Language_English</name>
+    </customLabels>
+    <customLabels>
+        <label>Polsk</label>
+        <name>NKS_Subtitle_Language_Polish</name>
+    </customLabels>
+    <customLabels>
+        <label>Undertekstlenke</label>
+        <name>NKS_Subtitle_Link</name>
+    </customLabels>
+    <customLabels>
+        <label>Undertekstlenken finner du i Detaljer-fanen på filen du vil bruke</label>
+        <name>NKS_Subtitle_Placeholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Undertekster kan kun legges til videofiler.</label>
+        <name>NKS_Subtitle_Warning</name>
+    </customLabels>
+    <customLabels>
+        <label>Detaljer</label>
+        <name>NKS_Tab_Details</name>
+    </customLabels>
+    <customLabels>
+        <label>Undertekster</label>
+        <name>NKS_Tab_Subtitles</name>
+    </customLabels>
+    <customLabels>
+        <label>Lagre thumbnail-lenke</label>
+        <name>NKS_Thumbnail_Button_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>Thumbnail-lenke</label>
+        <name>NKS_Thumbnail_Link</name>
+    </customLabels>
+    <customLabels>
+        <label>Thumbnail-lenken finner du i Detaljer-fanen på filen du vil bruke</label>
+        <name>NKS_Thumbnail_Placeholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Thumbnail-lenke lagret.</label>
+        <name>NKS_Thumbnail_Save</name>
+    </customLabels>
+    <customLabels>
         <label>Bibliotekslenke</label>
         <name>NKS_Video_Library_Link</name>
     </customLabels>
