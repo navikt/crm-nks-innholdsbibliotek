@@ -1,31 +1,9 @@
 <template>
-    <br/>
-    <div if:true={isThumbnailFile}>
-        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">{label.THUMBNAIL_LINK}</h1>
-        <div class="slds-box slds-box_x-small slds-theme_shade">
-            <lightning-layout multiple-rows>
-                <lightning-layout-item alignment-bump="right" size="11">
-                    <lightning-formatted-text value={showThumbnailLink}></lightning-formatted-text>
-                </lightning-layout-item>
-                <lightning-layout-item>
-                    <lightning-button-icon
-                        data-id="thumbnail-copy-button"
-                        icon-name="utility:copy"
-                        alternative-text="Kopier"
-                        onclick={handleCopy}
-                        variant="brand"
-                    ></lightning-button-icon>
-                </lightning-layout-item>
-            </lightning-layout>
+    <h3 if:false={isVideoFile} style="text-align: center;">{label.THUMBNAIL_WARNING}</h3>
+    <lightning-card title="Thumbnail" icon-name="utility:image" if:true={isVideoFile}>
+        <div class="lgc-bg">
+            <lightning-input type="text" label={label.THUMBNAIL_LINK} value={thumbnailLink} placeholder={label.THUMBNAIL_PLACEHOLDER} onchange={handleInputChange} style="margin-bottom: 1rem;"></lightning-input>
         </div>
-    </div>
-    <div if:true={isVideoFile}>
-        <h1 class="slds-text-heading_small slds-text-title_bold slds-p-bottom_xx-small">Thumbnail</h1>
-        <div>
-            <div class="padding-small lgc-bg">
-                <lightning-input type="text" label={label.THUMBNAIL_LINK} value={thumbnailLink} placeholder={label.THUMBNAIL_PLACEHOLDER} onchange={handleInputChange}></lightning-input>
-            </div>
-            <lightning-button variant="brand" label={label.SAVE} title={label.THUMBNAIL_BUTTON_TITLE} onclick={saveThumbnailLink} class="slds-m-left_x-small"></lightning-button>
-        </div>
-    </div>
+        <lightning-button variant="brand" label={label.SAVE} title={label.THUMBNAIL_BUTTON_TITLE} onclick={saveThumbnailLink}></lightning-button>
+    </lightning-card> 
 </template>

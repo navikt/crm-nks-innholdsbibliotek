@@ -89,6 +89,10 @@
         <name>NKS_Thumbnail_Save</name>
     </customLabels>
     <customLabels>
+        <label>Thumbnails kan kun legges til videofiler.</label>
+        <name>NKS_Thumbnail_Warning</name>
+    </customLabels>
+    <customLabels>
         <label>Bibliotekslenke</label>
         <name>NKS_Video_Library_Link</name>
     </customLabels>

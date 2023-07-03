@@ -1,10 +1,8 @@
 <template>
-    <div if:true={isVideoFile}>
-        <c-nks-video-lib-linker record-id={recordId}></c-nks-video-lib-linker>
-    </div>
+    <c-nks-video-lib-linker record-id={recordId} if:true={isVideoFile}></c-nks-video-lib-linker>
     <div class="slds-p-top_small" if:true={isVideoFile}>
         <c-nks-embed-generator record-id={recordId}></c-nks-embed-generator>
     </div>
-    <c-nks-thumbnail-generator record-id={recordId} filetype={filetype}></c-nks-thumbnail-generator>
+    <c-nks-thumbnail-linker record-id={recordId} filetype={filetype}></c-nks-thumbnail-linker>
     <c-nks-subtitle-linker record-id={recordId} filetype={filetype}></c-nks-subtitle-linker>
 </template>
