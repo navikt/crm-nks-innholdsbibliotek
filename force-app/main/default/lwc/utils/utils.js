@@ -35,6 +35,7 @@ import THUMBNAIL_SAVE from '@salesforce/label/c.NKS_Thumbnail_Save';
 import THUMBNAIL_LINK from '@salesforce/label/c.NKS_Thumbnail_Link';
 import THUMBNAIL_PLACEHOLDER from '@salesforce/label/c.NKS_Thumbnail_Placeholder';
 import THUMBNAIL_BUTTON_TITLE from '@salesforce/label/c.NKS_Thumbnail_Button_Title';
+import THUMBNAIL_WARNING from '@salesforce/label/c.NKS_Thumbnail_Warning';
 import EMBEDDING_CODE from '@salesforce/label/c.NKS_Embedding_Code';
 
 export default {
@@ -59,5 +60,6 @@ export default {
     THUMBNAIL_LINK,
     THUMBNAIL_PLACEHOLDER,
     THUMBNAIL_BUTTON_TITLE,
+    THUMBNAIL_WARNING,
     EMBEDDING_CODE
 };

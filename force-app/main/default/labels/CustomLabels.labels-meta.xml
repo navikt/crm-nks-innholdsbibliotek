@@ -177,6 +177,14 @@
         <value>Thumbnail link saved.</value>
     </labels>
     <labels>
+        <fullName>NKS_Thumbnail_Warning</fullName>
+        <categories>Video, Asset Library, UI</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thumbnail warning for filetype</shortDescription>
+        <value>Thumbnails can only be added to video files.</value>
+    </labels>
+    <labels>
         <fullName>NKS_Video_Stats_Title</fullName>
         <categories>Video, Asset Library, UI</categories>
         <language>en_US</language>
