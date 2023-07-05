@@ -97,7 +97,7 @@ export default class NksSubtitles extends LightningElement {
 
     deleteSubtitleLink(event) {
         const row = event.detail.row;
-        const index = this.subtitleLinks.indexOf(row);
+        const index = this.subtitleLinks.map(x => x.srclang).indexOf(row.srclang);
         if (index > -1) {
             this.subtitleLinks.splice(index, 1);
         }
