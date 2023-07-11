@@ -17,6 +17,7 @@
             const videoId = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
             component.set('v.videoId', videoId);
             component.set('v.recordId', videoId);
+            component.set('v.context', 'Experience');
             this.getInstanceType(component)
                 .then((isSandbox) => {
                     videoSrc = isSandbox
