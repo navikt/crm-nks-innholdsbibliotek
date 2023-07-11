@@ -43,6 +43,30 @@
                 const state = response.getState();
                 if (state === 'SUCCESS') {
                     resolve(response.getReturnValue());
+                    this.getVideoTracks(component).then((subTracks) => {
+                        let videoPlayer =
+                        '<video height=40%; width=60%;' +
+                        ' aria-label="' + component.get('v.videoTitle') + '"' +
+                        (component.get('v.thumbnailLink') !== 'err' ? ' poster="' + component.get('v.thumbnailLink') + '"' : '') +
+                        ' controls controlsList="nodownload"><source src="' +
+                        component.get('v.videoSrc') +
+                        '" type="video/mp4" >';
+                        if (subTracks && subTracks.length > 0) {
+                            subTracks.forEach((track) => {
+                                videoPlayer +=
+                                    '<track kind="subtitles" srclang="' +
+                                    track.srclang +
+                                    '" label="' +
+                                    track.languageLabel +
+                                    '" src="' +
+                                    track.src +
+                                    '">';
+                            });
+                        }
+                        videoPlayer += '</video>'; //Video end
+                        console.log(videoPlayer);
+                        component.set('v.videoPlayer', videoPlayer);
+                    });
                 } else if (state === 'ERROR') {
                     let errors = response.getError();
                     console.error(JSON.stringify(errors));
@@ -104,6 +128,9 @@
                 const state = response.getState();
                 if (state === 'SUCCESS') {
                     resolve(response.getReturnValue());
+                    this.getThumbnailLink(component).then((thumbnail) => {
+                        component.set('v.thumbnailLink', thumbnail);
+                    });
                 } else if (state === 'ERROR') {
                     let errors = response.getError();
                     console.error(JSON.stringify(errors));
@@ -116,36 +143,9 @@
     },
 
     generateVideoPlayer: function (component) {
-        let videoPlayer = '';
-        this.getThumbnailLink(component).then((thumbnail) => {
-            this.getVideoTitle(component).then((videoTitle) => {
-                videoPlayer =
-                '<video height=40%; width=60%;' +
-                ' aria-label="' + videoTitle + '"' +
-                (thumbnail !== 'err' ? ' poster="' + thumbnail + '"' : '') +
-                ' controls controlsList="nodownload"><source src="' +
-                component.get('v.videoSrc') +
-                '" type="video/mp4" >';
-            }).finally(() => {
-                this.getVideoTracks(component).then((subTracks) => {
-                    if (subTracks && subTracks.length > 0) {
-                        subTracks.forEach((track) => {
-                            videoPlayer +=
-                                '<track kind="subtitles" srclang="' +
-                                track.srclang +
-                                '" label="' +
-                                track.languageLabel +
-                                '" src="' +
-                                track.src +
-                                '">';
-                        });
-                    }
-                    videoPlayer += '</video>'; //Video end
-                    console.log(videoPlayer);
-                    component.set('v.videoPlayer', videoPlayer);
-                });
-            });
-        })
+        this.getVideoTitle(component).then((title) => {
+            component.set('v.videoTitle', title);
+        });
     },
 
     addVideoView: function (component) {

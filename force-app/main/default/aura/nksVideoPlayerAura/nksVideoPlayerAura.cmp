@@ -8,7 +8,9 @@
     <aura:attribute name="videoId" type="String" />
     <aura:attribute name="videoSize" type="String" />
     <aura:attribute name="videoSrc" type="String" />
+    <aura:attribute name="videoTitle" type="String" />
     <aura:attribute name="videoPlayer" type="String" />
+    <aura:attribute name="thumbnailLink" type="String" />
     <aura:attribute name="error" type="Boolean" default="false" />
     <aura:attribute name="contentDocument" type="Object" />
     <aura:attribute name="recordError" type="String" />
