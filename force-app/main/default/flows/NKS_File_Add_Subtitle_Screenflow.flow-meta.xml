@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <apiVersion>56.0</apiVersion>
     <assignments>
         <name>Set_Content_Document_Url_and_Video_Relation</name>
@@ -74,8 +75,8 @@
     <dynamicChoiceSets>
         <name>Subtitle_Language_Choices</name>
         <dataType>Picklist</dataType>
-        <displayField xsi:nil="true"/>
-        <object xsi:nil="true"/>
+        <displayField xsi:nil="true" />
+        <object xsi:nil="true" />
         <picklistField>NKS_Subtitle_Language__c</picklistField>
         <picklistObject>ContentVersion</picklistObject>
     </dynamicChoiceSets>
@@ -107,7 +108,8 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordCreates>
-        <description>Adding the newly created file as a member of the library for later move into correct folder.</description>
+        <description>Adding the newly created file as a member of the library for later move into
+            correct folder.</description>
         <name>Create_Content_Document_Link</name>
         <label>Create Content Document Link</label>
         <locationX>50</locationX>
@@ -355,7 +357,9 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>File_Upload_Text</name>
-                    <fieldText>&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Fil klar for opplastning.&lt;/p&gt;&lt;p&gt;Velg språk for tekstsporet og klikk &quot;knytt til video&quot; for å fullføre.&lt;/p&gt;</fieldText>
+                    <fieldText>&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Fil klar for
+                        opplastning.&lt;/p&gt;&lt;p&gt;Velg språk for tekstsporet og klikk
+                        &quot;knytt til video&quot; for å fullføre.&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
@@ -441,7 +445,10 @@
             <inputParameters>
                 <name>columns</name>
                 <value>
-                    <stringValue>[{&quot;apiName&quot;:&quot;Title&quot;,&quot;guid&quot;:&quot;column-eeb0&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:0,&quot;label&quot;:&quot;Title&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;NKS_Subtitle_Language__c&quot;,&quot;guid&quot;:&quot;column-c085&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:1,&quot;label&quot;:&quot;Subtitle Language&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;FileExtension&quot;,&quot;guid&quot;:&quot;column-98c1&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:2,&quot;label&quot;:&quot;File Extension&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;NKS_Content_Document_Link__c&quot;,&quot;guid&quot;:&quot;column-9bbc&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:true,&quot;customHeaderLabel&quot;:&quot;Lenke&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:3,&quot;label&quot;:&quot;Content Document Link&quot;,&quot;type&quot;:&quot;url&quot;}]</stringValue>
+                    <stringValue>[{&quot;apiName&quot;:&quot;Title&quot;,&quot;guid&quot;:&quot;column-eeb0&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:0,&quot;label&quot;:&quot;Title&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;NKS_Subtitle_Language__c&quot;,&quot;guid&quot;:&quot;column-c085&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:1,&quot;label&quot;:&quot;Subtitle
+                        Language&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;FileExtension&quot;,&quot;guid&quot;:&quot;column-98c1&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:2,&quot;label&quot;:&quot;File
+                        Extension&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;NKS_Content_Document_Link__c&quot;,&quot;guid&quot;:&quot;column-9bbc&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:true,&quot;customHeaderLabel&quot;:&quot;Lenke&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:3,&quot;label&quot;:&quot;Content
+                        Document Link&quot;,&quot;type&quot;:&quot;url&quot;}]</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -468,7 +475,9 @@
         <allowPause>false</allowPause>
         <fields>
             <name>Unsupported_File_Type_Error_Text</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Undertekster kan kun legges til videofiler.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span
+                style=&quot;font-size: 16px;&quot;&gt;Undertekster kan kun legges til
+                videofiler.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>false</showFooter>
@@ -481,7 +490,7 @@
             <targetReference>Get_File_Information</targetReference>
         </connector>
     </start>
-    <status>Active</status>
+    <status>Inactive</status>
     <variables>
         <name>Content_Document_Links</name>
         <dataType>SObject</dataType>
