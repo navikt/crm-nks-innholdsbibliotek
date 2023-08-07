@@ -32,11 +32,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>ContentVersion.NKS_Subtitle_Language__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>ContentVersion.NKS_Thumbnail_Link__c</field>
         <readable>true</readable>
     </fieldPermissions>
