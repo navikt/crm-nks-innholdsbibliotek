@@ -490,7 +490,7 @@
             <targetReference>Get_File_Information</targetReference>
         </connector>
     </start>
-    <status>Inactive</status>
+    <status>Draft</status>
     <variables>
         <name>Content_Document_Links</name>
         <dataType>SObject</dataType>
