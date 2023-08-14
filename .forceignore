@@ -3,6 +3,10 @@
 # ----------------------------------------------------------------------------------------
 **/profiles/*
 
+# Allow files in Scratch-org folder
+!**/scratch-org/**
+!**/scratch-org/profiles/Admin.profile-meta.xml
+
 
 # NOTE!! Do NOT use **/ before
 !unpackagable/profiles/*
