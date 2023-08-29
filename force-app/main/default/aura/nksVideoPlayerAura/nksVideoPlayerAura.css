@@ -4,3 +4,8 @@
     left: 30%;
     width: 40%;
 }
+
+.THIS .subtitle-background::cue {
+    background-color: black !important;
+    font-family: Arial !important;
+  }
