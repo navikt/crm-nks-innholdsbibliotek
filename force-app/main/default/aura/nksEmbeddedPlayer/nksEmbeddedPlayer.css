@@ -1,2 +1,4 @@
-.THIS {
-}
+.THIS .subtitle-background::cue {
+    background-color: black !important;
+    font-family: Arial !important;
+  }

@@ -45,7 +45,7 @@
                     resolve(response.getReturnValue());
                     this.getVideoTracks(component).then((subTracks) => {
                         let videoPlayer =
-                        '<video height=40%; width=60%;' +
+                        '<video class="subtitle-background" height=40%; width=60%;' +
                         ' aria-label="' + component.get('v.videoTitle') + '"' +
                         (component.get('v.thumbnailLink') !== 'err' ? ' poster="' + component.get('v.thumbnailLink') + '"' : '') +
                         ' controls controlsList="nodownload"><source src="' +
