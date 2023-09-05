@@ -16,7 +16,6 @@ on:
         - crm-uat
         - uat
         - dev
-
 jobs:
   debug:
     name: Debug Information
@@ -31,9 +30,10 @@ jobs:
   deploy-package:
     name: Deploy Package
     uses: navikt/crm-workflows-base/.github/workflows/deployPackage.yml@master
+    permissions:
+      contents: read
     with:
       packageId: ${{ inputs.packageId }}
       org: ${{ inputs.org }}
       unpackagable: ./force-app/unpackagable-with-auto-deploy
-      SFDX_ENV: HEADER_ENV_REPLACER='"Dev"' DEPLOY_DESTINATION=DEV
     secrets: inherit
