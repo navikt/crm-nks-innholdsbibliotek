@@ -22,7 +22,7 @@
                 .then((isSandbox) => {
                     videoSrc = isSandbox
                         ? window.location.origin + '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId
-                        : window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
+                        : window.location.origin + '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/' + videoId;
                 })
                 .finally(() => {
                     component.set('v.videoSrc', videoSrc);
