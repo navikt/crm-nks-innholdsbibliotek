@@ -73,7 +73,7 @@ export default class NksVideoPlayer extends LightningElement {
 
     setThumbnail() {
         const videoElement = this.template.querySelector('video');
-        if (videoElement && this.thumbnail !== undefined) {
+        if (videoElement && this.thumbnail !== undefined && this.thumbnail !== 'err') {
             videoElement.setAttribute('poster', this.thumbnail);
         }
     }
