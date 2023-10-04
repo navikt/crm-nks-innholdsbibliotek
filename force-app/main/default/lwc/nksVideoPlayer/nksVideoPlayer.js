@@ -1,4 +1,4 @@
-import { LightningElement, track, api, wire } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import getVideoTracks from '@salesforce/apex/NKS_VideoPlayerCtrl.getVideoTracks';
 import getVideoTitle from '@salesforce/apex/NKS_VideoPlayerCtrl.getVideoTitle';
 import getStoredThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.getStoredThumbnailLink';
@@ -7,102 +7,88 @@ import addViewCount from '@salesforce/apex/NKS_VideoPlayerCtrl.addViewCount';
 
 export default class NksVideoPlayer extends LightningElement {
     @api videoId; // Set through Lightning Out param
-    @track videoPlayer;
-    @track videoSrc;
-    @track videoTitle;
-    @track subTracks; // Store subtracks here
-    @track tracksAdded = false; // Check whether tracks have been added or not
+    videoSrc;
+    videoTitle;
+    thumbnail;
+    tracksAdded = false; // Check whether tracks have been added or not
+    subTracks = [];
 
     connectedCallback() {
-        this.fetchSubTracks(); // Fetch subtracks before rendering
+        //this.fetchSubTracks(); // Fetch subtitles before render
         this.generateVideoPlayer();
     }
 
     renderedCallback() {
         this.attachEventListener();
 
-        if (this.videoSrc && this.subTracks && this.subTracks.length > 0 && !this.tracksAdded) {
+        if (this.videoSrc && this.subTracks.length > 0 && !this.tracksAdded) {
             this.addTracksToVideo();
         }
     }
 
-    generateVideoPlayer() {
-        this.getExperienceSiteURL()
-            .then((experienceSiteURL) => {
-                this.videoSrc =
-                    experienceSiteURL.replace('/s/', '') +
-                    '/sfsites/c/sfc/servlet.shepherd/document/download/' +
-                    this.videoId;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    async generateVideoPlayer() {
+        try {
+            this.subTracks = await this.fetchSubTracks();
+            this.videoSrc = await this.generateVideoUrl();
+            this.videoTitle = await this.getVideoTitle();
+            this.thumbnail = await this.getThumbnailLink();
+            this.setThumbnail();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    getExperienceSiteURL() {
-        return getLibraryBaseUrl()
-            .then((libraryBaseUrl) => {
-                this.getVideoTitle()
-                    .then((title) => {
-                        this.videoTitle = title;
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-
-                return libraryBaseUrl;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    async generateVideoUrl() {
+        try {
+            const libraryBaseUrl = await getLibraryBaseUrl();
+            return (
+                libraryBaseUrl.replace('/s/', '') +
+                '/sfsites/c/sfc/servlet.shepherd/document/download/' +
+                this.videoId
+            );
+        } catch (error) {
+            throw error;
+        }
     }
 
-    getVideoTitle() {
-        return getVideoTitle({ videoId: this.videoId })
-            .then((result) => {
-                this.getThumbnailLink().then((thumbnail) => {
-                    const videoElement = this.template.querySelector('video');
-                    if (videoElement) {
-                        // Add a dynamic attribute to the video element
-                        videoElement.setAttribute('poster', thumbnail);
-                    }
-                });
-
-                return result;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    async getVideoTitle() {
+        try {
+            return await getVideoTitle({ videoId: this.videoId });
+        } catch (error) {
+            throw error;
+        }
     }
 
-    getThumbnailLink() {
-        return getStoredThumbnailLink({
-            videoId: this.videoId,
-            env: 'Embed',
-            windowOrigin: '',
-        })
-            .then((result) => {
-                return result;
-            })
-            .catch((error) => {
-                console.error(error);
+    async getThumbnailLink() {
+        try {
+            return await getStoredThumbnailLink({
+                videoId: this.videoId,
+                env: 'Embed',
+                windowOrigin: '',
             });
+        } catch (error) {
+            throw error;
+        }
     }
 
-    fetchSubTracks() {
-        getVideoTracks({ videoId: this.videoId })
-            .then((subTracks) => {
-                this.subTracks = subTracks;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    setThumbnail() {
+        const videoElement = this.template.querySelector('video');
+        if (videoElement && this.thumbnail !== undefined) {
+            videoElement.setAttribute('poster', this.thumbnail);
+        }
+    }
+
+    async fetchSubTracks() {
+        try {
+            return await getVideoTracks({ videoId: this.videoId });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     addTracksToVideo() {
-        const video = this.template.querySelector('video');
-
-        if (video && this.subTracks && this.subTracks.length > 0) {
+        const videoElement = this.template.querySelector('video');
+        if (videoElement && this.subTracks.length > 0) {
             this.subTracks.forEach((track) => {
                 try {
                     const blob = new Blob([track.src], { type: 'text/plain' });
@@ -114,7 +100,7 @@ export default class NksVideoPlayer extends LightningElement {
                     newTrack.label = track.languageLabel;
                     newTrack.src = url;
 
-                    video.appendChild(newTrack);
+                    videoElement.appendChild(newTrack);
                 } catch (e) {
                     console.error(
                         'Could not create blob from VersionData. Error: ',
