@@ -6,17 +6,24 @@ import getLibraryBaseUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryBa
 import addViewCount from '@salesforce/apex/NKS_VideoPlayerCtrl.addViewCount';
 
 export default class NksVideoPlayer extends LightningElement {
-    @api videoId;
+    @api videoId; // Set through Lightning Out param
     @track videoPlayer;
     @track videoSrc;
     @track videoTitle;
+    @track subTracks; // Store subtracks here
+    @track tracksAdded = false; // Check whether tracks have been added or not
 
     connectedCallback() {
+        this.fetchSubTracks(); // Fetch subtracks before rendering
         this.generateVideoPlayer();
     }
 
     renderedCallback() {
         this.attachEventListener();
+
+        if (this.videoSrc && this.subTracks && this.subTracks.length > 0 && !this.tracksAdded) {
+            this.addTracksToVideo();
+        }
     }
 
     generateVideoPlayer() {
@@ -75,51 +82,6 @@ export default class NksVideoPlayer extends LightningElement {
             windowOrigin: '',
         })
             .then((result) => {
-                getVideoTracks()
-                    .then((subTracks) => {
-                        /*let videoPlayer =
-                            '<video class="subtitle-background" height=100%; width=100%;' +
-                            ' aria-label="' +
-                            this.videoTitle +
-                            '"' +
-                            (this.thumbnailLink !== 'err'
-                                ? ' poster="' + this.thumbnailLink + '"'
-                                : '') +
-                            ' controls controlsList="nodownload"><source src="' +
-                            this.videoSrc +
-                            '" type="video/mp4" >';*/
-                        if (subTracks && subTracks.length > 0) {
-                            let blob;
-                            subTracks.forEach((track) => {
-                                try {
-                                    blob = new Blob([track.src], {
-                                        type: 'text/plain',
-                                    });
-                                } catch (e) {
-                                    console.error(
-                                        'Could not create blob from VersionData. Error: ',
-                                        e
-                                    );
-                                }
-                                const url = window.URL.createObjectURL(blob);
-                                this.addTrackToVideo(track, url);
-                                /*videoPlayer +=
-                                    '<track kind="captions" srclang="' +
-                                    track.srclang +
-                                    '" label="' +
-                                    track.languageLabel +
-                                    '" src="' +
-                                    url +
-                                    '">';*/
-                            });
-                        }
-                        //videoPlayer += '</video>'; //Video end
-                        //console.log(videoPlayer);
-                        //this.videoPlayer = videoPlayer;
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
                 return result;
             })
             .catch((error) => {
@@ -127,21 +89,41 @@ export default class NksVideoPlayer extends LightningElement {
             });
     }
 
-    // Method to add tracks dynamically
-    addTrackToVideo(trackData, url) {
+    fetchSubTracks() {
+        getVideoTracks({ videoId: this.videoId })
+            .then((subTracks) => {
+                this.subTracks = subTracks;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    addTracksToVideo() {
         const video = this.template.querySelector('video');
 
-        if (video && trackData && trackData !== undefined && trackData !== null) {
-            trackData.forEach((track) => {
-                const newTrack = document.createElement('track');
-                newTrack.kind = 'captions';
-                newTrack.srclang = track.srclang;
-                newTrack.label = track.languageLabel;
-                newTrack.src = url;
+        if (video && this.subTracks && this.subTracks.length > 0) {
+            this.subTracks.forEach((track) => {
+                try {
+                    const blob = new Blob([track.src], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
 
-                video.appendChild(newTrack);
+                    const newTrack = document.createElement('track');
+                    newTrack.kind = 'captions';
+                    newTrack.srclang = track.srclang;
+                    newTrack.label = track.languageLabel;
+                    newTrack.src = url;
+
+                    video.appendChild(newTrack);
+                } catch (e) {
+                    console.error(
+                        'Could not create blob from VersionData. Error: ',
+                        e
+                    );
+                }
             });
         }
+        this.tracksAdded = true; // Set the flag to true to avoid adding tracks again on rerender
     }
 
     attachEventListener() {
