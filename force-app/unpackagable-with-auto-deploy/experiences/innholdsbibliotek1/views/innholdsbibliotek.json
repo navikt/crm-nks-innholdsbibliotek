@@ -33,12 +33,12 @@
                     "type": "component"
                 },
                 {
-                    "componentAttributes": {},
-                    "componentName": "c:nksVideoPlayerAura",
-                    "id": "c496f193-576b-4d80-9bc8-7ccc4252e32f",
-                    "renderPriority": "NEUTRAL",
-                    "renditionMap": {},
-                    "type": "component"
+                    "componentAttributes" : { },
+                    "componentName" : "c:nksVideoPlayer",
+                    "id" : "b27b32f7-a19d-4f7b-910e-85cf79414d7c",
+                    "renderPriority" : "NEUTRAL",
+                    "renditionMap" : { },
+                    "type" : "component"
                 }
             ],
             "id": "fe593b16-b188-4fab-8d3d-d061733f5fe8",
