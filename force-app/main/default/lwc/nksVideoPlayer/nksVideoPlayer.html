@@ -1,25 +1,40 @@
 <template>
-    <div style="position: relative">
-        <div if:true={error}>
-            <div class="decorator-wrapper alert-positioning">
-                <div style="align-items: inherit" class="navds-alert navds-alert--error navds-alert--medium">
-                    <c-icon icon-name="ErrorFilled" fill="Red"></c-icon>
-                    <div class="navds-alert__wrapper navds-body-long">
-                        <h3 class="navds-heading navds-heading--small navds-typo--spacing">
-                            {label.NKS_Video_Player_Error_Header}
-                        </h3>
-                        {label.NKS_Video_Player_Error_Message}
+    <div if:true={isFileTypeMp4}>
+        <lightning-layout horizontal-align="center" multiple-rows>
+            <lightning-layout-item size="12" medium-device-size="10">
+                <div if:true={isExperience}>
+                    <div class="decorator-wrapper slds-p-bottom_small">
+                        <h1 class="navds-heading navds-heading--xlarge" style="text-align: center;">
+                            {videoTitle}
+                        </h1>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div style="text-align: center" if:true={videoSrc}>
-            <!--<lightning-formatted-rich-text value={videoPlayer}></lightning-formatted-rich-text>-->
-            <video class="subtitle-background" height="100%" width="100%"
-               aria-label={videoTitle}
-               controls controlslist="nodownload">
-            <source src={videoSrc} type="video/mp4">
-            </video>
-        </div>
+                <div style="position: relative">
+                    <div if:true={error}>
+                        <div class="decorator-wrapper alert-positioning">
+                            <div
+                                style="align-items: inherit"
+                                class="navds-alert navds-alert--error navds-alert--medium"
+                            >
+                                <c-icon icon-name="ErrorFilled" fill="Red"></c-icon>
+                                <div class="navds-alert__wrapper navds-body-long">
+                                    <h3 class="navds-heading navds-heading--small navds-typo--spacing">
+                                        {label.NKS_Video_Player_Error_Header}
+                                    </h3>
+                                    {label.NKS_Video_Player_Error_Message}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center" if:true={videoSrc}>
+                        <video class="subtitle-background" height="40%" width="60%"
+                           aria-label={videoTitle}
+                           controls controlslist="nodownload">
+                        <source src={videoSrc} type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
     </div>
 </template>

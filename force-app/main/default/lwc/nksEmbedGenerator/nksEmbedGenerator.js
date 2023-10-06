@@ -62,7 +62,7 @@ export default class NksEmbedGenerator extends LightningElement {
             "'c:nksVideoEmbeddingApp'," +
             'function () {' +
             '$Lightning.createComponent(' +
-            "'c:nksVideoPlayer'," +
+            "'c:NksEmbeddedVideoPlayer'," +
             "{ videoId: '" +
             this.recordId +
             "' }," +

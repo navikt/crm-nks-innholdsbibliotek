@@ -1,19 +1,15 @@
-import { LightningElement, api, wire } from 'lwc';
-import getFileType from '@salesforce/apex/NKS_VideoPlayerCtrl.checkFileType';
-import { isVideoFile } from 'c/utils';
-import getVideoTracksInternally from '@salesforce/apex/NKS_VideoPlayerCtrl.getVideoTracksInternally';
+import { LightningElement, api } from 'lwc';
+import getVideoTracks from '@salesforce/apex/NKS_VideoPlayerCtrl.getVideoTracks';
 import getVideoTitle from '@salesforce/apex/NKS_VideoPlayerCtrl.getVideoTitle';
 import getStoredThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.getStoredThumbnailLink';
-import isSandbox from '@salesforce/apex/NKS_VideoPlayerCtrl.isSandbox';
+import getLibraryBaseUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryBaseUrl';
 import addViewCount from '@salesforce/apex/NKS_VideoPlayerCtrl.addViewCount';
 
-export default class NksVideoPlayer extends LightningElement {
-    @api recordId; // Automatically set when within Salesforce
+export default class NksEmbeddedVideoPlayer extends LightningElement {
+    @api videoId; // Set through Lightning Out param
     videoSrc;
     videoTitle;
     thumbnail;
-    context;
-    isFileTypeMp4;
     tracksAdded = false; // Check whether tracks have been added or not
     subTracks = [];
     error;
@@ -30,24 +26,10 @@ export default class NksVideoPlayer extends LightningElement {
         }
     }
 
-    get isExperience() {
-        return this.context === 'Experience';
-    }
-
-    @wire(getFileType, { recordId: '$recordId'})
-    wiredGetFileType(result) {
-        if (result.error) {
-            console.error(result.error);
-        } else if (result.data) {
-            this.isFileTypeMp4 = isVideoFile(result.data);
-            this.filetype = result.data;
-        }
-    }
-
     async generateVideoPlayer() {
         try {
-            await this.getVideoIdAndSetVideoUrl();
             this.subTracks = await this.fetchSubTracks();
+            this.videoSrc = await this.generateVideoUrl();
             this.videoTitle = await this.getVideoTitle();
             this.thumbnail = await this.getThumbnailLink();
             this.setThumbnail();
@@ -57,45 +39,34 @@ export default class NksVideoPlayer extends LightningElement {
         }
     }
 
-    async getVideoIdAndSetVideoUrl() {
-        if (this.recordId) {
-            // Displaying inside Salesforce
-            this.videoSrc = window.location.origin + '/sfc/servlet.shepherd/document/download/' + this.recordId;
-            this.context = 'Standard';
-        } else {
-            // In community
-            const url = window.location.href;
-            const videoId = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1));
-            this.recordId = videoId;
-            this.context = 'Experience';
-            try {
-                const sandbox = await isSandbox();
-                const baseUrl = sandbox
-                    ? window.location.origin + '/ihb/sfsites/c/sfc/servlet.shepherd/document/download/'
-                    : window.location.origin + '/sfsites/c/sfc/servlet.shepherd/document/download/';
-                this.videoSrc = baseUrl + videoId;
-            } catch (error) {
-                this.error = error;
-                console.error(error);
-            }
+    async generateVideoUrl() {
+        try {
+            const libraryBaseUrl = await getLibraryBaseUrl();
+            return (
+                libraryBaseUrl.replace('/s/', '') +
+                '/sfsites/c/sfc/servlet.shepherd/document/download/' +
+                this.videoId
+            );
+        } catch (error) {
+            this.error = error;
+            throw error;
         }
     }
 
     async getVideoTitle() {
         try {
-            return await getVideoTitle({ videoId: this.recordId });
+            return await getVideoTitle({ videoId: this.videoId });
         } catch (error) {
-            console.error(error);
-            return '';
+            throw error;
         }
     }
 
     async getThumbnailLink() {
         try {
             return await getStoredThumbnailLink({
-                videoId: this.recordId,
-                env: this.context,
-                windowOrigin: window.location.origin,
+                videoId: this.videoId,
+                env: 'Embed',
+                windowOrigin: '',
             });
         } catch (error) {
             throw error;
@@ -111,7 +82,7 @@ export default class NksVideoPlayer extends LightningElement {
 
     async fetchSubTracks() {
         try {
-            return await getVideoTracksInternally({ videoId: this.recordId });
+            return await getVideoTracks({ videoId: this.videoId });
         } catch (error) {
             console.error(error);
         }
@@ -122,11 +93,14 @@ export default class NksVideoPlayer extends LightningElement {
         if (videoElement && this.subTracks.length > 0) {
             this.subTracks.forEach((track) => {
                 try {
+                    const blob = new Blob([track.src], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
+
                     const newTrack = document.createElement('track');
                     newTrack.kind = 'captions';
                     newTrack.srclang = track.srclang;
                     newTrack.label = track.languageLabel;
-                    newTrack.src = track.src;
+                    newTrack.src = url;
 
                     videoElement.appendChild(newTrack);
                 } catch (e) {
@@ -150,8 +124,8 @@ export default class NksVideoPlayer extends LightningElement {
     }
 
     addViewCount() {
-        if (this.recordId) {
-            addViewCount({ videoId: this.recordId })
+        if (this.videoId) {
+            addViewCount({ videoId: this.videoId })
                 .then(() => {
                     // View count was updated
                 })
