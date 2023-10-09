@@ -49,7 +49,7 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
             );
         } catch (error) {
             this.error = error;
-            throw error;
+            console.error(error);
         }
     }
 
@@ -57,7 +57,7 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
         try {
             return await getVideoTitle({ videoId: this.videoId });
         } catch (error) {
-            throw error;
+            console.error(error);
         }
     }
 
@@ -69,7 +69,7 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
                 windowOrigin: '',
             });
         } catch (error) {
-            throw error;
+            console.error(error);
         }
     }
 

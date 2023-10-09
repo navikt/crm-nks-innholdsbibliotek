@@ -98,7 +98,7 @@ export default class NksVideoPlayer extends LightningElement {
                 windowOrigin: window.location.origin,
             });
         } catch (error) {
-            throw error;
+            console.error(error);
         }
     }
 
