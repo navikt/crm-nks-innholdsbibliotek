@@ -1,7 +1,7 @@
 <template>
     <div style="position: relative">
-        <div if:true={error}>
-            <div class="decorator-wrapper alert-positioning">
+        <div lwc:if={error}>
+            <div class="alert-positioning">
                 <div style="align-items: inherit" class="navds-alert navds-alert--error navds-alert--medium">
                     <c-icon icon-name="ErrorFilled" fill="Red"></c-icon>
                     <div class="navds-alert__wrapper navds-body-long">
@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <div style="text-align: center" if:true={videoSrc}>
+        <div style="text-align: center" lwc:if={videoSrc}>
             <video class="subtitle-background" height="100%" width="100%"
                aria-label={videoTitle}
                controls controlslist="nodownload">

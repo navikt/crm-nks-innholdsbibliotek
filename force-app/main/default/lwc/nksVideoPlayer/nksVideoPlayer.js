@@ -16,15 +16,17 @@ export default class NksVideoPlayer extends LightningElement {
     isFileTypeMp4;
     tracksAdded = false; // Check whether tracks have been added or not
     subTracks = [];
-    error;
+    error = true;
+    videoEventListenerAttached = false;
 
     connectedCallback() {
         this.generateVideoPlayer();
     }
 
     renderedCallback() {
-        this.attachEventListener();
-
+        if (!this.videoEventListenerAttached) {
+            this.attachEventListener();
+        }
         if (this.videoSrc && this.subTracks.length > 0 && !this.tracksAdded) {
             this.addTracksToVideo();
         }
@@ -143,8 +145,11 @@ export default class NksVideoPlayer extends LightningElement {
     attachEventListener() {
         const video = this.template.querySelector('video');
         if (video) {
+            this.videoEventListenerAttached = true;
             video.addEventListener('play', () => {
-                this.addViewCount();
+                if (!video.paused) {
+                    this.addViewCount();
+                }
             });
         }
     }
@@ -152,9 +157,6 @@ export default class NksVideoPlayer extends LightningElement {
     addViewCount() {
         if (this.recordId) {
             addViewCount({ videoId: this.recordId })
-                .then(() => {
-                    // View count was updated
-                })
                 .catch((error) => {
                     console.error(error);
                 });
