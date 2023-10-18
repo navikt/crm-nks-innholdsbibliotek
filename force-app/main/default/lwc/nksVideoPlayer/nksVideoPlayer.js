@@ -16,7 +16,7 @@ export default class NksVideoPlayer extends LightningElement {
     isFileTypeMp4;
     tracksAdded = false; // Check whether tracks have been added or not
     subTracks = [];
-    error = true;
+    error;
     videoEventListenerAttached = false;
 
     connectedCallback() {
