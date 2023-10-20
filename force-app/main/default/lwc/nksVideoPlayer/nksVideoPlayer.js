@@ -150,7 +150,7 @@ export default class NksVideoPlayer extends LightningElement {
                 if (!video.paused) {
                     this.addViewCount();
                 }
-            });
+            }, { once : true });
         }
     }
 

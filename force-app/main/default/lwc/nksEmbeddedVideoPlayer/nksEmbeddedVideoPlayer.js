@@ -124,7 +124,7 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
                 if (!video.paused) {
                     this.addViewCount();
                 }
-            });
+            }, { once : true });
         }
     }
 
