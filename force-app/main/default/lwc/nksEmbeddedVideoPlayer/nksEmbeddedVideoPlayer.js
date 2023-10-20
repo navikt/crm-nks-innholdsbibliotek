@@ -4,6 +4,8 @@ import getVideoTitle from '@salesforce/apex/NKS_VideoPlayerCtrl.getVideoTitle';
 import getStoredThumbnailLink from '@salesforce/apex/NKS_VideoPlayerCtrl.getStoredThumbnailLink';
 import getLibraryBaseUrl from '@salesforce/apex/NKS_VideoPlayerCtrl.getLibraryBaseUrl';
 import addViewCount from '@salesforce/apex/NKS_VideoPlayerCtrl.addViewCount';
+import VIDEO_ERROR_HEADER from '@salesforce/label/c.NKS_Video_Player_Error_Header';
+import VIDEO_ERROR_MESSAGE from '@salesforce/label/c.NKS_Video_Player_Error_Message';
 
 export default class NksEmbeddedVideoPlayer extends LightningElement {
     @api videoId; // Set through Lightning Out param
@@ -12,8 +14,13 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
     thumbnail;
     tracksAdded = false; // Check whether tracks have been added or not
     subTracks = [];
-    error;
+    error = false;
     videoEventListenerAttached = false;
+
+    labels = {
+        VIDEO_ERROR_HEADER,
+        VIDEO_ERROR_MESSAGE
+    };
 
     connectedCallback() {
         this.generateVideoPlayer();
