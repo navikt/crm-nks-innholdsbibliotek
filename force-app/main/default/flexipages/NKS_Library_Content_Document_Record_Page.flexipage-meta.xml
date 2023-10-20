@@ -57,8 +57,8 @@
         </itemInstances>
         <itemInstances>
             <componentInstance>
-                <componentName>nksVideoPlayerAura</componentName>
-                <identifier>c_nksVideoPlayerAura</identifier>
+                <componentName>nksVideoPlayer</componentName>
+                <identifier>c_nksVideoPlayer</identifier>
             </componentInstance>
         </itemInstances>
         <name>Facet-b71cde68-37df-4250-b62d-4fdf330fb8b6</name>

@@ -1,6 +1,7 @@
 {
   "appPageId" : "64b6b7b6-6292-42ea-88ce-f777a2d33b69",
   "componentName" : "siteforce:sldsOneColLayout",
+  "dataProviders" : [ ],
   "id" : "dbe84be2-4877-4d8c-8f8b-50898077b8bb",
   "label" : "Error",
   "regions" : [ {
@@ -28,8 +29,8 @@
       "type" : "component"
     }, {
       "componentAttributes" : { },
-      "componentName" : "c:nksVideoPlayerAura",
-      "id" : "c550bbea-c282-43fa-b42d-2ab7cd629c90",
+      "componentName" : "c:nksVideoPlayer",
+      "id" : "eeb18f80-bfe8-4deb-bfcc-6a8734b6e41f",
       "renderPriority" : "NEUTRAL",
       "renditionMap" : { },
       "type" : "component"

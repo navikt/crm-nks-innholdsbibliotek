@@ -59,16 +59,16 @@ export default class NksEmbedGenerator extends LightningElement {
             '"></script>' +
             '<script>' +
             '$Lightning.use(' +
-            "'c:nksEmbeddedVideoApp'," +
+            "'c:nksVideoEmbeddingApp'," +
             'function () {' +
             '$Lightning.createComponent(' +
-            "'c:nksEmbeddedPlayer'," +
+            "'c:NksEmbeddedVideoPlayer'," +
             "{ videoId: '" +
             this.recordId +
             "' }," +
             "'video-player'," +
             'function (cmp) {' +
-            "console.log('Aura component was created');" +
+            "console.log('LWC component was created');" +
             '}' +
             ');' +
             '},' +

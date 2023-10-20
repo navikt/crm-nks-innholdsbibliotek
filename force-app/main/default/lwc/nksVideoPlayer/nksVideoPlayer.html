@@ -1,0 +1,40 @@
+<template>
+    <div lwc:if={isFileTypeMp4}>
+        <lightning-layout horizontal-align="center" multiple-rows>
+            <lightning-layout-item size="12" medium-device-size="10">
+                <div lwc:if={isExperience}>
+                    <div class="slds-p-bottom_small">
+                        <h1 class="navds-heading navds-heading--xlarge" style="text-align: center;">
+                            {videoTitle}
+                        </h1>
+                    </div>
+                </div>
+                <div style="position: relative">
+                    <div lwc:if={error}>
+                        <div class="alert-positioning">
+                            <div
+                                style="align-items: inherit"
+                                class="navds-alert navds-alert--error navds-alert--medium"
+                            >
+                                <c-icon icon-name="ErrorFilled" fill="Red"></c-icon>
+                                <div class="navds-alert__wrapper navds-body-long">
+                                    <h3 class="navds-heading navds-heading--small navds-typo--spacing">
+                                        {labels.VIDEO_ERROR_HEADER}
+                                    </h3>
+                                    {labels.VIDEO_ERROR_MESSAGE}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center" lwc:if={videoSrc}>
+                        <video class="subtitle-background" height="40%" width="60%"
+                           aria-label={videoTitle}
+                           controls controlslist="nodownload">
+                        <source src={videoSrc} type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+</template>

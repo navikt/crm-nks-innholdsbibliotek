@@ -1,0 +1,11 @@
+.alert-positioning {
+    position: absolute;
+    top: 45%;
+    left: 30%;
+    width: 40%;
+}
+
+.subtitle-background::cue {
+    background-color: black !important;
+    font-family: Arial !important;
+}
