@@ -130,7 +130,7 @@ public with sharing class NKS_VideoPlayerCtrl {
     // Always returns internal URL. Experience URL is handled in getVideoTracksInternally
     @AuraEnabled(cacheable=true)
     public static String showVideoTrackURL(String videoId) {
-        String baseUrl = Url.getSalesforceBaseUrl().toExternalForm();
+        String baseUrl = Url.getOrgDomainUrl().toExternalForm();
         return baseUrl.replace('/s', '') + '/sfc/servlet.shepherd/document/download/' + videoId;
     }
 
