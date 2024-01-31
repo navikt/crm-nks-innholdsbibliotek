@@ -6,7 +6,7 @@ import label from 'c/utils';
 export default class NksVideoLibLinker extends LightningElement {
     @api recordId;
     label = label;
-    
+
     libraryUrl;
     connectedCallback() {
         getExperienceUrl({ recordId: this.recordId })
@@ -26,6 +26,7 @@ export default class NksVideoLibLinker extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
+            // eslint-disable-next-line @locker/locker/distorted-document-exec-command
             document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');

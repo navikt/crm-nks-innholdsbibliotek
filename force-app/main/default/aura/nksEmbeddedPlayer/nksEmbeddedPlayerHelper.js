@@ -25,7 +25,7 @@
 
     getVideoTitle: function (component) {
         let getVideoTitle = component.get('c.getVideoTitle');
-        getVideoTitle.setParams({videoId: component.get('v.videoId')});
+        getVideoTitle.setParams({ videoId: component.get('v.videoId') });
 
         const videoTitlePromise = new Promise((resolve, reject) => {
             getVideoTitle.setCallback(this, function (response) {
@@ -60,11 +60,16 @@
                     resolve(response.getReturnValue());
                     this.getVideoTracks(component).then((subTracks) => {
                         let videoPlayer =
-                        '<video class="subtitle-background" height=100%; width=100%;' + 
-                        ' aria-label="' + component.get('v.videoTitle') + '"' +
-                        (component.get('v.thumbnailLink') !== 'err' ? ' poster="' + component.get('v.thumbnailLink') + '"' : '') +
-                        ' controls controlsList="nodownload"><source src="' +
-                        component.get('v.videoSrc') + '" type="video/mp4" >';
+                            '<video class="subtitle-background" height=100%; width=100%;' +
+                            ' aria-label="' +
+                            component.get('v.videoTitle') +
+                            '"' +
+                            (component.get('v.thumbnailLink') !== 'err'
+                                ? ' poster="' + component.get('v.thumbnailLink') + '"'
+                                : '') +
+                            ' controls controlsList="nodownload"><source src="' +
+                            component.get('v.videoSrc') +
+                            '" type="video/mp4" >';
                         if (subTracks && subTracks.length > 0) {
                             let blob;
                             subTracks.forEach((track) => {
@@ -73,7 +78,8 @@
                                 } catch (e) {
                                     console.error('Could not create blob from VersionData. Error: ', e);
                                 }
-                                const url = window.URL.createObjectURL(blob);               
+                                // eslint-disable-next-line @locker/locker/distorted-url-create-object-url
+                                const url = window.URL.createObjectURL(blob);
                                 videoPlayer +=
                                     '<track kind="captions" srclang="' +
                                     track.srclang +
@@ -93,7 +99,7 @@
                     console.error(JSON.stringify(errors));
                     reject(JSON.stringify(errors));
                 }
-            })
+            });
         });
         $A.enqueueAction(getThumbnail);
         return thumbnailPromise;
@@ -124,7 +130,12 @@
     generateVideoPlayer: function (component) {
         // getExperienceSiteURL starts the chaining of promises and ends with getVideoTracks() which creates the HTML video tag with required attributes
         this.getExperienceSiteURL(component).then((experienceSiteURL) => {
-            component.set('v.videoSrc', experienceSiteURL.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + component.get('v.videoId'));   
+            component.set(
+                'v.videoSrc',
+                experienceSiteURL.replace('/s/', '') +
+                    '/sfsites/c/sfc/servlet.shepherd/document/download/' +
+                    component.get('v.videoId')
+            );
         });
     },
 

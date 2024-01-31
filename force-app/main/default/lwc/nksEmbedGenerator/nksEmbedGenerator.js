@@ -21,7 +21,7 @@ export default class NksEmbedGenerator extends LightningElement {
                 console.error(JSON.stringify(error, null, 2));
             });
     }
-    
+
     handleCopy() {
         let copyValue = this.embeddingCode;
         let hiddenInput = document.createElement('input');
@@ -30,6 +30,7 @@ export default class NksEmbedGenerator extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
+            // eslint-disable-next-line @locker/locker/distorted-document-exec-command
             document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');

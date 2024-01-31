@@ -16,6 +16,7 @@ export default class NksThumbnailLinker extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
+            // eslint-disable-next-line @locker/locker/distorted-document-exec-command
             document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');
@@ -34,10 +35,10 @@ export default class NksThumbnailLinker extends LightningElement {
     }
 
     // Easier than checking all the image variants
-    get isThumbnailFile() { 
+    get isThumbnailFile() {
         return !isSubtitleFile(this.filetype) && !isVideoFile(this.filetype);
     }
-    
+
     get showThumbnailLink() {
         return window.location.origin + '/sfc/servlet.shepherd/document/download/' + this.recordId;
     }
