@@ -1,7 +1,7 @@
 ({
     afterRender: function (component, helper) {
         this.superAfterRender();
-        const video = document.querySelector('video');
+        const video = this.template.querySelector('video');
 
         if (video) {
             video.addEventListener('play', (event) => {

@@ -14,7 +14,7 @@ export default class NksSubtitleLinker extends LightningElement {
     }
 
     videoTrackURL;
-    @wire(showVideoTrackURL, { videoId: '$recordId'})
+    @wire(showVideoTrackURL, { videoId: '$recordId' })
     wiredShowVideoTrackURL(result) {
         if (result.error) {
             console.log(result.error);
@@ -31,6 +31,7 @@ export default class NksSubtitleLinker extends LightningElement {
         hiddenInput.focus();
         hiddenInput.select();
         try {
+            // eslint-disable-next-line @locker/locker/distorted-document-exec-command
             document.execCommand('copy');
         } catch (error) {
             this.showCopyToast('error');

@@ -52,9 +52,7 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
         try {
             const libraryBaseUrl = await getLibraryBaseUrl();
             return (
-                libraryBaseUrl.replace('/s/', '') +
-                '/sfsites/c/sfc/servlet.shepherd/document/download/' +
-                this.videoId
+                libraryBaseUrl.replace('/s/', '') + '/sfsites/c/sfc/servlet.shepherd/document/download/' + this.videoId
             );
         } catch (error) {
             this.error = error;
@@ -75,7 +73,7 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
             return await getStoredThumbnailLink({
                 videoId: this.videoId,
                 env: 'Embed',
-                windowOrigin: '',
+                windowOrigin: ''
             });
         } catch (error) {
             console.error(error);
@@ -85,6 +83,7 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
     setThumbnail() {
         const videoElement = this.template.querySelector('video');
         if (videoElement && this.thumbnail !== undefined && this.thumbnail !== 'err') {
+            // eslint-disable-next-line @locker/locker/distorted-element-set-attribute
             videoElement.setAttribute('poster', this.thumbnail);
         }
     }
@@ -103,20 +102,19 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
             this.subTracks.forEach((track) => {
                 try {
                     const blob = new Blob([track.src], { type: 'text/plain' });
+                    // eslint-disable-next-line @locker/locker/distorted-url-create-object-url
                     const url = window.URL.createObjectURL(blob);
 
                     const newTrack = document.createElement('track');
                     newTrack.kind = 'captions';
                     newTrack.srclang = track.srclang;
                     newTrack.label = track.languageLabel;
+                    // eslint-disable-next-line @locker/locker/distorted-html-iframe-script-element-src-setter
                     newTrack.src = url;
 
                     videoElement.appendChild(newTrack);
                 } catch (e) {
-                    console.error(
-                        'Could not create blob from VersionData. Error: ',
-                        e
-                    );
+                    console.error('Could not create blob from VersionData. Error: ', e);
                 }
             });
         }
@@ -127,20 +125,23 @@ export default class NksEmbeddedVideoPlayer extends LightningElement {
         const video = this.template.querySelector('video');
         if (video) {
             this.videoEventListenerAttached = true;
-            video.addEventListener('play', () => {
-                if (!video.paused) {
-                    this.addViewCount();
-                }
-            }, { once : true });
+            video.addEventListener(
+                'play',
+                () => {
+                    if (!video.paused) {
+                        this.addViewCount();
+                    }
+                },
+                { once: true }
+            );
         }
     }
 
     addViewCount() {
         if (this.videoId) {
-            addViewCount({ videoId: this.videoId })
-                .catch((error) => {
-                    console.error(error);
-                });
+            addViewCount({ videoId: this.videoId }).catch((error) => {
+                console.error(error);
+            });
         }
     }
 }

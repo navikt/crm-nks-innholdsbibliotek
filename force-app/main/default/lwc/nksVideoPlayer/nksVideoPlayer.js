@@ -43,7 +43,7 @@ export default class NksVideoPlayer extends LightningElement {
         return this.context === 'Experience';
     }
 
-    @wire(getFileType, { recordId: '$recordId'})
+    @wire(getFileType, { recordId: '$recordId' })
     wiredGetFileType(result) {
         if (result.error) {
             console.error(result.error);
@@ -104,7 +104,7 @@ export default class NksVideoPlayer extends LightningElement {
             return await getStoredThumbnailLink({
                 videoId: this.recordId,
                 env: this.context,
-                windowOrigin: window.location.origin,
+                windowOrigin: window.location.origin
             });
         } catch (error) {
             console.error(error);
@@ -114,6 +114,7 @@ export default class NksVideoPlayer extends LightningElement {
     setThumbnail() {
         const videoElement = this.template.querySelector('video');
         if (videoElement && this.thumbnail !== undefined && this.thumbnail !== 'err') {
+            // eslint-disable-next-line @locker/locker/distorted-element-set-attribute
             videoElement.setAttribute('poster', this.thumbnail);
         }
     }
@@ -135,14 +136,12 @@ export default class NksVideoPlayer extends LightningElement {
                     newTrack.kind = 'captions';
                     newTrack.srclang = track.srclang;
                     newTrack.label = track.languageLabel;
+                    // eslint-disable-next-line @locker/locker/distorted-html-iframe-script-element-src-setter
                     newTrack.src = track.src;
 
                     videoElement.appendChild(newTrack);
                 } catch (e) {
-                    console.error(
-                        'Could not create blob from VersionData. Error: ',
-                        e
-                    );
+                    console.error('Could not create blob from VersionData. Error: ', e);
                 }
             });
         }
@@ -153,20 +152,23 @@ export default class NksVideoPlayer extends LightningElement {
         const video = this.template.querySelector('video');
         if (video) {
             this.videoEventListenerAttached = true;
-            video.addEventListener('play', () => {
-                if (!video.paused) {
-                    this.addViewCount();
-                }
-            }, { once : true });
+            video.addEventListener(
+                'play',
+                () => {
+                    if (!video.paused) {
+                        this.addViewCount();
+                    }
+                },
+                { once: true }
+            );
         }
     }
 
     addViewCount() {
         if (this.recordId) {
-            addViewCount({ videoId: this.recordId })
-                .catch((error) => {
-                    console.error(error);
-                });
+            addViewCount({ videoId: this.recordId }).catch((error) => {
+                console.error(error);
+            });
         }
     }
 }
